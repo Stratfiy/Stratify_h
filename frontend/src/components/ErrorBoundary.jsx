@@ -1,7 +1,7 @@
 import { Component } from "react";
 import axios from "axios";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${import.meta.env.VITE_BACKEND_URL}/api`;
 
 export default class ErrorBoundary extends Component {
   constructor(props) {
