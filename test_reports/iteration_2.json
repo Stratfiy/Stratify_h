@@ -1,0 +1,49 @@
+{
+  "summary": "Production-readiness iteration verified end-to-end. Backend: 19 pytest tests pass (config flags, health flag, feedback up/down + 422 invalid + 422 missing, error sink, lead regression, audit_logs persistence, control-char stripping). Rate-limit confirmed separately (11th /api/leads -> 429). Frontend: cookie banner appears ~700ms then persists Accept and Reject in localStorage stratify_cookie_consent_v1 (no reappear after reload), /privacy renders 8 sections, /terms renders 7 sections + cross-link to /privacy, footer Privacy & Terms links work, FeedbackWidget opens panel -> thumbs up reveals note -> submit posts to /api/feedback and shows green 'Thanks' state, scroll-to-top works (1500 -> 0 on /privacy nav), kill-switch verified by flipping LEAD_FORM_ENABLED=false (env restored after) — Contact page renders ShieldAlert + 'The demo form is paused.' message and contact-submit-button hidden. Zero pageerrors during full traversal. iteration_1 backend regression suite (8 tests) still 100% green.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/feedback,/api/errors", "issue": "Both endpoints share the same in-memory rate-limit bucket as /api/leads (via rate_limit(ip_hash)). Heavy feedback/error traffic from the same IP can lock out lead submissions for an hour. Consider per-endpoint buckets or higher caps for feedback/errors."},
+      {"endpoint": "/api/errors", "issue": "Persists to db.client_errors but swallows insert failures silently (try/except + logger.exception then returns ok:true). Acceptable for a fire-and-forget client error sink, but means you won't notice if the collection becomes write-blocked."},
+      {"endpoint": "/api/leads (GET)", "issue": "Carry-over from iteration_1 — still public; exposes captured leads. Pre-launch hardening needed."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Contact (kill-switch state)", "issues": ["When LEAD_FORM_ENABLED=false the cookie banner overlaps the disabled-form card on small viewports because it is fixed at bottom — minor, not blocking. Consider lifting the banner z-index or shrinking its mobile footprint."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_leads.py",
+    "/app/backend/tests/test_production_readiness.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "(Optional) Split rate-limit buckets per endpoint so feedback/error spam can't lock out lead submissions.",
+    "(Optional) Consider per-endpoint caps (RATE_LIMIT_PER_HOUR is shared).",
+    "(Carry-over) Gate GET /api/leads behind admin token before launch.",
+    "(Carry-over from iteration_1) Move logger init above route definitions in server.py."
+  ],
+  "critical_code_review_comments": [
+    "rate_limit() is shared across /api/leads, /api/feedback, /api/errors — single global bucket per IP. A user clicking thumbs up 10× would 429 their lead submission. Recommend per-endpoint buckets or only rate-limit /api/leads.",
+    "FeedbackCreate / ClientError do not strip control characters the way LeadCreate does. Symmetric sanitation would be a small improvement.",
+    "/api/errors returns ok:true even when db insert fails (caught and logged). Fine for a sink, but consider a metric/alert hook.",
+    "ErrorBoundary wraps router; data-testid='error-boundary' is on the FALLBACK div which only mounts on error — verifying its presence requires forcing an error. Confirmed code path is correct via inspection; normal traversal produced zero pageerrors.",
+    "CookieBanner localStorage key is correct ('stratify_cookie_consent_v1'); 700ms delay timer is implemented and persistence works for both Accept and Reject.",
+    "Privacy + Terms have 8 and 7 h2 sections respectively, matching spec; Terms cross-links /privacy.",
+    "scrollTo(0,0) on route change works via SiteShell — verified 1500 -> 0 after click.",
+    "Contact.jsx 429 handler toasts 'Too many requests…'; 503 handler toasts and locally disables the form (good UX)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_production_readiness.py (new)"
+  ],
+  "success_rate": {"backend": "100% (19/19 + 1 rate-limit run separately)", "frontend": "100% of new flows verified"},
+  "test_credentials": "N/A — no auth in app",
+  "seed_data_creation": "TEST_-prefixed leads, feedback rows, client_errors, audit_logs created during runs. Safe to leave or purge by prefix.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Two test files now: /app/backend/tests/test_leads.py (regression from iteration_1, 8 tests) and /app/backend/tests/test_production_readiness.py (12 tests + 1 gated by RATE_LIMIT_TEST=1 env). The rate-limit test pollutes the in-memory bucket — restart backend after running it. Backend was restarted twice during this iteration (kill-switch toggle and rate-limit test), then env restored to LEAD_FORM_ENABLED=true. All frontend testids per spec are present and working except 'error-boundary' which intentionally only renders on the fallback path — this is correct, not a bug.",
+  "rca of the issue": "No defects. Two minor design observations: (1) shared rate-limit bucket across all 3 POST endpoints; (2) cookie banner z-index slight overlap with paused-form card on mobile. Neither blocks launch."
+}

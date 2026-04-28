@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowRight, Check, Mail } from "lucide-react";
+import { ArrowRight, Check, Mail, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { FadeUp } from "@/components/Motion";
 
@@ -25,6 +25,15 @@ export default function Contact() {
   const [form, setForm] = useState(initial);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [formEnabled, setFormEnabled] = useState(true);
+
+  useEffect(() => {
+    let alive = true;
+    axios.get(`${API}/config`)
+      .then((r) => { if (alive) setFormEnabled(!!r.data?.lead_form_enabled); })
+      .catch(() => { /* keep enabled by default */ });
+    return () => { alive = false; };
+  }, []);
 
   const update = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
@@ -43,8 +52,16 @@ export default function Contact() {
       setDone(true);
       toast.success("Got it. We'll be in touch within 4 hours.");
     } catch (err) {
-      const msg = err?.response?.data?.detail || "Something went wrong. Please try again.";
-      toast.error(typeof msg === "string" ? msg : "Could not submit form");
+      const status = err?.response?.status;
+      if (status === 429) {
+        toast.error("Too many requests from this network. Try again in a bit, or email hello@stratifyai.com.");
+      } else if (status === 503) {
+        toast.error("The form is paused right now. Please email hello@stratifyai.com.");
+        setFormEnabled(false);
+      } else {
+        const msg = err?.response?.data?.detail || "Something went wrong. Please try again.";
+        toast.error(typeof msg === "string" ? msg : "Could not submit form");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -90,7 +107,21 @@ export default function Contact() {
         <div className="lg:col-span-7">
           <FadeUp delay={0.05}>
             <div className="card-base p-7 md:p-10">
-              {done ? (
+              {!formEnabled ? (
+                <div className="text-center py-12" data-testid="contact-disabled">
+                  <div className="mx-auto w-14 h-14 rounded-full bg-[#0066FF]/10 flex items-center justify-center">
+                    <ShieldAlert className="w-6 h-6 text-[#0066FF]" />
+                  </div>
+                  <h2 className="mt-6 text-[26px] md:text-[30px] tracking-[-0.02em] font-medium">
+                    The demo form is paused.
+                  </h2>
+                  <p className="mt-3 text-[15px] text-[#4B5563] max-w-[440px] mx-auto">
+                    We've temporarily disabled the form for maintenance. Email{" "}
+                    <a href="mailto:hello@stratifyai.com" className="text-[#0066FF]">hello@stratifyai.com</a>{" "}
+                    and we'll reply within 4 hours.
+                  </p>
+                </div>
+              ) : done ? (
                 <div className="text-center py-12" data-testid="contact-success">
                   <div className="mx-auto w-14 h-14 rounded-full bg-[#00D4AA]/15 flex items-center justify-center">
                     <Check className="w-6 h-6 text-[#00A37D]" />

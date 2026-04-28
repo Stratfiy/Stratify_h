@@ -55,8 +55,14 @@ export default function Footer() {
             </div>
             <span className="font-semibold text-[15px]">StratifyAI</span>
           </div>
-          <div className="text-[12.5px] text-white/55 font-mono tracking-wide">
-            © 2026 StratifyAI · Privacy · Terms · Built with AI agents
+          <div className="text-[12.5px] text-white/55 font-mono tracking-wide flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span>© 2026 StratifyAI</span>
+            <span>·</span>
+            <a href="/privacy" className="hover:text-white">Privacy</a>
+            <span>·</span>
+            <a href="/terms" className="hover:text-white">Terms</a>
+            <span>·</span>
+            <span>Built with AI agents</span>
           </div>
         </div>
       </div>
