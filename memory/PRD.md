@@ -42,6 +42,7 @@ Build the **StratifyAI** marketing website end-to-end, based on the user-uploade
 ## Test Coverage
 - **Backend pytest** — 19/19 passing (iteration_2): config flags, health flag, leads CRUD, feedback up/down + 422s, error sink, control-char stripping, audit log persistence, kill switch
 - **Frontend Playwright** — all critical flows: homepage animations, dropdowns, ROI sliders, pricing tabs, contact form (incl. 429/503 paths), cookie banner accept+reject persistence, feedback widget end-to-end, /privacy + /terms render, scroll-to-top, mobile viewport, **zero console errors**
+- **Code review pass (Apr 2026)** — applied: shared `PricingCard` (deduped 3×), `StepIcon` extract for KaiDashboard nested-ternary, `FormPanel`/`PausedCard`/`SuccessCard`/`DemoForm`/`Select` extracts for Contact, module-scope `MOTION` variants in `Motion.jsx`, stable log entry IDs in `KaiDashboard`, composite keys for duplicated NDA marquee, expanded comments on intentional empty catches in `CookieBanner` + `ErrorBoundary`, dev-mode console.warn on logging path failures. Skipped (false-positive linter complaints): wrong useEffect deps for module constants/setState setters/local effect variables, "localStorage is sensitive" warning for cookie consent (it isn't), arbitrary 50-line component-splitting for marketing pages.
 
 ## What's Missing for Public Launch
 | Item | Owner |

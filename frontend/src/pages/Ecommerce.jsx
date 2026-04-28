@@ -3,6 +3,7 @@ import { ArrowRight, Check, ShieldCheck } from "lucide-react";
 import { FadeUp, StaggerGroup, StaggerItem } from "@/components/Motion";
 import { ECOM_PRICING } from "@/lib/site-data";
 import RoiCalculator from "@/components/RoiCalculator";
+import PricingCard from "@/components/PricingCard";
 
 const ECOM_AGENTS = [
   { name: "Kai", role: "Creative & Ad Production", desc: "Ships scroll-stopping ad creative with your approval. Hooks, body, leads — all rendered." },
@@ -157,7 +158,7 @@ export default function Ecommerce() {
           </FadeUp>
           <div className="mt-12 grid md:grid-cols-3 gap-5">
             {ECOM_PRICING.map((p) => (
-              <PricingCard key={p.name} plan={p} />
+              <PricingCard key={p.name} plan={p} testIdPrefix="pricing-card" />
             ))}
           </div>
         </div>
@@ -181,50 +182,5 @@ export default function Ecommerce() {
         </div>
       </section>
     </>
-  );
-}
-
-function PricingCard({ plan }) {
-  const isHi = plan.highlight;
-  return (
-    <div
-      className={`relative rounded-2xl p-7 border transition-shadow ${
-        isHi
-          ? "bg-[#0A0A0A] text-white border-[#0A0A0A] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]"
-          : "bg-white border-[#E5E7EB] hover:shadow-md"
-      }`}
-      data-testid={`pricing-card-${plan.name.toLowerCase()}`}
-    >
-      {plan.tag && (
-        <div className="absolute -top-3 left-7 px-2.5 py-1 rounded-full bg-[#0066FF] text-white text-[11px] font-mono tracking-wider uppercase">
-          {plan.tag}
-        </div>
-      )}
-      <div className={`font-mono text-[11px] tracking-[0.18em] uppercase ${isHi ? "text-[#00D4AA]" : "text-[#0066FF]"}`}>
-        {plan.name}
-      </div>
-      <div className="mt-4 flex items-baseline gap-1">
-        <span className="text-[44px] font-medium tracking-[-0.025em]">{plan.price}</span>
-        <span className={`text-[14px] ${isHi ? "text-white/60" : "text-[#9CA3AF]"}`}>{plan.cadence}</span>
-      </div>
-      <ul className="mt-6 space-y-2.5">
-        {plan.bullets.map((b) => (
-          <li key={b} className={`flex items-start gap-2.5 text-[14px] ${isHi ? "text-white/85" : "text-[#0A0A0A]"}`}>
-            <Check className={`w-4 h-4 mt-0.5 ${isHi ? "text-[#00D4AA]" : "text-[#0066FF]"}`} />
-            <span>{b}</span>
-          </li>
-        ))}
-      </ul>
-      <Link
-        to="/contact"
-        className={`mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-[14px] font-medium transition-colors ${
-          isHi
-            ? "bg-white text-[#0A0A0A] hover:bg-white/90"
-            : "bg-[#0066FF] text-white hover:bg-[#0052CC]"
-        }`}
-      >
-        Book a demo <ArrowRight className="w-4 h-4" />
-      </Link>
-    </div>
   );
 }

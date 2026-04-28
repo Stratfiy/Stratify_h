@@ -11,13 +11,20 @@ export default function CookieBanner() {
     const t = setTimeout(() => {
       try {
         if (!localStorage.getItem(KEY)) setShow(true);
-      } catch (_) { /* private mode */ }
+      } catch (_storageErr) {
+        // localStorage throws in Safari Private Mode and a few enterprise lockdowns.
+        // Banner just stays hidden — that's the correct, privacy-respecting fallback.
+      }
     }, 700);
     return () => clearTimeout(t);
   }, []);
 
   const decide = (val) => {
-    try { localStorage.setItem(KEY, val); } catch (_) {}
+    try {
+      localStorage.setItem(KEY, val);
+    } catch (_storageErr) {
+      // Same private-mode case — choice won't persist across reloads, that's fine.
+    }
     setShow(false);
   };
 

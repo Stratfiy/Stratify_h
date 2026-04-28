@@ -21,8 +21,19 @@ export default class ErrorBoundary extends Component {
         stack: String(error?.stack || info?.componentStack || "").slice(0, 8000),
         url: typeof window !== "undefined" ? window.location.href : "",
         user_agent: typeof navigator !== "undefined" ? navigator.userAgent : "",
-      }).catch(() => {});
-    } catch (_) { /* noop */ }
+      }).catch((postErr) => {
+        // Surface in dev console; production has the original error visible too.
+        if (process.env.NODE_ENV !== "production") {
+          // eslint-disable-next-line no-console
+          console.warn("[ErrorBoundary] failed to report error:", postErr?.message);
+        }
+      });
+    } catch (loggingErr) {
+      if (process.env.NODE_ENV !== "production") {
+        // eslint-disable-next-line no-console
+        console.warn("[ErrorBoundary] logging path threw:", loggingErr?.message);
+      }
+    }
   }
 
   render() {

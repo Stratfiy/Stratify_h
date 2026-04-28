@@ -20,6 +20,14 @@ const STEPS = [
 
 const VARIANT_LABELS = ["Hook · 9:16", "Body · 1:1", "Lead · 16:9"];
 
+// Replaces nested ternary — clearer to scan and easier to extend later.
+function StepIcon({ step }) {
+  if (step === 3) return <Check className="w-4 h-4 text-[#00A37D]" />;
+  if (step === 2) return <Upload className="w-4 h-4 text-[#0066FF]" />;
+  if (step === 1) return <Sparkles className="w-4 h-4 text-[#0066FF]" />;
+  return <ArrowUpRight className="w-4 h-4 text-[#0066FF]" />;
+}
+
 export default function KaiDashboard() {
   const [step, setStep] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -40,11 +48,15 @@ export default function KaiDashboard() {
         if (p >= 100) clearInterval(interval);
       }, 60);
 
-      // Add a log line
+      // Add a log line with a stable id so React keys are reliable.
       const s = STEPS[i % STEPS.length];
+      const ts = new Date();
       setLogs((prev) => [
         ...prev.slice(-3),
-        `[${new Date().toISOString().slice(11, 19)}] ${s.agent.toLowerCase()}.${s.action}`,
+        {
+          id: `${ts.getTime()}-${i}`,
+          line: `[${ts.toISOString().slice(11, 19)}] ${s.agent.toLowerCase()}.${s.action}`,
+        },
       ]);
 
       i++;
@@ -99,15 +111,7 @@ export default function KaiDashboard() {
           <div className="rounded-xl border border-[#EDEEF1] bg-white p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                {step === 3 ? (
-                  <Check className="w-4 h-4 text-[#00A37D]" />
-                ) : step === 2 ? (
-                  <Upload className="w-4 h-4 text-[#0066FF]" />
-                ) : step === 1 ? (
-                  <Sparkles className="w-4 h-4 text-[#0066FF]" />
-                ) : (
-                  <ArrowUpRight className="w-4 h-4 text-[#0066FF]" />
-                )}
+                <StepIcon step={step} />
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={cur.id}
@@ -175,8 +179,8 @@ export default function KaiDashboard() {
           {/* Logs terminal */}
           <div className="rounded-lg bg-[#0A0A0A] p-3 font-mono text-[11px] leading-[1.6] text-[#9CA3AF] min-h-[88px]">
             <div className="text-[#00D4AA]">$ stratify run --agent kai</div>
-            {logs.map((l, i) => (
-              <div key={i} className="opacity-90">{l}</div>
+            {logs.map((entry) => (
+              <div key={entry.id} className="opacity-90">{entry.line}</div>
             ))}
             <div className="opacity-60">{step === 3 ? "✓ live · ROAS tracking ↗" : "•"} <span className="animate-pulse">_</span></div>
           </div>

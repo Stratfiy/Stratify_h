@@ -134,7 +134,9 @@ export default function Home() {
           <div className="text-center eyebrow mb-6">Trusted by operators who ship fast</div>
           <Marquee speed={28} gradient gradientColor="#FBFBFD" gradientWidth={80}>
             {NDA_BRANDS.concat(NDA_BRANDS).map((b, i) => (
-              <span key={i} className="nda-pill mx-3">{b}</span>
+              // brands are intentionally duplicated for the seamless loop, so a
+              // composite key (brand + position) is required for uniqueness.
+              <span key={`${b}__${i}`} className="nda-pill mx-3">{b}</span>
             ))}
           </Marquee>
         </div>
