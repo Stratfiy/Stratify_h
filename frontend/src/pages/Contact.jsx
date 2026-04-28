@@ -4,7 +4,7 @@ import { ArrowRight, Check, Mail, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { FadeUp } from "@/components/Motion";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${import.meta.env.VITE_BACKEND_URL}/api`;
 
 const REVENUE_OPTIONS = ["< $100K", "$100K – $1M", "$1M – $10M", "$10M+"];
 const INDUSTRY_OPTIONS = ["E-commerce", "Healthcare", "B2B Services", "Other"];
