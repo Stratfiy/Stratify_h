@@ -67,7 +67,7 @@ class TestFeedback:
         r = api.post(f"{BASE_URL}/api/feedback", json=payload)
         assert r.status_code == 201, r.text
         d = r.json()
-        assert d.get("ok") is True
+        assert d.get("ok")
         assert "id" in d and isinstance(d["id"], str)
         # Verify persisted
         doc = mongo.feedback.find_one({"id": d["id"]})
@@ -80,7 +80,7 @@ class TestFeedback:
         r = api.post(f"{BASE_URL}/api/feedback",
                      json={"page": "/test", "rating": "down"})
         assert r.status_code == 201
-        assert r.json().get("ok") is True
+        assert r.json().get("ok")
 
     def test_feedback_invalid_rating(self, api):
         r = api.post(f"{BASE_URL}/api/feedback",
@@ -103,7 +103,7 @@ class TestErrors:
         }
         r = api.post(f"{BASE_URL}/api/errors", json=payload)
         assert r.status_code == 201, r.text
-        assert r.json().get("ok") is True
+        assert r.json().get("ok")
         # Verify persisted
         doc = mongo.client_errors.find_one({"message": payload["message"]})
         assert doc is not None

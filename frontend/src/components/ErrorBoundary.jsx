@@ -24,13 +24,13 @@ export default class ErrorBoundary extends Component {
       }).catch((postErr) => {
         // Surface in dev console; production has the original error visible too.
         if (process.env.NODE_ENV !== "production") {
-          // eslint-disable-next-line no-console
+          // eslint-disable-next-line no-console -- dev-only diagnostic, gated above
           console.warn("[ErrorBoundary] failed to report error:", postErr?.message);
         }
       });
     } catch (loggingErr) {
       if (process.env.NODE_ENV !== "production") {
-        // eslint-disable-next-line no-console
+        // eslint-disable-next-line no-console -- dev-only diagnostic, gated above
         console.warn("[ErrorBoundary] logging path threw:", loggingErr?.message);
       }
     }
