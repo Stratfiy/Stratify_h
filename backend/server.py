@@ -52,20 +52,26 @@ def redact(value: str) -> str:
     return value[:200]
 
 
-# Simple in-memory sliding-window rate limiter.
-# Adequate for marketing-site lead-form abuse — does NOT survive restarts (acceptable here).
-RATE_BUCKETS: dict[str, deque] = defaultdict(deque)
+# Per-endpoint sliding-window rate limiters.
+# Keyed by (endpoint, ip_hash) so feedback/error spam can't lock out lead submissions.
+RATE_BUCKETS: dict[tuple[str, str], deque] = defaultdict(deque)
 RATE_LIMIT_PER_HOUR = int(os.environ.get("RATE_LIMIT_PER_HOUR", "10"))
+RATE_LIMITS = {
+    "leads": RATE_LIMIT_PER_HOUR,
+    "feedback": int(os.environ.get("RATE_LIMIT_FEEDBACK_PER_HOUR", "30")),
+    "errors": int(os.environ.get("RATE_LIMIT_ERRORS_PER_HOUR", "60")),
+}
 
 
-def rate_limit(ip_hash: str) -> bool:
-    """Return True if request is within limit, False if exceeded."""
+def rate_limit(scope: str, ip_hash: str) -> bool:
+    """Return True if request is within limit for this (scope, ip), else False."""
     now = time.time()
     window_start = now - 3600
-    bucket = RATE_BUCKETS[ip_hash]
+    cap = RATE_LIMITS.get(scope, RATE_LIMIT_PER_HOUR)
+    bucket = RATE_BUCKETS[(scope, ip_hash)]
     while bucket and bucket[0] < window_start:
         bucket.popleft()
-    if len(bucket) >= RATE_LIMIT_PER_HOUR:
+    if len(bucket) >= cap:
         return False
     bucket.append(now)
     return True
@@ -153,8 +159,8 @@ async def create_lead(payload: LeadCreate, request: Request):
         raise HTTPException(status_code=503, detail="Lead form temporarily disabled. Email hello@stratifyai.com.")
 
     ip_hash = hash_ip(get_client_ip(request))
-    if not rate_limit(ip_hash):
-        logger.warning("rate-limit hit ip_hash=%s", ip_hash)
+    if not rate_limit("leads", ip_hash):
+        logger.warning("rate-limit hit endpoint=leads ip_hash=%s", ip_hash)
         raise HTTPException(status_code=429, detail="Too many requests. Try again later.")
 
     lead = Lead(**payload.model_dump())
@@ -194,7 +200,7 @@ async def submit_feedback(payload: FeedbackCreate, request: Request):
     if not flag("FEEDBACK_ENABLED"):
         raise HTTPException(status_code=503, detail="Feedback disabled.")
     ip_hash = hash_ip(get_client_ip(request))
-    if not rate_limit(ip_hash):
+    if not rate_limit("feedback", ip_hash):
         raise HTTPException(status_code=429, detail="Too many requests.")
     doc = {
         "id": str(uuid.uuid4()),
