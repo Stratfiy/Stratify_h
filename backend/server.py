@@ -7,6 +7,9 @@ import logging
 import hashlib
 import time
 import re
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from collections import defaultdict, deque
 from pathlib import Path
 from pydantic import BaseModel, Field, EmailStr, ConfigDict, field_validator
@@ -53,6 +56,63 @@ def redact(value: str) -> str:
 
 
 # Per-endpoint sliding-window rate limiters.
+def send_lead_email(lead):
+    """Send email notification when a new lead submits the demo form."""
+    try:
+        smtp_host = os.environ.get('SMTP_HOST', 'smtp.hostinger.com')
+        smtp_port = int(os.environ.get('SMTP_PORT', '465'))
+        smtp_user = os.environ.get('SMTP_USER', 'office.nh@stratifyai.in')
+        smtp_pass = os.environ.get('SMTP_PASS', '')
+        notify_email = os.environ.get('NOTIFY_EMAIL', 'office.nh@stratifyai.in')
+
+        if not smtp_pass:
+            logger.warning('SMTP_PASS not set, skipping email notification')
+            return
+
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = f'New Demo Request: {lead.company_name} ({lead.industry})'
+        msg['From'] = smtp_user
+        msg['To'] = notify_email
+
+        html = f"""
+        <html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+        <div style="background:#000;padding:20px;border-radius:8px 8px 0 0;">
+            <h2 style="color:#fff;margin:0;">New Demo Request 🚀</h2>
+        </div>
+        <div style="background:#f9f9f9;padding:24px;border-radius:0 0 8px 8px;">
+            <table style="width:100%;border-collapse:collapse;">
+                <tr><td style="padding:8px 0;color:#666;width:40%;">Name</td><td style="padding:8px 0;font-weight:bold;">{lead.full_name}</td></tr>
+                <tr><td style="padding:8px 0;color:#666;">Email</td><td style="padding:8px 0;"><a href="mailto:{lead.work_email}">{lead.work_email}</a></td></tr>
+                <tr><td style="padding:8px 0;color:#666;">Company</td><td style="padding:8px 0;font-weight:bold;">{lead.company_name}</td></tr>
+                <tr><td style="padding:8px 0;color:#666;">Website</td><td style="padding:8px 0;">{lead.company_website or 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;color:#666;">Industry</td><td style="padding:8px 0;">{lead.industry}</td></tr>
+                <tr><td style="padding:8px 0;color:#666;">Monthly Revenue</td><td style="padding:8px 0;">{lead.monthly_revenue}</td></tr>
+                <tr><td style="padding:8px 0;color:#666;">How they heard</td><td style="padding:8px 0;">{lead.referral_source or 'N/A'}</td></tr>
+            </table>
+            <div style="margin-top:16px;padding:16px;background:#fff;border-left:4px solid #000;border-radius:4px;">
+                <p style="color:#666;margin:0 0 8px;">Challenge / Message:</p>
+                <p style="margin:0;">{lead.challenge}</p>
+            </div>
+            <div style="margin-top:20px;text-align:center;">
+                <a href="mailto:{lead.work_email}?subject=Re: Stratify Demo Request" 
+                   style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;display:inline-block;">
+                   Reply to {lead.full_name}
+                </a>
+            </div>
+        </div>
+        </body></html>
+        """
+
+        msg.attach(MIMEText(html, 'html'))
+
+        with smtplib.SMTP_SSL(smtp_host, smtp_port) as server:
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(smtp_user, notify_email, msg.as_string())
+            logger.info('lead notification email sent to %s', notify_email)
+    except Exception as e:
+        logger.warning('failed to send lead notification email: %s', e)
+
+
 # Keyed by (endpoint, ip_hash) so feedback/error spam can't lock out lead submissions.
 RATE_BUCKETS: dict[tuple[str, str], deque] = defaultdict(deque)
 RATE_LIMIT_PER_HOUR = int(os.environ.get("RATE_LIMIT_PER_HOUR", "10"))
