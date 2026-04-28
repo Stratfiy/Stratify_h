@@ -3,7 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThumbsUp, ThumbsDown, X, MessageSquare, Check } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${import.meta.env.VITE_BACKEND_URL}/api`;
 
 export default function FeedbackWidget() {
   const [open, setOpen] = useState(false);
