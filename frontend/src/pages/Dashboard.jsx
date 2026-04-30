@@ -181,10 +181,7 @@ export default function Dashboard() {
             <button onClick={() => setMobileOpen(true)} className="lg:hidden" style={{ width: 34, height: 34, borderRadius: 9, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
               <Menu style={{ width: 15, height: 15, color: '#6B7280' }} />
             </button>
-            
-            <span style={{ fontWeight: 900, fontSize: 16, color: '#1A1A2E', letterSpacing: -0.4, textTransform: 'capitalize' }}>
-              {activeTab === 'overview' ? 'Dashboard' : activeTab}
-            </span>
+            <Link to="/" style={{ fontWeight: 900, fontSize: 15, color: '#1A1A2E', textDecoration: 'none', letterSpacing: -0.3 }}>stratify.in</Link>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <button style={{ width: 36, height: 36, borderRadius: 10, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative' }}>
