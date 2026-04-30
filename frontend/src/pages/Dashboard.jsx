@@ -153,7 +153,7 @@ export default function Dashboard() {
     <div style={{ display: 'flex', minHeight: '100vh', background: '#F7F7FA', fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>
 
       {/* Desktop Sidebar */}
-      <aside style={{ width: 240, flexShrink: 0, position: 'fixed', top: 0, bottom: 0, left: 0, background: 'white', borderRight: '1px solid #F1F1F4', zIndex: 30, display: 'flex', flexDirection: 'column', overflowY: 'auto' }} className="hidden lg:flex">
+      <aside style={{ width: 240, flexShrink: 0, position: 'fixed', top: 0, bottom: 0, left: 0, background: 'white', borderRight: '1px solid #F1F1F4', zIndex: 30, flexDirection: 'column', overflowY: 'auto', display: 'none' }} className="lg:!flex">
         <SB />
       </aside>
 
@@ -181,7 +181,13 @@ export default function Dashboard() {
             <button onClick={() => setMobileOpen(true)} className="lg:hidden" style={{ width: 34, height: 34, borderRadius: 9, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
               <Menu style={{ width: 15, height: 15, color: '#6B7280' }} />
             </button>
-            <Link to="/" style={{ fontWeight: 900, fontSize: 15, color: '#1A1A2E', textDecoration: 'none', letterSpacing: -0.3 }}>stratify.in</Link>
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+              <div style={{ width: 34, height: 34, borderRadius: 10, background: 'linear-gradient(135deg,#5B5BD6,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(91,91,214,0.4)', position: 'relative', flexShrink: 0 }}>
+                <span style={{ color: 'white', fontWeight: 900, fontSize: 12, letterSpacing: -0.5 }}>SA</span>
+                <span style={{ position: 'absolute', top: -2, right: -2, width: 9, height: 9, borderRadius: '50%', background: '#30A46C', border: '2px solid white' }} />
+              </div>
+              <span style={{ fontWeight: 900, fontSize: 15, color: '#1A1A2E', letterSpacing: -0.4 }}>StratifyAI</span>
+            </Link>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <button style={{ width: 36, height: 36, borderRadius: 10, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative' }}>
