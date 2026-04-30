@@ -4,494 +4,519 @@ import { useAuth } from '@/lib/AuthContext'
 import { AGENTS } from '@/lib/site-data'
 import Onboarding from '@/components/Onboarding'
 import {
-  LayoutDashboard, Zap, Settings, LogOut, ChevronRight,
-  Lock, ArrowRight, Bell, TrendingUp, BarChart3, Users,
-  ShoppingCart, Star, HeadphonesIcon, LineChart,
-  Sparkles, AlertCircle, Clock, Menu, X
+  LayoutDashboard, Zap, Settings, LogOut, Lock,
+  ArrowRight, Bell, Users, ShoppingCart, Star,
+  HeadphonesIcon, LineChart, Sparkles, AlertCircle,
+  Clock, Menu, X, ChevronRight, TrendingUp, Search,
+  BarChart3, Play, CheckCircle
 } from 'lucide-react'
 
 const PLAN_AGENTS = {
   starter: ['Kai', 'Remy', 'Echo'],
-  growth:  ['Kai', 'Atlas', 'Nova', 'Remy', 'Echo', 'Sage', 'Pulse'],
-  scale:   ['Kai', 'Atlas', 'Nova', 'Remy', 'Echo', 'Sage', 'Pulse'],
+  growth: ['Kai', 'Atlas', 'Nova', 'Remy', 'Echo', 'Sage', 'Pulse'],
+  scale: ['Kai', 'Atlas', 'Nova', 'Remy', 'Echo', 'Sage', 'Pulse'],
 }
 
-const AGENT_CONFIG = {
-  Kai:   { color: '#2563EB', light: '#EFF6FF', border: '#BFDBFE', icon: Sparkles,       shadow: '0 8px 32px rgba(37,99,235,0.15)' },
-  Atlas: { color: '#7C3AED', light: '#F5F3FF', border: '#DDD6FE', icon: Users,          shadow: '0 8px 32px rgba(124,58,237,0.15)' },
-  Nova:  { color: '#DB2777', light: '#FDF2F8', border: '#FBCFE8', icon: HeadphonesIcon, shadow: '0 8px 32px rgba(219,39,119,0.15)' },
-  Remy:  { color: '#059669', light: '#ECFDF5', border: '#A7F3D0', icon: ShoppingCart,   shadow: '0 8px 32px rgba(5,150,105,0.15)'  },
-  Echo:  { color: '#D97706', light: '#FFFBEB', border: '#FDE68A', icon: Star,           shadow: '0 8px 32px rgba(217,119,6,0.15)'  },
-  Sage:  { color: '#0891B2', light: '#ECFEFF', border: '#A5F3FC', icon: HeadphonesIcon, shadow: '0 8px 32px rgba(8,145,178,0.15)'  },
-  Pulse: { color: '#EA580C', light: '#FFF7ED', border: '#FED7AA', icon: LineChart,      shadow: '0 8px 32px rgba(234,88,12,0.15)'  },
+const AGENT_CFG = {
+  Kai:   { color: '#5B5BD6', bg: '#EEEEFF', icon: Sparkles,       tag: 'Ad Production',    grad: 'linear-gradient(135deg,#5B5BD6,#7C3AED)' },
+  Atlas: { color: '#E54D2E', bg: '#FFF0EE', icon: Users,          tag: 'Lead Gen',          grad: 'linear-gradient(135deg,#E54D2E,#FF6B6B)' },
+  Nova:  { color: '#0091FF', bg: '#E8F4FF', icon: HeadphonesIcon, tag: 'Conversational AI', grad: 'linear-gradient(135deg,#0091FF,#00C6FF)' },
+  Remy:  { color: '#30A46C', bg: '#E9F9EE', icon: ShoppingCart,   tag: 'Cart Recovery',     grad: 'linear-gradient(135deg,#30A46C,#3DD68C)' },
+  Echo:  { color: '#F76808', bg: '#FFF3E8', icon: Star,           tag: 'Reviews & UGC',     grad: 'linear-gradient(135deg,#F76808,#FFB347)' },
+  Sage:  { color: '#0EA5E9', bg: '#E0F5FF', icon: HeadphonesIcon, tag: 'Support',           grad: 'linear-gradient(135deg,#0EA5E9,#38BDF8)' },
+  Pulse: { color: '#8B5CF6', bg: '#F3EEFF', icon: LineChart,      tag: 'Analytics',         grad: 'linear-gradient(135deg,#8B5CF6,#C084FC)' },
 }
 
 const MOCK_STATS = {
-  Kai:   { label: 'Ads created',       value: '12',  unit: 'this month', trend: '+4 this week',     pct: 72 },
-  Atlas: { label: 'Leads found',       value: '847', unit: 'this month', trend: '+124 this week',    pct: 85 },
-  Nova:  { label: 'DMs handled',       value: '234', unit: 'this month', trend: '+38 this week',     pct: 61 },
-  Remy:  { label: 'Carts recovered',   value: '18',  unit: 'this month', trend: '$4,320 revenue',    pct: 45 },
-  Echo:  { label: 'Reviews collected', value: '64',  unit: 'this month', trend: '+12 this week',     pct: 53 },
-  Sage:  { label: 'Tickets resolved',  value: '312', unit: 'this month', trend: '80% auto-resolved', pct: 80 },
-  Pulse: { label: 'Reports sent',      value: '4',   unit: 'this month', trend: 'Next: Monday 9AM',  pct: 40 },
-}
-
-function getPersonalizedMessage(answers) {
-  if (!answers) return { headline: "Here's what your agents are doing today", sub: null }
-  const map = {
-    leads:     { headline: "Let's fill your pipeline.",           sub: "Atlas and Nova are your best bets." },
-    ads:       { headline: "Let's 10x your ad output.",           sub: "Kai is ready to create Meta ads on autopilot." },
-    retention: { headline: "Let's stop the leaks.",               sub: "Remy recovers 22% of abandoned carts within 30 minutes." },
-    support:   { headline: "Let's free up your team.",            sub: "Sage resolves 80% of tickets without a human." },
-    data:      { headline: "Let's get you clarity.",              sub: "Pulse sends you a Monday morning report every week." },
-    all:       { headline: "Let's fix everything, one by one.",   sub: "We'll start with your top priority and scale from there." },
-  }
-  return map[answers.biggest_challenge] || { headline: "Here's what your agents are doing today", sub: null }
-}
-
-function AgentCard({ agent, isUnlocked, status, isPriority }) {
-  const cfg = AGENT_CONFIG[agent.name]
-  const stats = MOCK_STATS[agent.name]
-  const Icon = cfg?.icon || Zap
-
-  if (!isUnlocked) {
-    return (
-      <div className="rounded-2xl bg-white border border-gray-100 p-5 overflow-hidden"
-        style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-        <div className="flex items-center gap-3 mb-4 opacity-40">
-          <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-            <Lock className="w-4 h-4 text-gray-400" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-sm text-gray-500">{agent.name}</h3>
-            <p className="text-xs font-mono uppercase tracking-wider text-gray-400">{agent.role}</p>
-          </div>
-        </div>
-        <div className="h-px bg-gray-100 mb-4" />
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-gray-400">Upgrade to unlock</p>
-          <Link to="/pricing" className="text-xs font-semibold flex items-center gap-1 text-blue-600">
-            Upgrade <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className={`rounded-2xl bg-white border overflow-hidden group transition-all duration-300 hover:-translate-y-1 ${isPriority ? 'ring-2' : ''}`}
-      style={{
-        borderColor: cfg.border,
-        boxShadow: isPriority ? cfg.shadow : '0 2px 12px rgba(0,0,0,0.06)',
-        ...(isPriority ? { ringColor: cfg.color + '40' } : {}),
-      }}>
-      {isPriority && (
-        <div className="h-1" style={{ background: `linear-gradient(90deg, ${cfg.color}, ${cfg.color}88)` }} />
-      )}
-      <div className="p-5">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
-              style={{ backgroundColor: cfg.color }}>
-              <Icon className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-sm text-gray-900">{agent.name}</h3>
-                {isPriority && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold"
-                    style={{ background: cfg.light, color: cfg.color }}>
-                    Recommended
-                  </span>
-                )}
-              </div>
-              <p className="text-xs font-mono uppercase tracking-wider text-gray-400">{agent.role}</p>
-            </div>
-          </div>
-
-          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
-            status === 'active'  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-            status === 'pending' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                                   'bg-amber-50 text-amber-700 border border-amber-200'
-          }`}>
-            {status === 'active'  && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
-            {status === 'pending' && <Clock className="w-3 h-3" />}
-            {status === 'setup'   && <AlertCircle className="w-3 h-3" />}
-            {status === 'active' ? 'Active' : status === 'pending' ? 'Activating' : 'Setup required'}
-          </div>
-        </div>
-
-        {status === 'active' && stats && (
-          <div className="mb-4">
-            <div className="rounded-xl p-3 mb-3" style={{ background: cfg.light }}>
-              <p className="text-xs text-gray-500 mb-1">{stats.label}</p>
-              <p className="text-2xl font-bold tracking-tight" style={{ color: cfg.color }}>{stats.value}</p>
-              <p className="text-xs mt-0.5 text-gray-500">{stats.unit} · <span style={{ color: cfg.color }}>{stats.trend}</span></p>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
-                <div className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${stats.pct}%`, backgroundColor: cfg.color }} />
-              </div>
-              <span className="text-xs text-gray-400">{stats.pct}%</span>
-            </div>
-          </div>
-        )}
-
-        {status === 'setup' && (
-          <div className="rounded-xl p-3 mb-4 bg-amber-50 border border-amber-200">
-            <p className="text-xs text-amber-700">Complete setup to activate this agent</p>
-          </div>
-        )}
-
-        <div className="h-px bg-gray-100 mb-3" />
-        <Link to={`/dashboard/agent/${agent.name.toLowerCase()}`}
-          className="flex items-center justify-between text-sm font-semibold transition-colors"
-          style={{ color: cfg.color }}>
-          {status === 'setup' ? 'Complete setup' : 'View details'}
-          <ChevronRight className="w-4 h-4" />
-        </Link>
-      </div>
-    </div>
-  )
+  Kai:   { value: '12',  label: 'Ads created',       trend: '+4',  pct: 72 },
+  Atlas: { value: '847', label: 'Leads found',        trend: '+124', pct: 85 },
+  Nova:  { value: '234', label: 'DMs handled',        trend: '+38', pct: 61 },
+  Remy:  { value: '18',  label: 'Carts recovered',    trend: '+5',  pct: 45 },
+  Echo:  { value: '64',  label: 'Reviews collected',  trend: '+12', pct: 53 },
+  Sage:  { value: '312', label: 'Tickets resolved',   trend: '+44', pct: 80 },
+  Pulse: { value: '4',   label: 'Reports sent',       trend: '0',   pct: 40 },
 }
 
 export default function Dashboard() {
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('overview')
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   const meta = user?.user_metadata || {}
   const onboardingDone = meta.onboarding_complete || false
-  const [localOnboardingDone, setLocalOnboardingDone] = useState(onboardingDone)
+  const [localDone, setLocalDone] = useState(onboardingDone)
   const [localAnswers, setLocalAnswers] = useState(meta.onboarding_answers || null)
-  const [localRecommended, setLocalRecommended] = useState(meta.recommended_agents || ['Kai', 'Remy', 'Echo', 'Atlas', 'Nova', 'Sage', 'Pulse'])
+  const [localRec, setLocalRec] = useState(meta.recommended_agents || ['Kai', 'Remy', 'Echo', 'Atlas', 'Nova', 'Sage', 'Pulse'])
 
-  const handleOnboardingComplete = ({ answers, recommendations }) => {
-    setLocalAnswers(answers)
-    setLocalRecommended(recommendations)
-    setLocalOnboardingDone(true)
-  }
-
-  if (!localOnboardingDone) return <Onboarding onComplete={handleOnboardingComplete} />
+  if (!localDone) return <Onboarding onComplete={({ answers, recommendations }) => {
+    setLocalAnswers(answers); setLocalRec(recommendations); setLocalDone(true)
+  }} />
 
   const currentPlan = 'starter'
-  const unlockedAgents = PLAN_AGENTS[currentPlan]
-  const agentStatuses = { Kai: 'active', Remy: 'setup', Echo: 'setup', Atlas: null, Nova: null, Sage: null, Pulse: null }
+  const unlocked = PLAN_AGENTS[currentPlan]
+  const statuses = { Kai: 'active', Remy: 'setup', Echo: 'setup', Atlas: null, Nova: null, Sage: null, Pulse: null }
 
   const handleSignOut = async () => { await signOut(); navigate('/') }
 
-  const userName = meta.full_name || user?.email?.split('@')[0] || 'there'
-  const companyName = meta.company_name || 'My Company'
-  const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+  const fullName = meta.full_name || ''
+  const firstName = fullName.split(' ')[0] || user?.email?.split('@')[0] || 'there'
+  const initials = (fullName || firstName).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
-  const personalMsg = getPersonalizedMessage(localAnswers)
 
-  const sortedAgents = [...AGENTS].sort((a, b) => {
-    const ai = localRecommended.indexOf(a.name)
-    const bi = localRecommended.indexOf(b.name)
+  const sorted = [...AGENTS].sort((a, b) => {
+    const ai = localRec.indexOf(a.name), bi = localRec.indexOf(b.name)
     return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi)
   })
 
   const navItems = [
-    { id: 'overview', label: 'Overview',  icon: LayoutDashboard },
-    { id: 'agents',   label: 'My Agents', icon: Zap },
+    { id: 'overview', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'agents',   label: 'Agents',    icon: Zap },
     { id: 'settings', label: 'Settings',  icon: Settings },
   ]
 
-  const SidebarContent = () => (
-    <>
-      {/* Logo / Company name */}
-      <div className="p-6 border-b border-gray-100">
-        <Link to="/" onClick={() => setMobileSidebarOpen(false)}
-          className="flex items-center gap-2.5 group">
-          <div className="relative w-8 h-8 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all"
-            style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}>
-            <span className="text-white font-bold text-[13px] tracking-tighter">SA</span>
-            <span className="absolute -right-0.5 -top-0.5 w-2 h-2 rounded-full bg-emerald-400 border-2 border-white" />
+  const SB = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      {/* Logo */}
+      <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid #F1F1F4' }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg,#5B5BD6,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(91,91,214,0.4)', position: 'relative' }}>
+            <span style={{ color: 'white', fontWeight: 900, fontSize: 13, letterSpacing: -0.5 }}>SA</span>
+            <span style={{ position: 'absolute', top: -2, right: -2, width: 10, height: 10, borderRadius: '50%', background: '#30A46C', border: '2px solid white' }} />
           </div>
-          <span className="font-bold text-[15px] tracking-tight text-gray-900">{companyName}</span>
+          <span style={{ fontWeight: 900, fontSize: 16, color: '#1A1A2E', letterSpacing: -0.4 }}>StratifyAI</span>
         </Link>
       </div>
 
+      {/* Search */}
+      <div style={{ padding: '14px 16px 4px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#F7F7FA', borderRadius: 10, padding: '9px 12px' }}>
+          <Search style={{ width: 14, height: 14, color: '#9CA3AF', flexShrink: 0 }} />
+          <span style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>Search...</span>
+        </div>
+      </div>
+
       {/* Nav */}
-      <nav className="flex-1 p-4 flex flex-col gap-1">
+      <nav style={{ flex: 1, padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#C4C4CC', padding: '8px 8px 4px' }}>Menu</div>
         {navItems.map(({ id, label, icon: Icon }) => (
-          <button key={id} onClick={() => { setActiveTab(id); setMobileSidebarOpen(false) }}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all w-full text-left ${
-              activeTab === id
-                ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-            }`}>
-            <Icon className="w-4 h-4" />
-            {label}
+          <button key={id} onClick={() => { setActiveTab(id); setMobileOpen(false) }}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 10, padding: '11px 12px',
+              borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
+              background: activeTab === id ? 'linear-gradient(135deg,#5B5BD6,#7C3AED)' : 'transparent',
+              color: activeTab === id ? 'white' : '#6B7280',
+              boxShadow: activeTab === id ? '0 4px 14px rgba(91,91,214,0.35)' : 'none',
+              transition: 'all 0.15s', width: '100%', textAlign: 'left',
+            }}>
+            <Icon style={{ width: 15, height: 15 }} />{label}
           </button>
         ))}
+
+        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#C4C4CC', padding: '16px 8px 4px' }}>Agents</div>
+        {['Kai', 'Remy', 'Echo'].map(name => {
+          const cfg = AGENT_CFG[name]
+          const Icon = cfg.icon
+          return (
+            <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', borderRadius: 10, cursor: 'pointer' }}>
+              <div style={{ width: 26, height: 26, borderRadius: 7, background: cfg.grad, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Icon style={{ width: 12, height: 12, color: 'white' }} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#374151' }}>{name}</div>
+                <div style={{ fontSize: 10, color: '#9CA3AF' }}>{cfg.tag}</div>
+              </div>
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: statuses[name] === 'active' ? '#30A46C' : '#F59E0B', flexShrink: 0 }} />
+            </div>
+          )
+        })}
       </nav>
 
-      {/* Plan badge + user + signout */}
-      <div className="p-4 border-t border-gray-100">
-        {/* Plan */}
-        <div className="rounded-xl p-4 mb-4 border border-blue-100"
-          style={{ background: 'linear-gradient(135deg, #EFF6FF, #F5F3FF)' }}>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-blue-400">{currentPlan} plan</span>
-            <Link to="/pricing" className="text-xs font-semibold text-blue-600 hover:text-blue-700">Upgrade</Link>
-          </div>
-          <p className="text-sm font-bold text-gray-900 mb-2">{unlockedAgents.length} of 7 agents</p>
-          <div className="h-1.5 rounded-full bg-blue-100 overflow-hidden">
-            <div className="h-full rounded-full"
-              style={{ width: `${(unlockedAgents.length / 7) * 100}%`, background: 'linear-gradient(90deg, #2563EB, #7C3AED)' }} />
+      {/* Bottom */}
+      <div style={{ padding: '12px 14px', borderTop: '1px solid #F1F1F4' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+          <div style={{ width: 34, height: 34, borderRadius: 10, background: 'linear-gradient(135deg,#5B5BD6,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 900, color: 'white', flexShrink: 0, boxShadow: '0 4px 10px rgba(91,91,214,0.3)' }}>{initials}</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 13, fontWeight: 800, color: '#1A1A2E', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{fullName || firstName}</div>
+            <div style={{ fontSize: 10, color: '#9CA3AF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</div>
           </div>
         </div>
-
-        {/* User */}
-        <div className="flex items-center gap-3 px-1 mb-3">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-md"
-            style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}>
-            {initials}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900 truncate">{userName}</p>
-            <p className="text-xs text-gray-400 truncate">{user?.email}</p>
-          </div>
-        </div>
-
-        {/* Sign out — below Contact style */}
-        <button onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors">
-          <LogOut className="w-4 h-4" />
-          Sign out
+        <button onClick={handleSignOut} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', borderRadius: 10, background: '#FFF0EE', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#E54D2E' }}>
+          <LogOut style={{ width: 13, height: 13 }} /> Sign out
         </button>
       </div>
-    </>
+    </div>
   )
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#F5F5F7', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#F7F7FA', fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-64 flex-col fixed h-full border-r border-gray-200/80 bg-white/80"
-        style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
-        <SidebarContent />
+      <aside style={{ width: 240, flexShrink: 0, position: 'fixed', top: 0, bottom: 0, left: 0, background: 'white', borderRight: '1px solid #F1F1F4', zIndex: 30, display: 'flex', flexDirection: 'column', overflowY: 'auto' }} className="hidden lg:flex">
+        <SB />
       </aside>
 
       {/* Mobile sidebar */}
-      {mobileSidebarOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setMobileSidebarOpen(false)} />
-          <aside className="absolute left-0 top-0 bottom-0 w-72 flex flex-col border-r border-gray-200 bg-white shadow-2xl">
-            <div className="flex items-center justify-between p-4 border-b border-gray-100">
-              <span className="font-bold text-gray-900">Menu</span>
-              <button onClick={() => setMobileSidebarOpen(false)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100">
-                <X className="w-4 h-4" />
+      {mobileOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 50 }} className="lg:hidden">
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)' }} onClick={() => setMobileOpen(false)} />
+          <aside style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 260, background: 'white', overflowY: 'auto', boxShadow: '4px 0 30px rgba(0,0,0,0.1)' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '14px 14px 0' }}>
+              <button onClick={() => setMobileOpen(false)} style={{ width: 30, height: 30, borderRadius: 8, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                <X style={{ width: 14, height: 14, color: '#6B7280' }} />
               </button>
             </div>
-            <SidebarContent />
+            <SB />
           </aside>
         </div>
       )}
 
       {/* Main */}
-      <main className="lg:ml-64 flex-1 flex flex-col min-h-screen">
-        {/* Topbar */}
-        <header className="sticky top-0 z-40 flex items-center justify-between px-6 h-16 border-b border-gray-200/60 bg-white/70"
-          style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
-          <div className="flex items-center gap-3">
-            <button onClick={() => setMobileSidebarOpen(true)}
-              className="lg:hidden w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-gray-100 transition-all">
-              <Menu className="w-5 h-5" />
-            </button>
-            {/* Company name as clickable link instead of "overview" */}
-            <Link to="/" className="font-bold text-gray-900 tracking-tight hover:text-blue-600 transition-colors">
-              {companyName}
-            </Link>
-          </div>
+      <main style={{ marginLeft: 240, flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }} className="lg:ml-[240px] ml-0">
 
-          <div className="flex items-center gap-2">
-            <button className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-gray-100 border border-gray-200 transition-all">
-              <Bell className="w-4 h-4" />
+        {/* Topbar */}
+        <header style={{ position: 'sticky', top: 0, zIndex: 40, height: 60, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderBottom: '1px solid #F1F1F4', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <button onClick={() => setMobileOpen(true)} className="lg:hidden" style={{ width: 34, height: 34, borderRadius: 9, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+              <Menu style={{ width: 15, height: 15, color: '#6B7280' }} />
             </button>
+            <Link to="/" style={{ fontWeight: 900, fontSize: 16, color: '#1A1A2E', textDecoration: 'none', letterSpacing: -0.4 }}>StratifyAI</Link>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button style={{ width: 36, height: 36, borderRadius: 10, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative' }}>
+              <Bell style={{ width: 15, height: 15, color: '#6B7280' }} />
+              <span style={{ position: 'absolute', top: 8, right: 8, width: 7, height: 7, borderRadius: '50%', background: '#E54D2E', border: '1.5px solid white' }} />
+            </button>
+            <div style={{ width: 34, height: 34, borderRadius: 10, background: 'linear-gradient(135deg,#5B5BD6,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', boxShadow: '0 3px 10px rgba(91,91,214,0.3)' }}>{initials}</div>
           </div>
         </header>
 
-        {/* Content */}
-        <div className="flex-1 p-6 lg:p-8">
+        <div style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
 
           {/* OVERVIEW */}
           {activeTab === 'overview' && (
             <>
-              {/* Welcome */}
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 tracking-tight">
-                  {greeting}, {userName.split(' ')[0]} 👋
-                </h2>
-                <p className="text-gray-500 mt-1">{personalMsg.headline}</p>
-                {personalMsg.sub && (
-                  <div className="mt-3 inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-blue-200 bg-blue-50">
-                    <Sparkles className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <p className="text-sm text-blue-700 font-medium">{personalMsg.sub}</p>
+              {/* Hero Banner — Purple gradient like Uinel */}
+              <div style={{ borderRadius: 20, background: 'linear-gradient(135deg,#5B5BD6 0%,#7C3AED 50%,#9333EA 100%)', padding: '28px 32px', marginBottom: 22, position: 'relative', overflow: 'hidden', minHeight: 140 }}>
+                {/* Decorative shapes */}
+                <div style={{ position: 'absolute', top: -40, right: 80, width: 160, height: 160, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' }} />
+                <div style={{ position: 'absolute', top: 20, right: 40, width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }} />
+                <div style={{ position: 'absolute', bottom: -30, right: 160, width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }} />
+                {/* 3D blob shape */}
+                <div style={{ position: 'absolute', right: 32, top: '50%', transform: 'translateY(-50%)', width: 140, height: 100, background: 'linear-gradient(135deg,rgba(255,200,100,0.9),rgba(255,120,180,0.9))', borderRadius: '60% 40% 50% 50% / 50% 60% 40% 50%', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', filter: 'blur(0px)' }} />
+
+                <div style={{ position: 'relative', zIndex: 2, maxWidth: 380 }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.18)', borderRadius: 99, padding: '4px 12px', marginBottom: 12 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80', display: 'inline-block' }} />
+                    <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 700 }}>All agents operational</span>
                   </div>
-                )}
+                  <h2 style={{ color: 'white', fontSize: 22, fontWeight: 900, letterSpacing: -0.6, lineHeight: 1.25, marginBottom: 8 }}>
+                    {greeting}, {firstName}! 👋<br />
+                    <span style={{ fontWeight: 500, fontSize: 14, opacity: 0.8 }}>Your AI team is working 24/7 for you.</span>
+                  </h2>
+                  <button style={{ background: 'white', color: '#5B5BD6', border: 'none', borderRadius: 10, padding: '10px 20px', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 16px rgba(0,0,0,0.15)' }}>
+                    <Play style={{ width: 13, height: 13 }} /> Explore agents
+                  </button>
+                </div>
               </div>
 
-              {/* Stats — Apple-style frosted cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+              {/* Stats row */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 22 }}>
                 {[
-                  { icon: TrendingUp, label: 'Active agents',   value: '1',       sub: '2 pending setup', color: '#2563EB', light: '#EFF6FF' },
-                  { icon: Zap,        label: 'Tasks completed', value: '12',      sub: 'This month',      color: '#059669', light: '#ECFDF5' },
-                  { icon: BarChart3,  label: 'Current plan',    value: 'Starter', isLink: true,           color: '#7C3AED', light: '#F5F3FF' },
-                ].map(({ icon: Icon, label, value, sub, color, light, isLink }) => (
-                  <div key={label} className="rounded-2xl bg-white p-6 border border-gray-100 relative overflow-hidden group hover:-translate-y-0.5 transition-all duration-300"
-                    style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-                    {/* 3D shine effect */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
-                      style={{ background: `radial-gradient(circle at 30% 20%, ${color}08, transparent 60%)` }} />
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: light }}>
-                        <Icon className="w-4 h-4" style={{ color }} />
-                      </div>
-                      <span className="text-sm font-medium text-gray-500">{label}</span>
+                  { label: 'Active agents',  value: '1',  sub: 'of 3 unlocked',     color: '#5B5BD6', bg: '#EEEEFF', icon: Zap },
+                  { label: 'Tasks done',     value: '12', sub: 'this month',         color: '#30A46C', bg: '#E9F9EE', icon: CheckCircle },
+                  { label: 'Ads created',    value: '12', sub: 'by Kai this month',  color: '#F76808', bg: '#FFF3E8', icon: TrendingUp },
+                  { label: 'Current plan',   value: 'Starter', sub: '3 of 7 agents', color: '#7C3AED', bg: '#F3EEFF', icon: BarChart3, isLink: true },
+                ].map(({ label, value, sub, color, bg, icon: Icon, isLink }) => (
+                  <div key={label} style={{ background: 'white', borderRadius: 16, padding: '18px 18px', border: '1px solid #F1F1F4', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', top: -16, right: -16, width: 60, height: 60, borderRadius: '50%', background: bg, opacity: 0.7 }} />
+                    <div style={{ width: 34, height: 34, borderRadius: 10, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+                      <Icon style={{ width: 16, height: 16, color }} />
                     </div>
-                    <p className="text-4xl font-bold text-gray-900 tracking-tight capitalize">{value}</p>
-                    {sub && <p className="text-sm text-gray-400 mt-1">{sub}</p>}
-                    {isLink && (
-                      <Link to="/pricing" className="text-sm font-semibold mt-1 inline-block" style={{ color }}>Upgrade →</Link>
-                    )}
+                    <div style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', marginBottom: 4 }}>{label}</div>
+                    <div style={{ fontSize: 26, fontWeight: 900, color: '#1A1A2E', letterSpacing: -0.8, lineHeight: 1, marginBottom: 3 }}>{value}</div>
+                    {isLink
+                      ? <Link to="/pricing" style={{ fontSize: 11, fontWeight: 700, color, textDecoration: 'none' }}>Upgrade ↗</Link>
+                      : <div style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 500 }}>{sub}</div>
+                    }
                   </div>
                 ))}
               </div>
 
-              {/* Priority agent banner */}
-              {localRecommended[0] && AGENT_CONFIG[localRecommended[0]] && (
-                <div className="rounded-2xl bg-white border p-6 mb-8 flex items-center justify-between gap-4"
-                  style={{
-                    borderColor: AGENT_CONFIG[localRecommended[0]].border,
-                    boxShadow: AGENT_CONFIG[localRecommended[0]].shadow,
-                    background: `linear-gradient(135deg, ${AGENT_CONFIG[localRecommended[0]].light}, white)`,
-                  }}>
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0 shadow-lg"
-                      style={{ background: AGENT_CONFIG[localRecommended[0]].color }}>
-                      {localRecommended[0][0]}
+              {/* Middle row: Agent spotlight + Quick actions */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 16, marginBottom: 22 }}>
+
+                {/* Priority agent card */}
+                {(() => {
+                  const top = localRec[0]
+                  const cfg = AGENT_CFG[top]
+                  const Icon = cfg?.icon || Zap
+                  return (
+                    <div style={{ borderRadius: 18, overflow: 'hidden', border: '1px solid #F1F1F4', boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
+                      <div style={{ background: cfg?.grad, padding: '20px 24px 16px', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.12)' }} />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative', zIndex: 2 }}>
+                          <div style={{ width: 48, height: 48, borderRadius: 14, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.3)' }}>
+                            <Icon style={{ width: 22, height: 22, color: 'white' }} />
+                          </div>
+                          <div>
+                            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>✦ Your #1 priority</div>
+                            <div style={{ fontSize: 18, fontWeight: 900, color: 'white', letterSpacing: -0.5 }}>{top} is ready to activate</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ background: 'white', padding: '18px 24px' }}>
+                        <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 16, lineHeight: 1.6 }}>{AGENTS.find(a => a.name === top)?.desc}</p>
+                        <div style={{ display: 'flex', gap: 10 }}>
+                          <Link to={`/dashboard/agent/${top.toLowerCase()}`}
+                            style={{ flex: 1, background: cfg?.grad, color: 'white', border: 'none', borderRadius: 12, padding: '11px 18px', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, textDecoration: 'none', boxShadow: `0 6px 20px ${cfg?.color}40` }}>
+                            Set up {top} <ArrowRight style={{ width: 14, height: 14 }} />
+                          </Link>
+                          <button style={{ padding: '11px 18px', borderRadius: 12, border: '1.5px solid #E5E7EB', background: 'white', fontSize: 13, fontWeight: 700, color: '#6B7280', cursor: 'pointer' }}>
+                            Learn more
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })()}
+
+                {/* Quick setup checklist */}
+                <div style={{ background: 'white', borderRadius: 18, border: '1px solid #F1F1F4', padding: '20px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18 }}>
+                    <div style={{ width: 30, height: 30, borderRadius: 9, background: '#EEEEFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Sparkles style={{ width: 14, height: 14, color: '#5B5BD6' }} />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-0.5">Start here — recommended for you</p>
-                      <p className="text-gray-900 font-bold text-lg">{localRecommended[0]} is your #1 priority agent</p>
-                      <p className="text-sm text-gray-500 mt-0.5">
-                        {AGENTS.find(a => a.name === localRecommended[0])?.desc}
-                      </p>
+                      <div style={{ fontWeight: 800, fontSize: 14, color: '#1A1A2E' }}>Get started</div>
+                      <div style={{ fontSize: 11, color: '#9CA3AF' }}>1 of 4 complete</div>
                     </div>
                   </div>
-                  <Link to={`/dashboard/agent/${localRecommended[0].toLowerCase()}`}
-                    className="flex-shrink-0 flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold text-white transition-all hover:shadow-lg hover:-translate-y-0.5"
-                    style={{ background: AGENT_CONFIG[localRecommended[0]].color }}>
-                    Set up <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  {/* Progress */}
+                  <div style={{ height: 4, background: '#F1F1F4', borderRadius: 99, marginBottom: 18, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: '25%', background: 'linear-gradient(90deg,#5B5BD6,#7C3AED)', borderRadius: 99 }} />
+                  </div>
+                  {[
+                    { done: true,  text: 'Create account',       sub: "You're in!" },
+                    { done: false, text: 'Set up Kai',           sub: 'Connect Meta Ads' },
+                    { done: false, text: 'Set up Remy',          sub: 'Connect Shopify' },
+                    { done: false, text: 'Upgrade to Growth',    sub: 'Unlock all 7 agents' },
+                  ].map((s, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: i < 3 ? 14 : 0 }}>
+                      <div style={{ width: 20, height: 20, borderRadius: '50%', background: s.done ? 'linear-gradient(135deg,#30A46C,#3DD68C)' : '#F1F1F4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                        {s.done && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 12, fontWeight: s.done ? 600 : 700, color: s.done ? '#9CA3AF' : '#1A1A2E', textDecoration: s.done ? 'line-through' : 'none' }}>{s.text}</div>
+                        <div style={{ fontSize: 11, color: '#9CA3AF' }}>{s.sub}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
 
-              {/* Agents */}
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-xl font-bold text-gray-900">Your agents</h3>
-                <button onClick={() => setActiveTab('agents')}
-                  className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
-                  View all <ArrowRight className="w-3.5 h-3.5" />
+              {/* Agents grid */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                <h3 style={{ fontSize: 17, fontWeight: 900, color: '#1A1A2E', letterSpacing: -0.3 }}>Your agents</h3>
+                <button onClick={() => setActiveTab('agents')} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 700, color: '#5B5BD6', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  View all <ChevronRight style={{ width: 14, height: 14 }} />
                 </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {sortedAgents.map((agent, i) => (
-                  <AgentCard key={agent.name} agent={agent}
-                    isUnlocked={unlockedAgents.includes(agent.name)}
-                    status={agentStatuses[agent.name]}
-                    isPriority={i === 0 && unlockedAgents.includes(agent.name)} />
-                ))}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+                {sorted.map((agent, i) => {
+                  const cfg = AGENT_CFG[agent.name]
+                  const stats = MOCK_STATS[agent.name]
+                  const Icon = cfg?.icon || Zap
+                  const isUnlocked = unlocked.includes(agent.name)
+                  const status = statuses[agent.name]
+
+                  if (!isUnlocked) return (
+                    <div key={agent.name} style={{ background: 'white', borderRadius: 16, border: '1px solid #F1F1F4', padding: '16px', opacity: 0.55 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 10, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Lock style={{ width: 14, height: 14, color: '#9CA3AF' }} />
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: '#9CA3AF' }}>{agent.name}</div>
+                          <div style={{ fontSize: 10, color: '#C4C4CC', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 1 }}>{cfg?.tag}</div>
+                        </div>
+                      </div>
+                      <div style={{ height: 1, background: '#F3F4F6', marginBottom: 12 }} />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: 11, color: '#C4C4CC' }}>Upgrade to unlock</span>
+                        <Link to="/pricing" style={{ fontSize: 11, fontWeight: 800, color: '#5B5BD6', textDecoration: 'none' }}>Upgrade →</Link>
+                      </div>
+                    </div>
+                  )
+
+                  return (
+                    <div key={agent.name} style={{ background: 'white', borderRadius: 16, border: `1px solid ${cfg.bg}`, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', transition: 'transform 0.2s, box-shadow 0.2s' }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 12px 32px ${cfg.color}25` }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.05)' }}>
+                      <div style={{ height: 3, background: cfg.grad }} />
+                      <div style={{ padding: '14px 16px' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div style={{ width: 38, height: 38, borderRadius: 12, background: cfg.grad, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 6px 16px ${cfg.color}40` }}>
+                              <Icon style={{ width: 17, height: 17, color: 'white' }} />
+                            </div>
+                            <div>
+                              <div style={{ fontSize: 13, fontWeight: 900, color: '#1A1A2E', display: 'flex', alignItems: 'center', gap: 5 }}>
+                                {agent.name}
+                                {i === 0 && <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 99, background: cfg.bg, color: cfg.color, fontWeight: 800 }}>TOP</span>}
+                              </div>
+                              <div style={{ fontSize: 10, color: '#9CA3AF', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 0.8, marginTop: 1 }}>{cfg.tag}</div>
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 9px', borderRadius: 99, fontSize: 10, fontWeight: 700,
+                            background: status === 'active' ? '#E9F9EE' : status === 'setup' ? '#FFF3E8' : '#F3F4F6',
+                            color: status === 'active' ? '#30A46C' : status === 'setup' ? '#F76808' : '#9CA3AF',
+                            border: `1px solid ${status === 'active' ? '#A7F3D0' : status === 'setup' ? '#FED7AA' : '#E5E7EB'}` }}>
+                            {status === 'active' && <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#30A46C', display: 'inline-block', animation: 'pulse 2s infinite' }} />}
+                            {status === 'active' ? 'Active' : status === 'setup' ? 'Setup' : 'Pending'}
+                          </div>
+                        </div>
+
+                        {status === 'active' && stats && (
+                          <div style={{ background: cfg.bg, borderRadius: 12, padding: '12px', marginBottom: 10 }}>
+                            <div style={{ fontSize: 10, color: '#9CA3AF', fontWeight: 600, marginBottom: 3 }}>{stats.label}</div>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                              <span style={{ fontSize: 28, fontWeight: 900, color: cfg.color, letterSpacing: -1 }}>{stats.value}</span>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: cfg.color, background: `${cfg.color}18`, padding: '2px 7px', borderRadius: 99 }}>+{stats.trend}</span>
+                            </div>
+                            <div style={{ marginTop: 8, height: 4, background: `${cfg.color}20`, borderRadius: 99, overflow: 'hidden' }}>
+                              <div style={{ height: '100%', width: `${stats.pct}%`, background: cfg.grad, borderRadius: 99, transition: 'width 1s ease' }} />
+                            </div>
+                          </div>
+                        )}
+
+                        {status === 'setup' && (
+                          <div style={{ background: '#FFF3E8', border: '1px solid #FED7AA', borderRadius: 12, padding: '10px 12px', marginBottom: 10 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                              <AlertCircle style={{ width: 13, height: 13, color: '#F76808', flexShrink: 0 }} />
+                              <span style={{ fontSize: 12, color: '#F76808', fontWeight: 600 }}>Setup required to activate</span>
+                            </div>
+                          </div>
+                        )}
+
+                        <div style={{ height: 1, background: '#F3F4F6', margin: '10px 0' }} />
+                        <Link to={`/dashboard/agent/${agent.name.toLowerCase()}`}
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, fontWeight: 800, color: cfg.color, textDecoration: 'none' }}>
+                          {status === 'setup' ? 'Complete setup' : 'View details'}
+                          <ChevronRight style={{ width: 14, height: 14 }} />
+                        </Link>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </>
           )}
 
-          {/* AGENTS */}
+          {/* AGENTS TAB */}
           {activeTab === 'agents' && (
             <>
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 tracking-tight">My Agents</h2>
-                <p className="text-gray-500 mt-1">Sorted by your goals · {unlockedAgents.length} active · {7 - unlockedAgents.length} locked</p>
+              <div style={{ marginBottom: 22 }}>
+                <h1 style={{ fontSize: 26, fontWeight: 900, color: '#1A1A2E', letterSpacing: -0.7, marginBottom: 4 }}>My Agents</h1>
+                <p style={{ fontSize: 13, color: '#9CA3AF', fontWeight: 500 }}>Sorted by your goals · {unlocked.length} active · {7 - unlocked.length} locked</p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {sortedAgents.map((agent, i) => (
-                  <AgentCard key={agent.name} agent={agent}
-                    isUnlocked={unlockedAgents.includes(agent.name)}
-                    status={agentStatuses[agent.name]}
-                    isPriority={i === 0 && unlockedAgents.includes(agent.name)} />
-                ))}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+                {sorted.map((agent) => {
+                  const cfg = AGENT_CFG[agent.name]
+                  const stats = MOCK_STATS[agent.name]
+                  const Icon = cfg?.icon || Zap
+                  const isUnlocked = unlocked.includes(agent.name)
+                  const status = statuses[agent.name]
+                  if (!isUnlocked) return (
+                    <div key={agent.name} style={{ background: 'white', borderRadius: 16, border: '1px solid #F1F1F4', padding: 16, opacity: 0.5 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 10, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Lock style={{ width: 14, height: 14, color: '#9CA3AF' }} /></div>
+                        <div><div style={{ fontSize: 13, fontWeight: 700, color: '#9CA3AF' }}>{agent.name}</div><div style={{ fontSize: 10, color: '#C4C4CC', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 1 }}>{cfg?.tag}</div></div>
+                      </div>
+                      <div style={{ height: 1, background: '#F3F4F6', marginBottom: 12 }} />
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: 11, color: '#C4C4CC' }}>Upgrade to unlock</span>
+                        <Link to="/pricing" style={{ fontSize: 11, fontWeight: 800, color: '#5B5BD6', textDecoration: 'none' }}>Upgrade →</Link>
+                      </div>
+                    </div>
+                  )
+                  return (
+                    <div key={agent.name} style={{ background: 'white', borderRadius: 16, border: `1px solid ${cfg.bg}`, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+                      <div style={{ height: 3, background: cfg.grad }} />
+                      <div style={{ padding: '16px' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div style={{ width: 40, height: 40, borderRadius: 12, background: cfg.grad, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 6px 16px ${cfg.color}40` }}><Icon style={{ width: 18, height: 18, color: 'white' }} /></div>
+                            <div><div style={{ fontSize: 14, fontWeight: 900, color: '#1A1A2E' }}>{agent.name}</div><div style={{ fontSize: 10, color: '#9CA3AF', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 0.8, marginTop: 1 }}>{agent.role}</div></div>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 9px', borderRadius: 99, fontSize: 10, fontWeight: 700,
+                            background: status === 'active' ? '#E9F9EE' : '#FFF3E8',
+                            color: status === 'active' ? '#30A46C' : '#F76808',
+                            border: `1px solid ${status === 'active' ? '#A7F3D0' : '#FED7AA'}` }}>
+                            {status === 'active' && <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#30A46C', display: 'inline-block' }} />}
+                            {status === 'active' ? 'Active' : 'Setup needed'}
+                          </div>
+                        </div>
+                        {stats && status === 'active' && (
+                          <div style={{ background: cfg.bg, borderRadius: 12, padding: 12, marginBottom: 10 }}>
+                            <div style={{ fontSize: 10, color: '#9CA3AF', marginBottom: 3 }}>{stats.label}</div>
+                            <div style={{ fontSize: 26, fontWeight: 900, color: cfg.color, letterSpacing: -0.8 }}>{stats.value}</div>
+                            <div style={{ marginTop: 6, height: 3, background: `${cfg.color}20`, borderRadius: 99, overflow: 'hidden' }}>
+                              <div style={{ height: '100%', width: `${stats.pct}%`, background: cfg.grad, borderRadius: 99 }} />
+                            </div>
+                          </div>
+                        )}
+                        {status === 'setup' && <div style={{ background: '#FFF3E8', borderRadius: 12, padding: '10px 12px', marginBottom: 10, fontSize: 12, color: '#F76808', fontWeight: 600 }}>Complete setup to activate</div>}
+                        <div style={{ height: 1, background: '#F3F4F6', margin: '10px 0' }} />
+                        <Link to={`/dashboard/agent/${agent.name.toLowerCase()}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, fontWeight: 800, color: cfg.color, textDecoration: 'none' }}>
+                          {status === 'setup' ? 'Complete setup' : 'View details'} <ChevronRight style={{ width: 14, height: 14 }} />
+                        </Link>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </>
           )}
 
-          {/* SETTINGS */}
+          {/* SETTINGS TAB */}
           {activeTab === 'settings' && (
-            <div className="max-w-2xl">
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Settings</h2>
-                <p className="text-gray-500 mt-1">Manage your account and preferences</p>
-              </div>
+            <div style={{ maxWidth: 600 }}>
+              <h1 style={{ fontSize: 26, fontWeight: 900, color: '#1A1A2E', letterSpacing: -0.7, marginBottom: 4 }}>Settings</h1>
+              <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 24, fontWeight: 500 }}>Manage your account</p>
+              {[
+                { title: 'Account', fields: [
+                  { label: 'Full name',    val: fullName,      type: 'text',  dis: false },
+                  { label: 'Company',     val: meta.company_name || '', type: 'text', dis: false },
+                  { label: 'Email',       val: user?.email,   type: 'email', dis: true  },
+                ]},
+              ].map(({ title, fields }) => (
+                <div key={title} style={{ background: 'white', borderRadius: 18, border: '1px solid #F1F1F4', padding: '22px', marginBottom: 14, boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+                  <div style={{ fontWeight: 900, fontSize: 15, color: '#1A1A2E', marginBottom: 18 }}>{title}</div>
+                  {fields.map(({ label, val, type, dis }) => (
+                    <div key={label} style={{ marginBottom: 16 }}>
+                      <label style={{ display: 'block', fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.8, color: '#9CA3AF', marginBottom: 6 }}>{label}</label>
+                      <input type={type} defaultValue={val} disabled={dis} style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: '1.5px solid', borderColor: dis ? '#F1F1F4' : '#E5E7EB', background: dis ? '#F9FAFB' : 'white', fontSize: 13, fontWeight: 500, color: dis ? '#9CA3AF' : '#1A1A2E', outline: 'none', boxSizing: 'border-box' }} />
+                    </div>
+                  ))}
+                  <button style={{ background: 'linear-gradient(135deg,#5B5BD6,#7C3AED)', color: 'white', border: 'none', borderRadius: 12, padding: '12px 22px', fontWeight: 800, fontSize: 13, cursor: 'pointer', boxShadow: '0 6px 20px rgba(91,91,214,0.3)' }}>Save changes</button>
+                </div>
+              ))}
 
-              <div className="rounded-2xl bg-white border border-gray-100 p-6 flex flex-col gap-5 mb-4"
-                style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-                <h3 className="font-bold text-gray-900">Account</h3>
-                {[
-                  { label: 'Full name',    value: userName,    type: 'text',  disabled: false },
-                  { label: 'Company name', value: companyName, type: 'text',  disabled: false },
-                  { label: 'Email',        value: user?.email, type: 'email', disabled: true  },
-                ].map(({ label, value, type, disabled }) => (
-                  <div key={label}>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">{label}</label>
-                    <input type={type} defaultValue={value} disabled={disabled}
-                      className="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all"
-                      style={{
-                        background: disabled ? '#F9FAFB' : 'white',
-                        borderColor: disabled ? '#E5E7EB' : '#D1D5DB',
-                        color: disabled ? '#9CA3AF' : '#111827',
-                      }} />
-                  </div>
-                ))}
-                <button className="px-6 py-3 rounded-xl text-sm font-bold text-white w-fit hover:shadow-md transition-all"
-                  style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}>
-                  Save changes
+              <div style={{ background: 'white', borderRadius: 18, border: '1px solid #F1F1F4', padding: '22px', marginBottom: 14, boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+                <div style={{ fontWeight: 900, fontSize: 15, color: '#1A1A2E', marginBottom: 8 }}>Preferences</div>
+                <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 14, fontWeight: 500 }}>Retake the setup quiz to repersonalize your dashboard.</p>
+                <button onClick={() => setLocalDone(false)} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '11px 18px', borderRadius: 12, border: '1.5px solid #E5E7EB', background: 'white', fontSize: 13, fontWeight: 700, color: '#5B5BD6', cursor: 'pointer' }}>
+                  <Sparkles style={{ width: 14, height: 14 }} /> Redo setup quiz
                 </button>
               </div>
 
-              <div className="rounded-2xl bg-white border border-gray-100 p-6 mb-4"
-                style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-                <h3 className="font-bold text-gray-900 mb-1">Preferences</h3>
-                <p className="text-sm text-gray-500 mb-4">Retake the setup quiz to repersonalize your dashboard.</p>
-                <button onClick={() => setLocalOnboardingDone(false)}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border-2 border-blue-200 text-blue-600 hover:bg-blue-50 transition-all">
-                  <Sparkles className="w-4 h-4" /> Redo setup quiz
-                </button>
-              </div>
-
-              <div className="rounded-2xl bg-white border border-gray-100 p-6 mb-4"
-                style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-                <h3 className="font-bold text-gray-900 mb-1">Subscription</h3>
-                <p className="text-sm text-gray-500 mb-4">You're on the <span className="font-semibold text-gray-900 capitalize">{currentPlan}</span> plan.</p>
-                <Link to="/pricing"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white hover:shadow-md transition-all"
-                  style={{ background: 'linear-gradient(135deg, #2563EB, #7C3AED)' }}>
-                  Manage subscription <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-
-              <div className="rounded-2xl bg-white border border-red-100 p-6"
-                style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.04)' }}>
-                <h3 className="font-bold text-red-500 mb-1">Danger zone</h3>
-                <p className="text-sm text-gray-400 mb-4">Sign out of your account on this device.</p>
-                <button onClick={handleSignOut}
-                  className="inline-flex items-center gap-2 border-2 border-red-200 text-red-500 py-2.5 px-5 rounded-xl font-semibold text-sm hover:bg-red-50 transition-colors">
-                  <LogOut className="w-4 h-4" /> Sign out
+              <div style={{ background: 'white', borderRadius: 18, border: '1px solid #FEE2E2', padding: '22px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+                <div style={{ fontWeight: 900, fontSize: 15, color: '#E54D2E', marginBottom: 8 }}>Danger zone</div>
+                <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 14 }}>Sign out of your account on this device.</p>
+                <button onClick={handleSignOut} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '11px 18px', borderRadius: 12, border: '1.5px solid #FCA5A5', background: '#FFF0EE', fontSize: 13, fontWeight: 800, color: '#E54D2E', cursor: 'pointer' }}>
+                  <LogOut style={{ width: 14, height: 14 }} /> Sign out
                 </button>
               </div>
             </div>
