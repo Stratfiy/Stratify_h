@@ -181,12 +181,8 @@ export default function Dashboard() {
             <button onClick={() => setMobileOpen(true)} className="lg:hidden" style={{ width: 34, height: 34, borderRadius: 9, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
               <Menu style={{ width: 15, height: 15, color: '#6B7280' }} />
             </button>
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-              <div style={{ width: 34, height: 34, borderRadius: 10, background: 'linear-gradient(135deg,#5B5BD6,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(91,91,214,0.4)', position: 'relative', flexShrink: 0 }}>
-                <span style={{ color: 'white', fontWeight: 900, fontSize: 12, letterSpacing: -0.5 }}>SA</span>
-                <span style={{ position: 'absolute', top: -2, right: -2, width: 9, height: 9, borderRadius: '50%', background: '#30A46C', border: '2px solid white' }} />
-              </div>
-              <span style={{ fontWeight: 900, fontSize: 15, color: '#1A1A2E', letterSpacing: -0.4 }}>StratifyAI</span>
+            <Link to="/" style={{ fontWeight: 900, fontSize: 15, color: '#1A1A2E', textDecoration: 'none', letterSpacing: -0.4 }}>
+              StratifyAI
             </Link>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
