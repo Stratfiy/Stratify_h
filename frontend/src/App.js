@@ -12,6 +12,8 @@ import NotFound from "@/pages/NotFound";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import Dashboard from "@/pages/Dashboard";
+import ForgotPassword from "@/pages/ForgotPassword";
+import ResetPassword from "@/pages/ResetPassword";
 import SiteShell from "@/components/SiteShell";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -25,6 +27,7 @@ function App() {
         <AuthProvider>
           <BrowserRouter>
             <Routes>
+              {/* Pages WITH Nav + Footer */}
               <Route element={<SiteShell />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/e-commerce" element={<Ecommerce />} />
@@ -35,8 +38,12 @@ function App() {
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
               </Route>
+
+              {/* Standalone pages — no Nav/Footer */}
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
