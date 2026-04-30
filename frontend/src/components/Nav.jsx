@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "@/lib/AuthContext";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Menu, X, ArrowRight } from "lucide-react";
@@ -48,6 +49,7 @@ function DropdownItem({ to, title, desc, soon }) {
 }
 
 export default function Nav() {
+  const { user, signOut } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(null); // 'agents' | 'industries' | null
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -157,12 +159,15 @@ export default function Nav() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link to="/contact" className="hidden md:inline-flex btn-ghost" data-testid="nav-login-link">
-            Login
-          </Link>
-          <Link to="/contact" className="btn-primary" data-testid="nav-cta-book-demo">
-            Book a demo <ArrowRight className="w-4 h-4" />
-          </Link>
+          {user ? (
+            <Link to="/dashboard" className="btn-primary" data-testid="nav-cta-dashboard">
+              Dashboard <ArrowRight className="w-4 h-4" />
+            </Link>
+          ) : (
+            <Link to="/login" className="btn-ghost" data-testid="nav-login-link">
+              Login
+            </Link>
+          )}
           <button
             className="lg:hidden p-2 -mr-2"
             onClick={() => setMobileOpen((s) => !s)}
