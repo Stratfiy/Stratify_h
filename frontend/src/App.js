@@ -9,29 +9,43 @@ import Contact from "@/pages/Contact";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
 import NotFound from "@/pages/NotFound";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
+import Dashboard from "@/pages/Dashboard";
 import SiteShell from "@/components/SiteShell";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { AuthProvider } from "@/lib/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
     <div className="App">
       <ErrorBoundary>
-        <BrowserRouter>
-          <Routes>
-            <Route element={<SiteShell />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/e-commerce" element={<Ecommerce />} />
-              <Route path="/healthcare" element={<Healthcare />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<SiteShell />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/e-commerce" element={<Ecommerce />} />
+                <Route path="/healthcare" element={<Healthcare />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+              </Route>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
               <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
       </ErrorBoundary>
       <Toaster position="bottom-right" />
     </div>
