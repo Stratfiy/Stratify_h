@@ -153,7 +153,7 @@ export default function Dashboard() {
     <div style={{ display: 'flex', minHeight: '100vh', background: '#F7F7FA', fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>
 
       {/* Desktop Sidebar */}
-      <aside style={{ width: 240, flexShrink: 0, position: 'fixed', top: 0, bottom: 0, left: 0, background: 'white', borderRight: '1px solid #F1F1F4', zIndex: 30, flexDirection: 'column', overflowY: 'auto', display: 'none' }} className="lg:!flex">
+      <aside style={{ width: 240, flexShrink: 0, position: 'fixed', top: 0, bottom: 0, left: 0, background: 'white', borderRight: '1px solid #F1F1F4', zIndex: 30, flexDirection: 'column', overflowY: 'auto', display: 'none' }} className="lg:!flex lg:!flex-col">
         <SB />
       </aside>
 
@@ -173,7 +173,7 @@ export default function Dashboard() {
       )}
 
       {/* Main */}
-      <main style={{ marginLeft: 240, flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }} className="lg:ml-[240px] ml-0">
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }} className="lg:ml-[240px]">
 
         {/* Topbar */}
         <header style={{ position: 'sticky', top: 0, zIndex: 40, height: 60, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderBottom: '1px solid #F1F1F4', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', gap: 12 }}>
