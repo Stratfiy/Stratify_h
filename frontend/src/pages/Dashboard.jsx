@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { useAuth } from '@/lib/AuthContext'
 import { AGENTS } from '@/lib/site-data'
 import Onboarding from '@/components/Onboarding'
@@ -7,34 +8,42 @@ import {
   LayoutDashboard, Zap, Settings, LogOut, Lock,
   ArrowRight, Bell, Users, ShoppingCart, Star,
   HeadphonesIcon, LineChart, Sparkles, AlertCircle,
-  Clock, Menu, X, ChevronRight, TrendingUp, Search,
-  BarChart3, Play, CheckCircle
+  Menu, X, ChevronRight, TrendingUp, BarChart3, CheckCircle,
 } from 'lucide-react'
 
 const PLAN_AGENTS = {
   starter: ['Kai', 'Remy', 'Echo'],
-  growth: ['Kai', 'Atlas', 'Nova', 'Remy', 'Echo', 'Sage', 'Pulse'],
-  scale: ['Kai', 'Atlas', 'Nova', 'Remy', 'Echo', 'Sage', 'Pulse'],
+  growth:  ['Kai', 'Atlas', 'Nova', 'Remy', 'Echo', 'Sage', 'Pulse'],
+  scale:   ['Kai', 'Atlas', 'Nova', 'Remy', 'Echo', 'Sage', 'Pulse'],
 }
 
 const AGENT_CFG = {
   Kai:   { color: '#5B5BD6', bg: '#EEEEFF', icon: Sparkles,       tag: 'Ad Production',    grad: 'linear-gradient(135deg,#5B5BD6,#7C3AED)' },
   Atlas: { color: '#E54D2E', bg: '#FFF0EE', icon: Users,          tag: 'Lead Gen',          grad: 'linear-gradient(135deg,#E54D2E,#FF6B6B)' },
   Nova:  { color: '#0091FF', bg: '#E8F4FF', icon: HeadphonesIcon, tag: 'Conversational AI', grad: 'linear-gradient(135deg,#0091FF,#00C6FF)' },
-  Remy:  { color: '#30A46C', bg: '#E9F9EE', icon: ShoppingCart,   tag: 'Cart Recovery',     grad: 'linear-gradient(135deg,#30A46C,#3DD68C)' },
+  Remy:  { color: '#00B894', bg: '#E6FAF5', icon: ShoppingCart,   tag: 'Cart Recovery',     grad: 'linear-gradient(135deg,#00B894,#00D4AA)' },
   Echo:  { color: '#F76808', bg: '#FFF3E8', icon: Star,           tag: 'Reviews & UGC',     grad: 'linear-gradient(135deg,#F76808,#FFB347)' },
   Sage:  { color: '#0EA5E9', bg: '#E0F5FF', icon: HeadphonesIcon, tag: 'Support',           grad: 'linear-gradient(135deg,#0EA5E9,#38BDF8)' },
   Pulse: { color: '#8B5CF6', bg: '#F3EEFF', icon: LineChart,      tag: 'Analytics',         grad: 'linear-gradient(135deg,#8B5CF6,#C084FC)' },
 }
 
 const MOCK_STATS = {
-  Kai:   { value: '12',  label: 'Ads created',       trend: '+4',  pct: 72 },
-  Atlas: { value: '847', label: 'Leads found',        trend: '+124', pct: 85 },
-  Nova:  { value: '234', label: 'DMs handled',        trend: '+38', pct: 61 },
-  Remy:  { value: '18',  label: 'Carts recovered',    trend: '+5',  pct: 45 },
-  Echo:  { value: '64',  label: 'Reviews collected',  trend: '+12', pct: 53 },
-  Sage:  { value: '312', label: 'Tickets resolved',   trend: '+44', pct: 80 },
-  Pulse: { value: '4',   label: 'Reports sent',       trend: '0',   pct: 40 },
+  Kai:   { value: '12',  label: 'Ads created',      trend: '+4',   pct: 72 },
+  Atlas: { value: '847', label: 'Leads found',       trend: '+124', pct: 85 },
+  Nova:  { value: '234', label: 'DMs handled',       trend: '+38',  pct: 61 },
+  Remy:  { value: '18',  label: 'Carts recovered',   trend: '+5',   pct: 45 },
+  Echo:  { value: '64',  label: 'Reviews collected', trend: '+12',  pct: 53 },
+  Sage:  { value: '312', label: 'Tickets resolved',  trend: '+44',  pct: 80 },
+  Pulse: { value: '4',   label: 'Reports sent',      trend: '0',    pct: 40 },
+}
+
+const fade = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] } },
+}
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
 }
 
 export default function Dashboard() {
@@ -47,11 +56,15 @@ export default function Dashboard() {
   const onboardingDone = meta.onboarding_complete || false
   const [localDone, setLocalDone] = useState(onboardingDone)
   const [localAnswers, setLocalAnswers] = useState(meta.onboarding_answers || null)
-  const [localRec, setLocalRec] = useState(meta.recommended_agents || ['Kai', 'Remy', 'Echo', 'Atlas', 'Nova', 'Sage', 'Pulse'])
+  const [localRec, setLocalRec] = useState(
+    meta.recommended_agents || ['Kai', 'Remy', 'Echo', 'Atlas', 'Nova', 'Sage', 'Pulse']
+  )
 
-  if (!localDone) return <Onboarding onComplete={({ answers, recommendations }) => {
-    setLocalAnswers(answers); setLocalRec(recommendations); setLocalDone(true)
-  }} />
+  if (!localDone) return (
+    <Onboarding onComplete={({ answers, recommendations }) => {
+      setLocalAnswers(answers); setLocalRec(recommendations); setLocalDone(true)
+    }} />
+  )
 
   const currentPlan = 'starter'
   const unlocked = PLAN_AGENTS[currentPlan]
@@ -77,94 +90,101 @@ export default function Dashboard() {
   ]
 
   const SB = () => (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div className="flex flex-col h-full">
       {/* Logo */}
-      <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid #F1F1F4' }}>
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg,#5B5BD6,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(91,91,214,0.4)', position: 'relative' }}>
-            <span style={{ color: 'white', fontWeight: 900, fontSize: 13, letterSpacing: -0.5 }}>SA</span>
-            <span style={{ position: 'absolute', top: -2, right: -2, width: 10, height: 10, borderRadius: '50%', background: '#30A46C', border: '2px solid white' }} />
+      <div className="px-5 pt-6 pb-5 border-b border-white/[0.07]">
+        <Link to="/" className="flex items-center gap-2.5 no-underline">
+          <div className="relative w-7 h-7 rounded-md bg-white/10 flex items-center justify-center">
+            <span className="text-white font-mono text-[12px] font-medium tracking-tighter">SA</span>
+            <span className="absolute -right-0.5 -top-0.5 w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />
           </div>
-          <span style={{ fontWeight: 900, fontSize: 16, color: '#1A1A2E', letterSpacing: -0.4 }}>StratifyAI</span>
+          <span className="font-semibold text-[17px] tracking-tight text-white">StratifyAI</span>
         </Link>
       </div>
 
-      {/* Search */}
-      <div style={{ padding: '14px 16px 4px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#F7F7FA', borderRadius: 10, padding: '9px 12px' }}>
-          <Search style={{ width: 14, height: 14, color: '#9CA3AF', flexShrink: 0 }} />
-          <span style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>Search...</span>
-        </div>
-      </div>
-
       {/* Nav */}
-      <nav style={{ flex: 1, padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#C4C4CC', padding: '8px 8px 4px' }}>Menu</div>
+      <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto">
+        <div className="px-2 pb-2 font-mono text-[10px] tracking-[0.16em] uppercase text-white/25">Menu</div>
         {navItems.map(({ id, label, icon: Icon }) => (
-          <button key={id} onClick={() => { setActiveTab(id); setMobileOpen(false) }}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 10, padding: '11px 12px',
-              borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
-              background: activeTab === id ? 'linear-gradient(135deg,#5B5BD6,#7C3AED)' : 'transparent',
-              color: activeTab === id ? 'white' : '#6B7280',
-              boxShadow: activeTab === id ? '0 4px 14px rgba(91,91,214,0.35)' : 'none',
-              transition: 'all 0.15s', width: '100%', textAlign: 'left',
-            }}>
-            <Icon style={{ width: 15, height: 15 }} />{label}
+          <button
+            key={id}
+            onClick={() => { setActiveTab(id); setMobileOpen(false) }}
+            className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-[13px] font-medium border-none cursor-pointer text-left transition-all duration-150 ${
+              activeTab === id
+                ? 'bg-white/10 text-white'
+                : 'bg-transparent text-white/45 hover:text-white/75 hover:bg-white/5'
+            }`}
+          >
+            <Icon className="w-[15px] h-[15px] shrink-0" />
+            <span className="flex-1">{label}</span>
+            {activeTab === id && (
+              <span className="w-1 h-3.5 rounded-full bg-[#0066FF]" />
+            )}
           </button>
         ))}
 
-        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#C4C4CC', padding: '16px 8px 4px' }}>Agents</div>
+        <div className="px-2 pb-2 pt-5 font-mono text-[10px] tracking-[0.16em] uppercase text-white/25">Active agents</div>
         {['Kai', 'Remy', 'Echo'].map(name => {
           const cfg = AGENT_CFG[name]
           const Icon = cfg.icon
           return (
-            <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', borderRadius: 10, cursor: 'pointer' }}>
-              <div style={{ width: 26, height: 26, borderRadius: 7, background: cfg.grad, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Icon style={{ width: 12, height: 12, color: 'white' }} />
+            <div key={name} className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-default hover:bg-white/5 transition-colors">
+              <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: cfg.grad }}>
+                <Icon className="w-3 h-3 text-white" />
               </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#374151' }}>{name}</div>
-                <div style={{ fontSize: 10, color: '#9CA3AF' }}>{cfg.tag}</div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[12px] font-medium text-white/75 leading-none">{name}</div>
+                <div className="font-mono text-[9px] uppercase tracking-[0.1em] text-white/25 mt-0.5">{cfg.tag}</div>
               </div>
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: statuses[name] === 'active' ? '#30A46C' : '#F59E0B', flexShrink: 0 }} />
+              <div
+                className="w-1.5 h-1.5 rounded-full shrink-0"
+                style={{ background: statuses[name] === 'active' ? '#00D4AA' : '#F59E0B' }}
+              />
             </div>
           )
         })}
       </nav>
 
-      {/* Bottom */}
-      <div style={{ padding: '12px 14px', borderTop: '1px solid #F1F1F4' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-          <div style={{ width: 34, height: 34, borderRadius: 10, background: 'linear-gradient(135deg,#5B5BD6,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 900, color: 'white', flexShrink: 0, boxShadow: '0 4px 10px rgba(91,91,214,0.3)' }}>{initials}</div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 13, fontWeight: 800, color: '#1A1A2E', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{fullName || firstName}</div>
-            <div style={{ fontSize: 10, color: '#9CA3AF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</div>
+      {/* User */}
+      <div className="px-3 pb-4 pt-3 border-t border-white/[0.07]">
+        <div className="flex items-center gap-2.5 px-2 mb-2">
+          <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center font-mono text-[11px] font-semibold text-white shrink-0">
+            {initials}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[12px] font-medium text-white truncate">{fullName || firstName}</div>
+            <div className="text-[10px] text-white/35 truncate font-mono">{user?.email}</div>
           </div>
         </div>
-        <button onClick={handleSignOut} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', borderRadius: 10, background: '#FFF0EE', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#E54D2E' }}>
-          <LogOut style={{ width: 13, height: 13 }} /> Sign out
+        <button
+          onClick={handleSignOut}
+          className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-white/40 hover:text-white/70 hover:bg-white/5 bg-transparent border-none cursor-pointer transition-colors"
+        >
+          <LogOut className="w-3.5 h-3.5" /> Sign out
         </button>
       </div>
     </div>
   )
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#F7F7FA', fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+    <div className="flex min-h-screen bg-[#F7F7F9]" style={{ fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>
 
-      {/* Desktop Sidebar */}
-      <aside style={{ width: 240, flexShrink: 0, position: 'fixed', top: 0, bottom: 0, left: 0, background: 'white', borderRight: '1px solid #F1F1F4', zIndex: 30, flexDirection: 'column', overflowY: 'auto', display: 'none' }} className="lg:!flex lg:!flex-col">
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex lg:flex-col w-[220px] fixed top-0 bottom-0 left-0 bg-[#0A0A0A] z-30 overflow-y-auto">
         <SB />
       </aside>
 
-      {/* Mobile sidebar */}
+      {/* Mobile sidebar overlay */}
       {mobileOpen && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 50 }} className="lg:hidden">
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)' }} onClick={() => setMobileOpen(false)} />
-          <aside style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 260, background: 'white', overflowY: 'auto', boxShadow: '4px 0 30px rgba(0,0,0,0.1)' }}>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '14px 14px 0' }}>
-              <button onClick={() => setMobileOpen(false)} style={{ width: 30, height: 30, borderRadius: 8, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                <X style={{ width: 14, height: 14, color: '#6B7280' }} />
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <aside className="absolute left-0 top-0 bottom-0 w-64 bg-[#0A0A0A] overflow-y-auto shadow-2xl">
+            <div className="flex justify-end p-3">
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center border-none cursor-pointer"
+              >
+                <X className="w-4 h-4 text-white/60" />
               </button>
             </div>
             <SB />
@@ -173,109 +193,128 @@ export default function Dashboard() {
       )}
 
       {/* Main */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }} className="lg:ml-[240px]">
+      <main className="flex-1 flex flex-col min-h-screen lg:ml-[220px]">
 
         {/* Topbar */}
-        <header style={{ position: 'sticky', top: 0, zIndex: 40, height: 60, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderBottom: '1px solid #F1F1F4', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <button onClick={() => setMobileOpen(true)} className="lg:hidden" style={{ width: 34, height: 34, borderRadius: 9, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-              <Menu style={{ width: 15, height: 15, color: '#6B7280' }} />
+        <header className="sticky top-0 z-40 h-14 bg-white/80 backdrop-blur-xl border-b border-[#F0F0F3] flex items-center justify-between px-5 gap-3">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="lg:hidden w-8 h-8 rounded-lg border border-[#E5E7EB] bg-white flex items-center justify-center cursor-pointer"
+            >
+              <Menu className="w-4 h-4 text-[#6B7280]" />
             </button>
-            <Link to="/" style={{ fontWeight: 900, fontSize: 15, color: '#1A1A2E', textDecoration: 'none', letterSpacing: -0.4 }}>
-              StratifyAI
-            </Link>
+            <div className="flex items-center gap-2 text-[13px]">
+              <span className="text-[#9CA3AF] hidden sm:block">StratifyAI</span>
+              <ChevronRight className="w-3.5 h-3.5 text-[#D1D5DB] hidden sm:block" />
+              <span className="font-medium text-[#0A0A0A]">
+                {activeTab === 'overview' ? 'Dashboard' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+              </span>
+            </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button style={{ width: 36, height: 36, borderRadius: 10, border: '1px solid #E5E7EB', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative' }}>
-              <Bell style={{ width: 15, height: 15, color: '#6B7280' }} />
-              <span style={{ position: 'absolute', top: 8, right: 8, width: 7, height: 7, borderRadius: '50%', background: '#E54D2E', border: '1.5px solid white' }} />
+          <div className="flex items-center gap-2">
+            <button className="relative w-8 h-8 rounded-lg border border-[#E5E7EB] bg-white flex items-center justify-center cursor-pointer hover:bg-[#FAFAFA] transition-colors">
+              <Bell className="w-3.5 h-3.5 text-[#6B7280]" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#E54D2E] border border-white" />
             </button>
-            <div style={{ width: 34, height: 34, borderRadius: 10, background: 'linear-gradient(135deg,#5B5BD6,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: 'white', boxShadow: '0 3px 10px rgba(91,91,214,0.3)' }}>{initials}</div>
+            <div className="w-8 h-8 rounded-lg bg-[#0A0A0A] flex items-center justify-center font-mono text-[11px] font-medium text-white">
+              {initials}
+            </div>
           </div>
         </header>
 
-        <div style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
+        {/* Content */}
+        <div className="flex-1 p-5 md:p-7">
 
-          {/* OVERVIEW */}
+          {/* ── OVERVIEW ── */}
           {activeTab === 'overview' && (
-            <>
-              {/* Hero Banner — Purple gradient like Uinel */}
-              <div style={{ borderRadius: 20, background: 'linear-gradient(135deg,#5B5BD6 0%,#7C3AED 50%,#9333EA 100%)', padding: '28px 32px', marginBottom: 22, position: 'relative', overflow: 'hidden', minHeight: 140 }}>
-                {/* Decorative shapes */}
-                <div style={{ position: 'absolute', top: -40, right: 80, width: 160, height: 160, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' }} />
-                <div style={{ position: 'absolute', top: 20, right: 40, width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }} />
-                <div style={{ position: 'absolute', bottom: -30, right: 160, width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }} />
-                {/* 3D blob shape */}
-                <div style={{ position: 'absolute', right: 32, top: '50%', transform: 'translateY(-50%)', width: 140, height: 100, background: 'linear-gradient(135deg,rgba(255,200,100,0.9),rgba(255,120,180,0.9))', borderRadius: '60% 40% 50% 50% / 50% 60% 40% 50%', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', filter: 'blur(0px)' }} />
+            <motion.div initial="hidden" animate="show" variants={stagger}>
 
-                <div style={{ position: 'relative', zIndex: 2, maxWidth: 380 }}>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.18)', borderRadius: 99, padding: '4px 12px', marginBottom: 12 }}>
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80', display: 'inline-block' }} />
-                    <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 700 }}>All agents operational</span>
+              {/* Hero */}
+              <motion.div variants={fade} className="relative rounded-2xl bg-[#0A0A0A] overflow-hidden mb-5 p-7 md:p-9 min-h-[180px]">
+                <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-[#0066FF]/20 blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-1/2 w-56 h-40 rounded-full bg-[#00D4AA]/10 blur-3xl pointer-events-none" />
+                <div className="absolute inset-0 pointer-events-none" style={{
+                  backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px)',
+                  backgroundSize: '28px 28px',
+                }} />
+                <div className="relative">
+                  <div className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-white/8 border border-white/10">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />
+                    <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-white/60">All agents operational</span>
                   </div>
-                  <h2 style={{ color: 'white', fontSize: 22, fontWeight: 900, letterSpacing: -0.6, lineHeight: 1.25, marginBottom: 8 }}>
-                    {greeting}, {firstName}! 👋<br />
-                    <span style={{ fontWeight: 500, fontSize: 14, opacity: 0.8 }}>Your AI team is working 24/7 for you.</span>
+                  <h2 className="text-[26px] md:text-[32px] font-medium tracking-tight text-white leading-tight mb-2">
+                    {greeting}, {firstName}.
                   </h2>
-                  <button style={{ background: 'white', color: '#5B5BD6', border: 'none', borderRadius: 10, padding: '10px 20px', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 16px rgba(0,0,0,0.15)' }}>
-                    <Play style={{ width: 13, height: 13 }} /> Explore agents
+                  <p className="text-[14px] text-white/45 mb-6 max-w-xs leading-relaxed">
+                    Your AI team has been working while you were away.
+                  </p>
+                  <button
+                    onClick={() => setActiveTab('agents')}
+                    className="inline-flex items-center gap-2 bg-white text-[#0A0A0A] text-[13px] font-medium px-4 py-2.5 rounded-xl hover:bg-white/90 transition-colors border-none cursor-pointer"
+                  >
+                    View agents <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
-              </div>
+              </motion.div>
 
-              {/* Stats row */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 22 }}>
+              {/* Stats */}
+              <motion.div variants={fade} className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
                 {[
-                  { label: 'Active agents',  value: '1',  sub: 'of 3 unlocked',     color: '#5B5BD6', bg: '#EEEEFF', icon: Zap },
-                  { label: 'Tasks done',     value: '12', sub: 'this month',         color: '#30A46C', bg: '#E9F9EE', icon: CheckCircle },
-                  { label: 'Ads created',    value: '12', sub: 'by Kai this month',  color: '#F76808', bg: '#FFF3E8', icon: TrendingUp },
-                  { label: 'Current plan',   value: 'Starter', sub: '3 of 7 agents', color: '#7C3AED', bg: '#F3EEFF', icon: BarChart3, isLink: true },
+                  { label: 'Active agents',    value: '1',       sub: 'of 3 unlocked',    color: '#0066FF', bg: '#EBF3FF', icon: Zap },
+                  { label: 'Tasks this month', value: '12',      sub: 'across all agents', color: '#00B894', bg: '#E6FAF5', icon: CheckCircle },
+                  { label: 'Ads created',      value: '12',      sub: 'by Kai this month', color: '#F76808', bg: '#FFF3E8', icon: TrendingUp },
+                  { label: 'Current plan',     value: 'Starter', isLink: true,             color: '#8B5CF6', bg: '#F3EEFF', icon: BarChart3 },
                 ].map(({ label, value, sub, color, bg, icon: Icon, isLink }) => (
-                  <div key={label} style={{ background: 'white', borderRadius: 16, padding: '18px 18px', border: '1px solid #F1F1F4', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', top: -16, right: -16, width: 60, height: 60, borderRadius: '50%', background: bg, opacity: 0.7 }} />
-                    <div style={{ width: 34, height: 34, borderRadius: 10, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-                      <Icon style={{ width: 16, height: 16, color }} />
+                  <div key={label} className="bg-white rounded-2xl border border-[#F0F0F3] p-5">
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-3.5" style={{ background: bg }}>
+                      <Icon className="w-4 h-4" style={{ color }} />
                     </div>
-                    <div style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', marginBottom: 4 }}>{label}</div>
-                    <div style={{ fontSize: 26, fontWeight: 900, color: '#1A1A2E', letterSpacing: -0.8, lineHeight: 1, marginBottom: 3 }}>{value}</div>
+                    <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#9CA3AF] mb-1">{label}</div>
+                    <div className="text-[22px] font-medium tracking-tight text-[#0A0A0A] leading-none mb-1.5">{value}</div>
                     {isLink
-                      ? <Link to="/pricing" style={{ fontSize: 11, fontWeight: 700, color, textDecoration: 'none' }}>Upgrade ↗</Link>
-                      : <div style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 500 }}>{sub}</div>
+                      ? <Link to="/pricing" className="text-[11px] font-medium no-underline" style={{ color }}>Upgrade plan →</Link>
+                      : <div className="text-[11px] text-[#9CA3AF]">{sub}</div>
                     }
                   </div>
                 ))}
-              </div>
+              </motion.div>
 
-              {/* Middle row: Agent spotlight + Quick actions */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 16, marginBottom: 22 }}>
+              {/* Agent spotlight + Checklist */}
+              <motion.div variants={fade} className="grid lg:grid-cols-[1fr_288px] gap-4 mb-5">
 
-                {/* Priority agent card */}
+                {/* Priority agent */}
                 {(() => {
                   const top = localRec[0]
                   const cfg = AGENT_CFG[top]
                   const Icon = cfg?.icon || Zap
+                  const agentData = AGENTS.find(a => a.name === top)
                   return (
-                    <div style={{ borderRadius: 18, overflow: 'hidden', border: '1px solid #F1F1F4', boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
-                      <div style={{ background: cfg?.grad, padding: '20px 24px 16px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.12)' }} />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative', zIndex: 2 }}>
-                          <div style={{ width: 48, height: 48, borderRadius: 14, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.3)' }}>
-                            <Icon style={{ width: 22, height: 22, color: 'white' }} />
+                    <div className="bg-white rounded-2xl border border-[#F0F0F3] overflow-hidden">
+                      <div className="h-[3px]" style={{ background: cfg?.grad }} />
+                      <div className="p-6">
+                        <div className="font-mono text-[10px] tracking-[0.16em] uppercase mb-4" style={{ color: cfg?.color }}>
+                          ✦ Your #1 priority
+                        </div>
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: cfg?.grad }}>
+                            <Icon className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>✦ Your #1 priority</div>
-                            <div style={{ fontSize: 18, fontWeight: 900, color: 'white', letterSpacing: -0.5 }}>{top} is ready to activate</div>
+                            <div className="text-[18px] font-medium tracking-tight text-[#0A0A0A]">{top} is ready to activate</div>
+                            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#9CA3AF] mt-0.5">{cfg?.tag}</div>
                           </div>
                         </div>
-                      </div>
-                      <div style={{ background: 'white', padding: '18px 24px' }}>
-                        <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 16, lineHeight: 1.6 }}>{AGENTS.find(a => a.name === top)?.desc}</p>
-                        <div style={{ display: 'flex', gap: 10 }}>
-                          <Link to={`/dashboard/agent/${top.toLowerCase()}`}
-                            style={{ flex: 1, background: cfg?.grad, color: 'white', border: 'none', borderRadius: 12, padding: '11px 18px', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, textDecoration: 'none', boxShadow: `0 6px 20px ${cfg?.color}40` }}>
-                            Set up {top} <ArrowRight style={{ width: 14, height: 14 }} />
+                        <p className="text-[13.5px] text-[#4B5563] leading-relaxed mb-5">{agentData?.desc}</p>
+                        <div className="flex items-center gap-3">
+                          <Link
+                            to={`/dashboard/agent/${top.toLowerCase()}`}
+                            className="inline-flex items-center gap-2 text-[13px] font-medium text-white px-4 py-2.5 rounded-xl no-underline transition-opacity hover:opacity-90"
+                            style={{ background: cfg?.grad }}
+                          >
+                            Set up {top} <ArrowRight className="w-3.5 h-3.5" />
                           </Link>
-                          <button style={{ padding: '11px 18px', borderRadius: 12, border: '1.5px solid #E5E7EB', background: 'white', fontSize: 13, fontWeight: 700, color: '#6B7280', cursor: 'pointer' }}>
+                          <button className="text-[13px] font-medium text-[#6B7280] px-4 py-2.5 rounded-xl border border-[#E5E7EB] bg-white hover:bg-[#FAFAFA] cursor-pointer transition-colors">
                             Learn more
                           </button>
                         </div>
@@ -284,48 +323,51 @@ export default function Dashboard() {
                   )
                 })()}
 
-                {/* Quick setup checklist */}
-                <div style={{ background: 'white', borderRadius: 18, border: '1px solid #F1F1F4', padding: '20px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18 }}>
-                    <div style={{ width: 30, height: 30, borderRadius: 9, background: '#EEEEFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Sparkles style={{ width: 14, height: 14, color: '#5B5BD6' }} />
-                    </div>
-                    <div>
-                      <div style={{ fontWeight: 800, fontSize: 14, color: '#1A1A2E' }}>Get started</div>
-                      <div style={{ fontSize: 11, color: '#9CA3AF' }}>1 of 4 complete</div>
-                    </div>
+                {/* Checklist */}
+                <div className="bg-white rounded-2xl border border-[#F0F0F3] p-5">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="text-[13px] font-medium text-[#0A0A0A]">Get started</div>
+                    <div className="font-mono text-[10px] text-[#9CA3AF]">1 / 4</div>
                   </div>
-                  {/* Progress */}
-                  <div style={{ height: 4, background: '#F1F1F4', borderRadius: 99, marginBottom: 18, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: '25%', background: 'linear-gradient(90deg,#5B5BD6,#7C3AED)', borderRadius: 99 }} />
+                  <div className="h-[3px] bg-[#F0F0F3] rounded-full mb-5 overflow-hidden">
+                    <div className="h-full w-1/4 rounded-full bg-[#0066FF]" />
                   </div>
-                  {[
-                    { done: true,  text: 'Create account',       sub: "You're in!" },
-                    { done: false, text: 'Set up Kai',           sub: 'Connect Meta Ads' },
-                    { done: false, text: 'Set up Remy',          sub: 'Connect Shopify' },
-                    { done: false, text: 'Upgrade to Growth',    sub: 'Unlock all 7 agents' },
-                  ].map((s, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: i < 3 ? 14 : 0 }}>
-                      <div style={{ width: 20, height: 20, borderRadius: '50%', background: s.done ? 'linear-gradient(135deg,#30A46C,#3DD68C)' : '#F1F1F4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                        {s.done && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                  <div className="flex flex-col gap-4">
+                    {[
+                      { done: true,  text: 'Create account',    sub: "You're in!" },
+                      { done: false, text: 'Set up Kai',        sub: 'Connect Meta Ads' },
+                      { done: false, text: 'Set up Remy',       sub: 'Connect Shopify' },
+                      { done: false, text: 'Upgrade to Growth', sub: 'Unlock all 7 agents' },
+                    ].map((s, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${s.done ? 'bg-[#0A0A0A]' : 'border-2 border-[#E5E7EB]'}`}>
+                          {s.done && (
+                            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          )}
+                        </div>
+                        <div>
+                          <div className={`text-[13px] font-medium leading-tight ${s.done ? 'text-[#9CA3AF] line-through' : 'text-[#0A0A0A]'}`}>{s.text}</div>
+                          <div className="text-[11px] text-[#9CA3AF] mt-0.5">{s.sub}</div>
+                        </div>
                       </div>
-                      <div>
-                        <div style={{ fontSize: 12, fontWeight: s.done ? 600 : 700, color: s.done ? '#9CA3AF' : '#1A1A2E', textDecoration: s.done ? 'line-through' : 'none' }}>{s.text}</div>
-                        <div style={{ fontSize: 11, color: '#9CA3AF' }}>{s.sub}</div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Agents grid */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-                <h3 style={{ fontSize: 17, fontWeight: 900, color: '#1A1A2E', letterSpacing: -0.3 }}>Your agents</h3>
-                <button onClick={() => setActiveTab('agents')} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 700, color: '#5B5BD6', background: 'none', border: 'none', cursor: 'pointer' }}>
-                  View all <ChevronRight style={{ width: 14, height: 14 }} />
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-[15px] font-medium tracking-tight text-[#0A0A0A]">Your agents</div>
+                <button
+                  onClick={() => setActiveTab('agents')}
+                  className="flex items-center gap-1 text-[13px] font-medium text-[#0066FF] bg-transparent border-none cursor-pointer"
+                >
+                  View all <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+              <motion.div variants={fade} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {sorted.map((agent, i) => {
                   const cfg = AGENT_CFG[agent.name]
                   const stats = MOCK_STATS[agent.name]
@@ -334,195 +376,253 @@ export default function Dashboard() {
                   const status = statuses[agent.name]
 
                   if (!isUnlocked) return (
-                    <div key={agent.name} style={{ background: 'white', borderRadius: 16, border: '1px solid #F1F1F4', padding: '16px', opacity: 0.55 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 10, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Lock style={{ width: 14, height: 14, color: '#9CA3AF' }} />
+                    <div key={agent.name} className="bg-white rounded-2xl border border-[#F0F0F3] p-5 opacity-40">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-9 h-9 rounded-xl bg-[#F3F4F6] flex items-center justify-center">
+                          <Lock className="w-3.5 h-3.5 text-[#C4C4CC]" />
                         </div>
                         <div>
-                          <div style={{ fontSize: 13, fontWeight: 700, color: '#9CA3AF' }}>{agent.name}</div>
-                          <div style={{ fontSize: 10, color: '#C4C4CC', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 1 }}>{cfg?.tag}</div>
+                          <div className="text-[13px] font-medium text-[#9CA3AF]">{agent.name}</div>
+                          <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#C4C4CC]">{cfg?.tag}</div>
                         </div>
                       </div>
-                      <div style={{ height: 1, background: '#F3F4F6', marginBottom: 12 }} />
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontSize: 11, color: '#C4C4CC' }}>Upgrade to unlock</span>
-                        <Link to="/pricing" style={{ fontSize: 11, fontWeight: 800, color: '#5B5BD6', textDecoration: 'none' }}>Upgrade →</Link>
+                      <div className="h-px bg-[#F3F4F6] my-3" />
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] text-[#C4C4CC]">Upgrade to unlock</span>
+                        <Link to="/pricing" className="text-[11px] font-medium text-[#0066FF] no-underline">Upgrade →</Link>
                       </div>
                     </div>
                   )
 
                   return (
-                    <div key={agent.name} style={{ background: 'white', borderRadius: 16, border: `1px solid ${cfg.bg}`, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', transition: 'transform 0.2s, box-shadow 0.2s' }}
-                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 12px 32px ${cfg.color}25` }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.05)' }}>
-                      <div style={{ height: 3, background: cfg.grad }} />
-                      <div style={{ padding: '14px 16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                            <div style={{ width: 38, height: 38, borderRadius: 12, background: cfg.grad, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 6px 16px ${cfg.color}40` }}>
-                              <Icon style={{ width: 17, height: 17, color: 'white' }} />
+                    <div
+                      key={agent.name}
+                      className="bg-white rounded-2xl border border-[#F0F0F3] overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-200 cursor-default"
+                    >
+                      <div className="h-[3px]" style={{ background: cfg?.grad }} />
+                      <div className="p-5">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: cfg?.grad }}>
+                              <Icon className="w-4 h-4 text-white" />
                             </div>
                             <div>
-                              <div style={{ fontSize: 13, fontWeight: 900, color: '#1A1A2E', display: 'flex', alignItems: 'center', gap: 5 }}>
-                                {agent.name}
-                                {i === 0 && <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 99, background: cfg.bg, color: cfg.color, fontWeight: 800 }}>TOP</span>}
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[14px] font-medium tracking-tight text-[#0A0A0A]">{agent.name}</span>
+                                {i === 0 && (
+                                  <span className="font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full" style={{ background: cfg?.bg, color: cfg?.color }}>
+                                    Top
+                                  </span>
+                                )}
                               </div>
-                              <div style={{ fontSize: 10, color: '#9CA3AF', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 0.8, marginTop: 1 }}>{cfg.tag}</div>
+                              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#9CA3AF] mt-0.5">{cfg?.tag}</div>
                             </div>
                           </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 9px', borderRadius: 99, fontSize: 10, fontWeight: 700,
-                            background: status === 'active' ? '#E9F9EE' : status === 'setup' ? '#FFF3E8' : '#F3F4F6',
-                            color: status === 'active' ? '#30A46C' : status === 'setup' ? '#F76808' : '#9CA3AF',
-                            border: `1px solid ${status === 'active' ? '#A7F3D0' : status === 'setup' ? '#FED7AA' : '#E5E7EB'}` }}>
-                            {status === 'active' && <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#30A46C', display: 'inline-block', animation: 'pulse 2s infinite' }} />}
+                          <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full font-mono text-[10px] ${
+                            status === 'active' ? 'bg-[#E6FAF5] text-[#00B894]' :
+                            status === 'setup'  ? 'bg-[#FFF3E8] text-[#F76808]' :
+                            'bg-[#F3F4F6] text-[#9CA3AF]'
+                          }`}>
+                            {status === 'active' && <span className="w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />}
                             {status === 'active' ? 'Active' : status === 'setup' ? 'Setup' : 'Pending'}
                           </div>
                         </div>
 
                         {status === 'active' && stats && (
-                          <div style={{ background: cfg.bg, borderRadius: 12, padding: '12px', marginBottom: 10 }}>
-                            <div style={{ fontSize: 10, color: '#9CA3AF', fontWeight: 600, marginBottom: 3 }}>{stats.label}</div>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                              <span style={{ fontSize: 28, fontWeight: 900, color: cfg.color, letterSpacing: -1 }}>{stats.value}</span>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: cfg.color, background: `${cfg.color}18`, padding: '2px 7px', borderRadius: 99 }}>+{stats.trend}</span>
+                          <div className="rounded-xl p-3.5 mb-4" style={{ background: cfg?.bg }}>
+                            <div className="font-mono text-[10px] uppercase tracking-[0.1em] mb-2" style={{ color: `${cfg?.color}90` }}>{stats.label}</div>
+                            <div className="flex items-baseline gap-2 mb-2">
+                              <span className="text-[22px] font-medium tracking-tight" style={{ color: cfg?.color }}>{stats.value}</span>
+                              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: `${cfg?.color}18`, color: cfg?.color }}>{stats.trend}</span>
                             </div>
-                            <div style={{ marginTop: 8, height: 4, background: `${cfg.color}20`, borderRadius: 99, overflow: 'hidden' }}>
-                              <div style={{ height: '100%', width: `${stats.pct}%`, background: cfg.grad, borderRadius: 99, transition: 'width 1s ease' }} />
+                            <div className="h-1 rounded-full overflow-hidden" style={{ background: `${cfg?.color}20` }}>
+                              <div className="h-full rounded-full" style={{ width: `${stats.pct}%`, background: cfg?.grad }} />
                             </div>
                           </div>
                         )}
 
                         {status === 'setup' && (
-                          <div style={{ background: '#FFF3E8', border: '1px solid #FED7AA', borderRadius: 12, padding: '10px 12px', marginBottom: 10 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                              <AlertCircle style={{ width: 13, height: 13, color: '#F76808', flexShrink: 0 }} />
-                              <span style={{ fontSize: 12, color: '#F76808', fontWeight: 600 }}>Setup required to activate</span>
-                            </div>
+                          <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 mb-4 bg-[#FFFBF0] border border-[#FED7AA]">
+                            <AlertCircle className="w-3.5 h-3.5 text-[#F76808] shrink-0" />
+                            <span className="text-[12px] font-medium text-[#F76808]">Setup required to activate</span>
                           </div>
                         )}
 
-                        <div style={{ height: 1, background: '#F3F4F6', margin: '10px 0' }} />
-                        <Link to={`/dashboard/agent/${agent.name.toLowerCase()}`}
-                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, fontWeight: 800, color: cfg.color, textDecoration: 'none' }}>
+                        <div className="h-px bg-[#F3F4F6] mb-3" />
+                        <Link
+                          to={`/dashboard/agent/${agent.name.toLowerCase()}`}
+                          className="flex items-center justify-between text-[13px] font-medium no-underline transition-opacity hover:opacity-70"
+                          style={{ color: cfg?.color }}
+                        >
                           {status === 'setup' ? 'Complete setup' : 'View details'}
-                          <ChevronRight style={{ width: 14, height: 14 }} />
+                          <ChevronRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
                     </div>
                   )
                 })}
-              </div>
-            </>
+              </motion.div>
+            </motion.div>
           )}
 
-          {/* AGENTS TAB */}
+          {/* ── AGENTS TAB ── */}
           {activeTab === 'agents' && (
-            <>
-              <div style={{ marginBottom: 22 }}>
-                <h1 style={{ fontSize: 26, fontWeight: 900, color: '#1A1A2E', letterSpacing: -0.7, marginBottom: 4 }}>My Agents</h1>
-                <p style={{ fontSize: 13, color: '#9CA3AF', fontWeight: 500 }}>Sorted by your goals · {unlocked.length} active · {7 - unlocked.length} locked</p>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+            <motion.div initial="hidden" animate="show" variants={stagger}>
+              <motion.div variants={fade} className="mb-7">
+                <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#9CA3AF] mb-2">Agents</div>
+                <h1 className="text-2xl md:text-[30px] font-medium tracking-tight text-[#0A0A0A]">My AI team</h1>
+                <p className="mt-1.5 text-[13.5px] text-[#6B7280]">
+                  Sorted by your goals · {unlocked.length} active · {7 - unlocked.length} locked
+                </p>
+              </motion.div>
+              <motion.div variants={fade} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {sorted.map((agent) => {
                   const cfg = AGENT_CFG[agent.name]
                   const stats = MOCK_STATS[agent.name]
                   const Icon = cfg?.icon || Zap
                   const isUnlocked = unlocked.includes(agent.name)
                   const status = statuses[agent.name]
+
                   if (!isUnlocked) return (
-                    <div key={agent.name} style={{ background: 'white', borderRadius: 16, border: '1px solid #F1F1F4', padding: 16, opacity: 0.5 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 10, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Lock style={{ width: 14, height: 14, color: '#9CA3AF' }} /></div>
-                        <div><div style={{ fontSize: 13, fontWeight: 700, color: '#9CA3AF' }}>{agent.name}</div><div style={{ fontSize: 10, color: '#C4C4CC', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 1 }}>{cfg?.tag}</div></div>
+                    <div key={agent.name} className="bg-white rounded-2xl border border-[#F0F0F3] p-5 opacity-40">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-9 h-9 rounded-xl bg-[#F3F4F6] flex items-center justify-center">
+                          <Lock className="w-3.5 h-3.5 text-[#C4C4CC]" />
+                        </div>
+                        <div>
+                          <div className="text-[13px] font-medium text-[#9CA3AF]">{agent.name}</div>
+                          <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#C4C4CC]">{cfg?.tag}</div>
+                        </div>
                       </div>
-                      <div style={{ height: 1, background: '#F3F4F6', marginBottom: 12 }} />
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: 11, color: '#C4C4CC' }}>Upgrade to unlock</span>
-                        <Link to="/pricing" style={{ fontSize: 11, fontWeight: 800, color: '#5B5BD6', textDecoration: 'none' }}>Upgrade →</Link>
+                      <div className="h-px bg-[#F3F4F6] my-3" />
+                      <div className="flex justify-between items-center">
+                        <span className="text-[11px] text-[#C4C4CC]">Upgrade to unlock</span>
+                        <Link to="/pricing" className="text-[11px] font-medium text-[#0066FF] no-underline">Upgrade →</Link>
                       </div>
                     </div>
                   )
+
                   return (
-                    <div key={agent.name} style={{ background: 'white', borderRadius: 16, border: `1px solid ${cfg.bg}`, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
-                      <div style={{ height: 3, background: cfg.grad }} />
-                      <div style={{ padding: '16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                            <div style={{ width: 40, height: 40, borderRadius: 12, background: cfg.grad, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 6px 16px ${cfg.color}40` }}><Icon style={{ width: 18, height: 18, color: 'white' }} /></div>
-                            <div><div style={{ fontSize: 14, fontWeight: 900, color: '#1A1A2E' }}>{agent.name}</div><div style={{ fontSize: 10, color: '#9CA3AF', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 0.8, marginTop: 1 }}>{agent.role}</div></div>
+                    <div
+                      key={agent.name}
+                      className="bg-white rounded-2xl border border-[#F0F0F3] overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-200"
+                    >
+                      <div className="h-[3px]" style={{ background: cfg?.grad }} />
+                      <div className="p-5">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: cfg?.grad }}>
+                              <Icon className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                              <div className="text-[14px] font-medium tracking-tight text-[#0A0A0A]">{agent.name}</div>
+                              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#0066FF] mt-0.5">{agent.role}</div>
+                            </div>
                           </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 9px', borderRadius: 99, fontSize: 10, fontWeight: 700,
-                            background: status === 'active' ? '#E9F9EE' : '#FFF3E8',
-                            color: status === 'active' ? '#30A46C' : '#F76808',
-                            border: `1px solid ${status === 'active' ? '#A7F3D0' : '#FED7AA'}` }}>
-                            {status === 'active' && <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#30A46C', display: 'inline-block' }} />}
+                          <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full font-mono text-[10px] ${
+                            status === 'active' ? 'bg-[#E6FAF5] text-[#00B894]' : 'bg-[#FFF3E8] text-[#F76808]'
+                          }`}>
+                            {status === 'active' && <span className="w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />}
                             {status === 'active' ? 'Active' : 'Setup needed'}
                           </div>
                         </div>
+
                         {stats && status === 'active' && (
-                          <div style={{ background: cfg.bg, borderRadius: 12, padding: 12, marginBottom: 10 }}>
-                            <div style={{ fontSize: 10, color: '#9CA3AF', marginBottom: 3 }}>{stats.label}</div>
-                            <div style={{ fontSize: 26, fontWeight: 900, color: cfg.color, letterSpacing: -0.8 }}>{stats.value}</div>
-                            <div style={{ marginTop: 6, height: 3, background: `${cfg.color}20`, borderRadius: 99, overflow: 'hidden' }}>
-                              <div style={{ height: '100%', width: `${stats.pct}%`, background: cfg.grad, borderRadius: 99 }} />
+                          <div className="rounded-xl p-3.5 mb-4" style={{ background: cfg?.bg }}>
+                            <div className="font-mono text-[10px] uppercase tracking-[0.1em] mb-2" style={{ color: `${cfg?.color}90` }}>{stats.label}</div>
+                            <div className="text-[22px] font-medium tracking-tight mb-2" style={{ color: cfg?.color }}>{stats.value}</div>
+                            <div className="h-1 rounded-full overflow-hidden" style={{ background: `${cfg?.color}20` }}>
+                              <div className="h-full rounded-full" style={{ width: `${stats.pct}%`, background: cfg?.grad }} />
                             </div>
                           </div>
                         )}
-                        {status === 'setup' && <div style={{ background: '#FFF3E8', borderRadius: 12, padding: '10px 12px', marginBottom: 10, fontSize: 12, color: '#F76808', fontWeight: 600 }}>Complete setup to activate</div>}
-                        <div style={{ height: 1, background: '#F3F4F6', margin: '10px 0' }} />
-                        <Link to={`/dashboard/agent/${agent.name.toLowerCase()}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, fontWeight: 800, color: cfg.color, textDecoration: 'none' }}>
-                          {status === 'setup' ? 'Complete setup' : 'View details'} <ChevronRight style={{ width: 14, height: 14 }} />
+
+                        {status === 'setup' && (
+                          <div className="rounded-xl px-3.5 py-2.5 mb-4 bg-[#FFFBF0] border border-[#FED7AA] text-[12px] font-medium text-[#F76808]">
+                            Complete setup to activate
+                          </div>
+                        )}
+
+                        <div className="h-px bg-[#F3F4F6] mb-3" />
+                        <Link
+                          to={`/dashboard/agent/${agent.name.toLowerCase()}`}
+                          className="flex items-center justify-between text-[13px] font-medium no-underline hover:opacity-70 transition-opacity"
+                          style={{ color: cfg?.color }}
+                        >
+                          {status === 'setup' ? 'Complete setup' : 'View details'}
+                          <ChevronRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
                     </div>
                   )
                 })}
-              </div>
-            </>
+              </motion.div>
+            </motion.div>
           )}
 
-          {/* SETTINGS TAB */}
+          {/* ── SETTINGS TAB ── */}
           {activeTab === 'settings' && (
-            <div style={{ maxWidth: 600 }}>
-              <h1 style={{ fontSize: 26, fontWeight: 900, color: '#1A1A2E', letterSpacing: -0.7, marginBottom: 4 }}>Settings</h1>
-              <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 24, fontWeight: 500 }}>Manage your account</p>
-              {[
-                { title: 'Account', fields: [
-                  { label: 'Full name',    val: fullName,      type: 'text',  dis: false },
-                  { label: 'Company',     val: meta.company_name || '', type: 'text', dis: false },
-                  { label: 'Email',       val: user?.email,   type: 'email', dis: true  },
-                ]},
-              ].map(({ title, fields }) => (
-                <div key={title} style={{ background: 'white', borderRadius: 18, border: '1px solid #F1F1F4', padding: '22px', marginBottom: 14, boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-                  <div style={{ fontWeight: 900, fontSize: 15, color: '#1A1A2E', marginBottom: 18 }}>{title}</div>
-                  {fields.map(({ label, val, type, dis }) => (
-                    <div key={label} style={{ marginBottom: 16 }}>
-                      <label style={{ display: 'block', fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.8, color: '#9CA3AF', marginBottom: 6 }}>{label}</label>
-                      <input type={type} defaultValue={val} disabled={dis} style={{ width: '100%', padding: '12px 14px', borderRadius: 12, border: '1.5px solid', borderColor: dis ? '#F1F1F4' : '#E5E7EB', background: dis ? '#F9FAFB' : 'white', fontSize: 13, fontWeight: 500, color: dis ? '#9CA3AF' : '#1A1A2E', outline: 'none', boxSizing: 'border-box' }} />
-                    </div>
-                  ))}
-                  <button style={{ background: 'linear-gradient(135deg,#5B5BD6,#7C3AED)', color: 'white', border: 'none', borderRadius: 12, padding: '12px 22px', fontWeight: 800, fontSize: 13, cursor: 'pointer', boxShadow: '0 6px 20px rgba(91,91,214,0.3)' }}>Save changes</button>
-                </div>
-              ))}
+            <motion.div initial="hidden" animate="show" variants={stagger} className="max-w-[540px]">
+              <motion.div variants={fade} className="mb-7">
+                <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#9CA3AF] mb-2">Account</div>
+                <h1 className="text-2xl md:text-[30px] font-medium tracking-tight text-[#0A0A0A]">Settings</h1>
+                <p className="mt-1.5 text-[13.5px] text-[#6B7280]">Manage your account and preferences</p>
+              </motion.div>
 
-              <div style={{ background: 'white', borderRadius: 18, border: '1px solid #F1F1F4', padding: '22px', marginBottom: 14, boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-                <div style={{ fontWeight: 900, fontSize: 15, color: '#1A1A2E', marginBottom: 8 }}>Preferences</div>
-                <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 14, fontWeight: 500 }}>Retake the setup quiz to repersonalize your dashboard.</p>
-                <button onClick={() => setLocalDone(false)} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '11px 18px', borderRadius: 12, border: '1.5px solid #E5E7EB', background: 'white', fontSize: 13, fontWeight: 700, color: '#5B5BD6', cursor: 'pointer' }}>
-                  <Sparkles style={{ width: 14, height: 14 }} /> Redo setup quiz
+              <motion.div variants={fade} className="bg-white rounded-2xl border border-[#F0F0F3] p-6 mb-4">
+                <div className="text-[14px] font-medium text-[#0A0A0A] mb-5">Account details</div>
+                {[
+                  { label: 'Full name', val: fullName,                type: 'text',  dis: false },
+                  { label: 'Company',   val: meta.company_name || '', type: 'text',  dis: false },
+                  { label: 'Email',     val: user?.email,             type: 'email', dis: true  },
+                ].map(({ label, val, type, dis }) => (
+                  <div key={label} className="mb-4">
+                    <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#9CA3AF] mb-1.5">{label}</label>
+                    <input
+                      type={type}
+                      defaultValue={val}
+                      disabled={dis}
+                      className="w-full px-4 py-3 rounded-xl border text-[13px] outline-none transition-colors focus:border-[#0066FF]"
+                      style={{
+                        borderColor: dis ? '#F0F0F3' : '#E5E7EB',
+                        background: dis ? '#FAFAFA' : 'white',
+                        color: dis ? '#9CA3AF' : '#0A0A0A',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                ))}
+                <button className="bg-[#0A0A0A] text-white text-[13px] font-medium px-5 py-2.5 rounded-xl hover:bg-[#1a1a1a] transition-colors border-none cursor-pointer">
+                  Save changes
                 </button>
-              </div>
+              </motion.div>
 
-              <div style={{ background: 'white', borderRadius: 18, border: '1px solid #FEE2E2', padding: '22px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-                <div style={{ fontWeight: 900, fontSize: 15, color: '#E54D2E', marginBottom: 8 }}>Danger zone</div>
-                <p style={{ fontSize: 13, color: '#9CA3AF', marginBottom: 14 }}>Sign out of your account on this device.</p>
-                <button onClick={handleSignOut} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '11px 18px', borderRadius: 12, border: '1.5px solid #FCA5A5', background: '#FFF0EE', fontSize: 13, fontWeight: 800, color: '#E54D2E', cursor: 'pointer' }}>
-                  <LogOut style={{ width: 14, height: 14 }} /> Sign out
+              <motion.div variants={fade} className="bg-white rounded-2xl border border-[#F0F0F3] p-6 mb-4">
+                <div className="text-[14px] font-medium text-[#0A0A0A] mb-1.5">Preferences</div>
+                <p className="text-[13px] text-[#9CA3AF] mb-4 leading-relaxed">
+                  Retake the setup quiz to repersonalize your dashboard.
+                </p>
+                <button
+                  onClick={() => setLocalDone(false)}
+                  className="inline-flex items-center gap-2 text-[13px] font-medium text-[#0066FF] border border-[#E5E7EB] px-4 py-2.5 rounded-xl hover:bg-[#F9FAFB] transition-colors bg-white cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5" /> Redo setup quiz
                 </button>
-              </div>
-            </div>
+              </motion.div>
+
+              <motion.div variants={fade} className="bg-white rounded-2xl border border-[#FEE2E2] p-6">
+                <div className="text-[14px] font-medium text-[#E54D2E] mb-1.5">Danger zone</div>
+                <p className="text-[13px] text-[#9CA3AF] mb-4">Sign out of your account on this device.</p>
+                <button
+                  onClick={handleSignOut}
+                  className="inline-flex items-center gap-2 text-[13px] font-medium text-[#E54D2E] border border-[#FCA5A5] px-4 py-2.5 rounded-xl bg-[#FFF5F5] hover:bg-[#FFF0F0] transition-colors cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" /> Sign out
+                </button>
+              </motion.div>
+            </motion.div>
           )}
+
         </div>
       </main>
     </div>

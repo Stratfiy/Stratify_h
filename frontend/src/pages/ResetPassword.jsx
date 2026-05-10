@@ -46,6 +46,18 @@ export default function ResetPassword() {
       setError('Password must be at least 8 characters')
       return
     }
+    if (!/[A-Z]/.test(password)) {
+      setError('Password must contain at least one uppercase letter')
+      return
+    }
+    if (!/[0-9]/.test(password)) {
+      setError('Password must contain at least one number')
+      return
+    }
+    if (!/[^A-Za-z0-9]/.test(password)) {
+      setError('Password must contain at least one special character')
+      return
+    }
     if (password !== confirmPassword) {
       setError('Passwords do not match')
       return
@@ -140,7 +152,7 @@ export default function ResetPassword() {
           </Link>
 
           <h1 className="text-3xl font-semibold tracking-tight mb-2">Set new password</h1>
-          <p className="text-[#6B7280] mb-8">Your new password must be at least 8 characters.</p>
+          <p className="text-[#6B7280] mb-8">Must be 8+ characters with an uppercase letter, a number, and a special character.</p>
 
           {error && (
             <div className="mb-6 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
