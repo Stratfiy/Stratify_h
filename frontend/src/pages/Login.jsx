@@ -36,7 +36,12 @@ export default function Login() {
   const handleGoogle = async () => {
     setError('')
     setGoogleLoading(true)
-    const { error } = await signInWithGoogle()
+    const { error } = await signInWithGoogle({
+      options: {
+        // This ensures the user is sent back to the landing page after auth
+        redirectTo: window.location.origin
+      }
+    })
     if (error) { setError(error.message); setGoogleLoading(false) }
   }
 
