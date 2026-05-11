@@ -4,11 +4,32 @@ import { supabase } from '@/lib/supabase'
 import { ArrowRight, Eye, EyeOff, Check, AlertCircle, Lock } from 'lucide-react'
 
 const rules = [
-  { id:'length',  label:'8+ characters',     test: p => p.length >= 8 },
+  { id:'length',  label:'8+ characters',      test: p => p.length >= 8 },
   { id:'upper',   label:'Uppercase (A–Z)',    test: p => /[A-Z]/.test(p) },
   { id:'number',  label:'Number (0–9)',       test: p => /[0-9]/.test(p) },
-  { id:'special', label:'Special char',      test: p => /[^A-Za-z0-9]/.test(p) },
+  { id:'special', label:'Special char',       test: p => /[^A-Za-z0-9]/.test(p) },
 ]
+
+// --- MOVE THIS OUTSIDE THE MAIN COMPONENT ---
+const PageShell = ({ children }) => (
+  <div className="min-h-screen bg-white relative overflow-hidden flex flex-col">
+    <div className="absolute inset-0 bg-grid-soft opacity-60 pointer-events-none" />
+    <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
+    <div className="absolute top-40 -left-32 w-[400px] h-[400px] rounded-full bg-[#00D4AA]/10 blur-3xl pointer-events-none" />
+    <nav className="relative z-10 flex items-center justify-between px-6 md:px-14 h-16 border-b border-[#F3F4F6] bg-white/80 backdrop-blur-sm">
+      <Link to="/" className="flex items-center gap-2.5">
+        <div className="relative w-8 h-8 rounded-lg bg-[#0A0A0A] flex items-center justify-center">
+          <span className="text-white font-semibold text-[13px] tracking-tight">SA</span>
+          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#00D4AA] border border-white" />
+        </div>
+        <span className="font-semibold text-[17px] tracking-[-0.02em] text-[#0A0A0A]">StratifyAI</span>
+      </Link>
+    </nav>
+    <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-16">
+      <div className="w-full max-w-[420px]">{children}</div>
+    </div>
+  </div>
+)
 
 export default function ResetPassword() {
   const navigate = useNavigate()
@@ -50,25 +71,7 @@ export default function ResetPassword() {
     else { setSuccess(true); await supabase.auth.signOut(); setTimeout(() => navigate('/login'), 2500) }
   }
 
-  const PageShell = ({ children }) => (
-    <div className="min-h-screen bg-white relative overflow-hidden flex flex-col">
-      <div className="absolute inset-0 bg-grid-soft opacity-60 pointer-events-none" />
-      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
-      <div className="absolute top-40 -left-32 w-[400px] h-[400px] rounded-full bg-[#00D4AA]/10 blur-3xl pointer-events-none" />
-      <nav className="relative z-10 flex items-center justify-between px-6 md:px-14 h-16 border-b border-[#F3F4F6] bg-white/80 backdrop-blur-sm">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="relative w-8 h-8 rounded-lg bg-[#0A0A0A] flex items-center justify-center">
-            <span className="text-white font-semibold text-[13px] tracking-tight">SA</span>
-            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#00D4AA] border border-white" />
-          </div>
-          <span className="font-semibold text-[17px] tracking-[-0.02em] text-[#0A0A0A]">StratifyAI</span>
-        </Link>
-      </nav>
-      <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-16">
-        <div className="w-full max-w-[420px]">{children}</div>
-      </div>
-    </div>
-  )
+  // --- REMOVED PageShell FROM HERE ---
 
   if (checking) return (
     <PageShell>
