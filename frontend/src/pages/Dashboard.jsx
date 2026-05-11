@@ -167,16 +167,11 @@ export default function Dashboard() {
   )
 
   return (
-    <div className="flex min-h-screen bg-[#F7F7F9]" style={{ fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+    <div className="flex min-h-screen bg-[#F9FAFB]">
 
-      {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col w-[220px] fixed top-0 bottom-0 left-0 bg-[#0A0A0A] z-30 overflow-y-auto">
-        <SB />
-      </aside>
-
-      {/* Mobile sidebar overlay */}
+      {/* Sidebar overlay — all screen sizes */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <aside className="absolute left-0 top-0 bottom-0 w-64 bg-[#0A0A0A] overflow-y-auto shadow-2xl">
             <div className="flex justify-end p-3">
@@ -193,27 +188,27 @@ export default function Dashboard() {
       )}
 
       {/* Main */}
-      <main className="flex-1 flex flex-col min-h-screen lg:ml-[220px]">
+      <main className="flex-1 flex flex-col min-h-screen">
 
         {/* Topbar */}
-        <header className="sticky top-0 z-40 h-14 bg-white/80 backdrop-blur-xl border-b border-[#F0F0F3] flex items-center justify-between px-5 gap-3">
-          <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-40 h-16 bg-white/80 backdrop-blur-xl border-b border-[#E5E7EB] flex items-center justify-between px-5 gap-3">
+          <div className="flex items-center gap-4">
             <button
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden w-8 h-8 rounded-lg border border-[#E5E7EB] bg-white flex items-center justify-center cursor-pointer"
+              className="w-8 h-8 rounded-lg border border-[#E5E7EB] bg-white flex items-center justify-center cursor-pointer hover:bg-[#F9FAFB] transition-colors"
             >
               <Menu className="w-4 h-4 text-[#6B7280]" />
             </button>
-            <div className="flex items-center gap-2 text-[13px]">
-              <span className="text-[#9CA3AF] hidden sm:block">StratifyAI</span>
-              <ChevronRight className="w-3.5 h-3.5 text-[#D1D5DB] hidden sm:block" />
-              <span className="font-medium text-[#0A0A0A]">
-                {activeTab === 'overview' ? 'Dashboard' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-              </span>
-            </div>
+            <Link to="/" className="flex items-center gap-2.5 no-underline">
+              <div className="relative w-7 h-7 rounded-md bg-[#0A0A0A] flex items-center justify-center">
+                <span className="text-white font-mono text-[12px] font-medium tracking-tighter">SA</span>
+                <span className="absolute -right-0.5 -top-0.5 w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />
+              </div>
+              <span className="font-semibold text-[17px] tracking-tight text-[#0A0A0A]">StratifyAI</span>
+            </Link>
           </div>
-          <div className="flex items-center gap-2">
-            <button className="relative w-8 h-8 rounded-lg border border-[#E5E7EB] bg-white flex items-center justify-center cursor-pointer hover:bg-[#FAFAFA] transition-colors">
+          <div className="flex items-center gap-2.5">
+            <button className="relative w-8 h-8 rounded-lg border border-[#E5E7EB] bg-white flex items-center justify-center cursor-pointer hover:bg-[#F9FAFB] transition-colors">
               <Bell className="w-3.5 h-3.5 text-[#6B7280]" />
               <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#E54D2E] border border-white" />
             </button>
@@ -266,7 +261,7 @@ export default function Dashboard() {
                   { label: 'Ads created',      value: '12',      sub: 'by Kai this month', color: '#F76808', bg: '#FFF3E8', icon: TrendingUp },
                   { label: 'Current plan',     value: 'Starter', isLink: true,             color: '#8B5CF6', bg: '#F3EEFF', icon: BarChart3 },
                 ].map(({ label, value, sub, color, bg, icon: Icon, isLink }) => (
-                  <div key={label} className="bg-white rounded-2xl border border-[#F0F0F3] p-5">
+                  <div key={label} className="bg-white rounded-2xl border border-[#E5E7EB] p-5">
                     <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-3.5" style={{ background: bg }}>
                       <Icon className="w-4 h-4" style={{ color }} />
                     </div>
@@ -290,7 +285,7 @@ export default function Dashboard() {
                   const Icon = cfg?.icon || Zap
                   const agentData = AGENTS.find(a => a.name === top)
                   return (
-                    <div className="bg-white rounded-2xl border border-[#F0F0F3] overflow-hidden">
+                    <div className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden">
                       <div className="h-[3px]" style={{ background: cfg?.grad }} />
                       <div className="p-6">
                         <div className="font-mono text-[10px] tracking-[0.16em] uppercase mb-4" style={{ color: cfg?.color }}>
@@ -324,12 +319,12 @@ export default function Dashboard() {
                 })()}
 
                 {/* Checklist */}
-                <div className="bg-white rounded-2xl border border-[#F0F0F3] p-5">
+                <div className="bg-white rounded-2xl border border-[#E5E7EB] p-5">
                   <div className="flex items-center justify-between mb-1">
                     <div className="text-[13px] font-medium text-[#0A0A0A]">Get started</div>
                     <div className="font-mono text-[10px] text-[#9CA3AF]">1 / 4</div>
                   </div>
-                  <div className="h-[3px] bg-[#F0F0F3] rounded-full mb-5 overflow-hidden">
+                  <div className="h-[3px] bg-[#E5E7EB] rounded-full mb-5 overflow-hidden">
                     <div className="h-full w-1/4 rounded-full bg-[#0066FF]" />
                   </div>
                   <div className="flex flex-col gap-4">
@@ -368,7 +363,7 @@ export default function Dashboard() {
                 </button>
               </div>
               <motion.div variants={fade} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sorted.map((agent, i) => {
+                {sorted.map((agent) => {
                   const cfg = AGENT_CFG[agent.name]
                   const stats = MOCK_STATS[agent.name]
                   const Icon = cfg?.icon || Zap
@@ -376,20 +371,21 @@ export default function Dashboard() {
                   const status = statuses[agent.name]
 
                   if (!isUnlocked) return (
-                    <div key={agent.name} className="bg-white rounded-2xl border border-[#F0F0F3] p-5 opacity-40">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#F3F4F6] flex items-center justify-center">
-                          <Lock className="w-3.5 h-3.5 text-[#C4C4CC]" />
+                    <div key={agent.name} className="bg-white rounded-2xl border border-[#E5E7EB] p-5 flex flex-col">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-[#F3F4F6] flex items-center justify-center shrink-0">
+                          <Lock className="w-4 h-4 text-[#C4C4CC]" />
                         </div>
                         <div>
-                          <div className="text-[13px] font-medium text-[#9CA3AF]">{agent.name}</div>
-                          <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#C4C4CC]">{cfg?.tag}</div>
+                          <div className="text-[14px] font-medium text-[#9CA3AF]">{agent.name}</div>
+                          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#C4C4CC] mt-0.5">{cfg?.tag}</div>
                         </div>
                       </div>
-                      <div className="h-px bg-[#F3F4F6] my-3" />
+                      <p className="text-[13px] text-[#C4C4CC] leading-relaxed mb-4 flex-1">{agent.desc}</p>
+                      <div className="h-px bg-[#F3F4F6] mb-3" />
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] text-[#C4C4CC]">Upgrade to unlock</span>
-                        <Link to="/pricing" className="text-[11px] font-medium text-[#0066FF] no-underline">Upgrade →</Link>
+                        <span className="text-[12px] text-[#C4C4CC]">Upgrade to unlock</span>
+                        <Link to="/pricing" className="text-[12px] font-medium text-[#0066FF] no-underline hover:underline">Upgrade →</Link>
                       </div>
                     </div>
                   )
@@ -397,28 +393,21 @@ export default function Dashboard() {
                   return (
                     <div
                       key={agent.name}
-                      className="bg-white rounded-2xl border border-[#F0F0F3] overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-200 cursor-default"
+                      className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-200 cursor-default flex flex-col"
                     >
                       <div className="h-[3px]" style={{ background: cfg?.grad }} />
-                      <div className="p-5">
+                      <div className="p-5 flex flex-col flex-1">
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: cfg?.grad }}>
                               <Icon className="w-4 h-4 text-white" />
                             </div>
                             <div>
-                              <div className="flex items-center gap-1.5">
-                                <span className="text-[14px] font-medium tracking-tight text-[#0A0A0A]">{agent.name}</span>
-                                {i === 0 && (
-                                  <span className="font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full" style={{ background: cfg?.bg, color: cfg?.color }}>
-                                    Top
-                                  </span>
-                                )}
-                              </div>
+                              <div className="text-[14px] font-medium tracking-tight text-[#0A0A0A]">{agent.name}</div>
                               <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#9CA3AF] mt-0.5">{cfg?.tag}</div>
                             </div>
                           </div>
-                          <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full font-mono text-[10px] ${
+                          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full font-mono text-[10px] ${
                             status === 'active' ? 'bg-[#E6FAF5] text-[#00B894]' :
                             status === 'setup'  ? 'bg-[#FFF3E8] text-[#F76808]' :
                             'bg-[#F3F4F6] text-[#9CA3AF]'
@@ -428,25 +417,27 @@ export default function Dashboard() {
                           </div>
                         </div>
 
-                        {status === 'active' && stats && (
-                          <div className="rounded-xl p-3.5 mb-4" style={{ background: cfg?.bg }}>
-                            <div className="font-mono text-[10px] uppercase tracking-[0.1em] mb-2" style={{ color: `${cfg?.color}90` }}>{stats.label}</div>
-                            <div className="flex items-baseline gap-2 mb-2">
-                              <span className="text-[22px] font-medium tracking-tight" style={{ color: cfg?.color }}>{stats.value}</span>
-                              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: `${cfg?.color}18`, color: cfg?.color }}>{stats.trend}</span>
+                        <div className="flex-1">
+                          {status === 'active' && stats && (
+                            <div className="rounded-xl p-3.5 mb-4" style={{ background: cfg?.bg }}>
+                              <div className="font-mono text-[10px] uppercase tracking-[0.1em] mb-2" style={{ color: `${cfg?.color}90` }}>{stats.label}</div>
+                              <div className="flex items-baseline gap-2 mb-2">
+                                <span className="text-[22px] font-medium tracking-tight" style={{ color: cfg?.color }}>{stats.value}</span>
+                                <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: `${cfg?.color}18`, color: cfg?.color }}>{stats.trend}</span>
+                              </div>
+                              <div className="h-1 rounded-full overflow-hidden" style={{ background: `${cfg?.color}20` }}>
+                                <div className="h-full rounded-full" style={{ width: `${stats.pct}%`, background: cfg?.grad }} />
+                              </div>
                             </div>
-                            <div className="h-1 rounded-full overflow-hidden" style={{ background: `${cfg?.color}20` }}>
-                              <div className="h-full rounded-full" style={{ width: `${stats.pct}%`, background: cfg?.grad }} />
-                            </div>
-                          </div>
-                        )}
+                          )}
 
-                        {status === 'setup' && (
-                          <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 mb-4 bg-[#FFFBF0] border border-[#FED7AA]">
-                            <AlertCircle className="w-3.5 h-3.5 text-[#F76808] shrink-0" />
-                            <span className="text-[12px] font-medium text-[#F76808]">Setup required to activate</span>
-                          </div>
-                        )}
+                          {status === 'setup' && (
+                            <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 mb-4 bg-[#FFFBF0] border border-[#FED7AA]">
+                              <AlertCircle className="w-3.5 h-3.5 text-[#F76808] shrink-0" />
+                              <span className="text-[12px] font-medium text-[#F76808]">Setup required to activate</span>
+                            </div>
+                          )}
+                        </div>
 
                         <div className="h-px bg-[#F3F4F6] mb-3" />
                         <Link
@@ -484,20 +475,21 @@ export default function Dashboard() {
                   const status = statuses[agent.name]
 
                   if (!isUnlocked) return (
-                    <div key={agent.name} className="bg-white rounded-2xl border border-[#F0F0F3] p-5 opacity-40">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#F3F4F6] flex items-center justify-center">
-                          <Lock className="w-3.5 h-3.5 text-[#C4C4CC]" />
+                    <div key={agent.name} className="bg-white rounded-2xl border border-[#E5E7EB] p-5 flex flex-col">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-[#F3F4F6] flex items-center justify-center shrink-0">
+                          <Lock className="w-4 h-4 text-[#C4C4CC]" />
                         </div>
                         <div>
-                          <div className="text-[13px] font-medium text-[#9CA3AF]">{agent.name}</div>
-                          <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#C4C4CC]">{cfg?.tag}</div>
+                          <div className="text-[14px] font-medium text-[#9CA3AF]">{agent.name}</div>
+                          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#C4C4CC] mt-0.5">{cfg?.tag}</div>
                         </div>
                       </div>
-                      <div className="h-px bg-[#F3F4F6] my-3" />
-                      <div className="flex justify-between items-center">
-                        <span className="text-[11px] text-[#C4C4CC]">Upgrade to unlock</span>
-                        <Link to="/pricing" className="text-[11px] font-medium text-[#0066FF] no-underline">Upgrade →</Link>
+                      <p className="text-[13px] text-[#C4C4CC] leading-relaxed mb-4 flex-1">{agent.desc}</p>
+                      <div className="h-px bg-[#F3F4F6] mb-3" />
+                      <div className="flex items-center justify-between">
+                        <span className="text-[12px] text-[#C4C4CC]">Upgrade to unlock</span>
+                        <Link to="/pricing" className="text-[12px] font-medium text-[#0066FF] no-underline hover:underline">Upgrade →</Link>
                       </div>
                     </div>
                   )
@@ -505,10 +497,10 @@ export default function Dashboard() {
                   return (
                     <div
                       key={agent.name}
-                      className="bg-white rounded-2xl border border-[#F0F0F3] overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-200"
+                      className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col"
                     >
                       <div className="h-[3px]" style={{ background: cfg?.grad }} />
-                      <div className="p-5">
+                      <div className="p-5 flex flex-col flex-1">
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: cfg?.grad }}>
@@ -516,10 +508,10 @@ export default function Dashboard() {
                             </div>
                             <div>
                               <div className="text-[14px] font-medium tracking-tight text-[#0A0A0A]">{agent.name}</div>
-                              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#0066FF] mt-0.5">{agent.role}</div>
+                              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#9CA3AF] mt-0.5">{cfg?.tag}</div>
                             </div>
                           </div>
-                          <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full font-mono text-[10px] ${
+                          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full font-mono text-[10px] ${
                             status === 'active' ? 'bg-[#E6FAF5] text-[#00B894]' : 'bg-[#FFF3E8] text-[#F76808]'
                           }`}>
                             {status === 'active' && <span className="w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />}
@@ -527,21 +519,24 @@ export default function Dashboard() {
                           </div>
                         </div>
 
-                        {stats && status === 'active' && (
-                          <div className="rounded-xl p-3.5 mb-4" style={{ background: cfg?.bg }}>
-                            <div className="font-mono text-[10px] uppercase tracking-[0.1em] mb-2" style={{ color: `${cfg?.color}90` }}>{stats.label}</div>
-                            <div className="text-[22px] font-medium tracking-tight mb-2" style={{ color: cfg?.color }}>{stats.value}</div>
-                            <div className="h-1 rounded-full overflow-hidden" style={{ background: `${cfg?.color}20` }}>
-                              <div className="h-full rounded-full" style={{ width: `${stats.pct}%`, background: cfg?.grad }} />
+                        <div className="flex-1">
+                          {stats && status === 'active' && (
+                            <div className="rounded-xl p-3.5 mb-4" style={{ background: cfg?.bg }}>
+                              <div className="font-mono text-[10px] uppercase tracking-[0.1em] mb-2" style={{ color: `${cfg?.color}90` }}>{stats.label}</div>
+                              <div className="text-[22px] font-medium tracking-tight mb-2" style={{ color: cfg?.color }}>{stats.value}</div>
+                              <div className="h-1 rounded-full overflow-hidden" style={{ background: `${cfg?.color}20` }}>
+                                <div className="h-full rounded-full" style={{ width: `${stats.pct}%`, background: cfg?.grad }} />
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
 
-                        {status === 'setup' && (
-                          <div className="rounded-xl px-3.5 py-2.5 mb-4 bg-[#FFFBF0] border border-[#FED7AA] text-[12px] font-medium text-[#F76808]">
-                            Complete setup to activate
-                          </div>
-                        )}
+                          {status === 'setup' && (
+                            <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 mb-4 bg-[#FFFBF0] border border-[#FED7AA]">
+                              <AlertCircle className="w-3.5 h-3.5 text-[#F76808] shrink-0" />
+                              <span className="text-[12px] font-medium text-[#F76808]">Setup required to activate</span>
+                            </div>
+                          )}
+                        </div>
 
                         <div className="h-px bg-[#F3F4F6] mb-3" />
                         <Link
@@ -569,7 +564,7 @@ export default function Dashboard() {
                 <p className="mt-1.5 text-[13.5px] text-[#6B7280]">Manage your account and preferences</p>
               </motion.div>
 
-              <motion.div variants={fade} className="bg-white rounded-2xl border border-[#F0F0F3] p-6 mb-4">
+              <motion.div variants={fade} className="bg-white rounded-2xl border border-[#E5E7EB] p-6 mb-4">
                 <div className="text-[14px] font-medium text-[#0A0A0A] mb-5">Account details</div>
                 {[
                   { label: 'Full name', val: fullName,                type: 'text',  dis: false },
@@ -584,7 +579,7 @@ export default function Dashboard() {
                       disabled={dis}
                       className="w-full px-4 py-3 rounded-xl border text-[13px] outline-none transition-colors focus:border-[#0066FF]"
                       style={{
-                        borderColor: dis ? '#F0F0F3' : '#E5E7EB',
+                        borderColor: dis ? '#E5E7EB' : '#E5E7EB',
                         background: dis ? '#FAFAFA' : 'white',
                         color: dis ? '#9CA3AF' : '#0A0A0A',
                         boxSizing: 'border-box',
@@ -597,7 +592,7 @@ export default function Dashboard() {
                 </button>
               </motion.div>
 
-              <motion.div variants={fade} className="bg-white rounded-2xl border border-[#F0F0F3] p-6 mb-4">
+              <motion.div variants={fade} className="bg-white rounded-2xl border border-[#E5E7EB] p-6 mb-4">
                 <div className="text-[14px] font-medium text-[#0A0A0A] mb-1.5">Preferences</div>
                 <p className="text-[13px] text-[#9CA3AF] mb-4 leading-relaxed">
                   Retake the setup quiz to repersonalize your dashboard.
