@@ -79,32 +79,29 @@ export const ECOM_PRICING = [
     highlight: false,
     bullets: [
       "3 agents of choice",
-      "Up to 5 Meta ads / month",
       "Email support",
       "Onboarding within 7 days",
     ],
   },
   {
     name: "Growth",
-    price: "$2,997",
+    price: "$2,487",
     cadence: "/mo",
     tag: "Most popular",
     highlight: true,
     bullets: [
       "All 7 agents deployed",
-      "20 Meta ads / month",
       "Slack support",
       "Monthly strategy call",
     ],
   },
   {
     name: "Scale",
-    price: "$6,997",
+    price: "$6,447",
     cadence: "/mo",
     highlight: false,
     bullets: [
       "All 7 agents deployed",
-      "60 Meta ads / month",
       "Dedicated account manager",
       "Priority everything",
     ],
@@ -126,7 +123,7 @@ export const HC_PRICING = [
   },
   {
     name: "Practice",
-    price: "$3,997",
+    price: "$3,557",
     cadence: "/mo",
     tag: "Most popular",
     highlight: true,
@@ -139,7 +136,7 @@ export const HC_PRICING = [
   },
   {
     name: "Enterprise",
-    price: "$7,997+",
+    price: "$6,447+",
     cadence: "/mo",
     highlight: false,
     bullets: [
