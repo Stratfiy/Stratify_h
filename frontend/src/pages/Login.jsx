@@ -29,145 +29,114 @@ export default function Login() {
     setError('')
     setLoading(true)
     const { error } = await signIn(email, password)
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-    } else {
-      navigate('/dashboard')
-    }
+    if (error) { setError(error.message); setLoading(false) }
+    else navigate('/')
   }
 
   const handleGoogle = async () => {
     setError('')
     setGoogleLoading(true)
     const { error } = await signInWithGoogle()
-    if (error) {
-      setError(error.message)
-      setGoogleLoading(false)
-    }
+    if (error) { setError(error.message); setGoogleLoading(false) }
   }
 
   return (
-    <div className="min-h-screen bg-white flex">
-      <div className="hidden lg:flex lg:w-1/2 bg-[#0A0A0A] flex-col justify-between p-12">
+    <div className="min-h-screen bg-white relative overflow-hidden flex flex-col">
+      {/* Background matching hero */}
+      <div className="absolute inset-0 bg-grid-soft opacity-60 pointer-events-none" />
+      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
+      <div className="absolute top-40 -left-32 w-[400px] h-[400px] rounded-full bg-[#00D4AA]/10 blur-3xl pointer-events-none" />
+
+      {/* Nav bar — same as landing page */}
+      <nav className="relative z-10 flex items-center justify-between px-6 md:px-14 h-16 border-b border-[#F3F4F6] bg-white/80 backdrop-blur-sm">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="relative w-7 h-7 rounded-md bg-white/10 flex items-center justify-center">
-            <span className="text-white font-mono text-[12px] font-medium tracking-tighter">SA</span>
-            <span className="absolute -right-0.5 -top-0.5 w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />
+          <div className="relative w-8 h-8 rounded-lg bg-[#0A0A0A] flex items-center justify-center">
+            <span className="text-white font-semibold text-[13px] tracking-tight">SA</span>
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#00D4AA] border border-white" />
           </div>
-          <span className="font-semibold text-[17px] tracking-tight text-white">StratifyAI</span>
+          <span className="font-semibold text-[17px] tracking-[-0.02em] text-[#0A0A0A]">StratifyAI</span>
         </Link>
-        <div>
-          <p className="text-[#6B7280] text-sm font-mono uppercase tracking-widest mb-4">YOUR AI OPERATIONS LAYER</p>
-          <h2 className="text-white text-4xl font-semibold tracking-tight leading-tight mb-6">
-            Your agents are<br />working while<br />you sleep.
-          </h2>
-          <div className="flex flex-col gap-3">
-            {[
-              { agent: 'Kai', status: 'Created 3 ad creatives', time: '2m ago', color: '#0066FF' },
-              { agent: 'Remy', status: 'Recovered 2 abandoned carts', time: '14m ago', color: '#00D4AA' },
-              { agent: 'Echo', status: 'Collected 8 new reviews', time: '1h ago', color: '#F59E0B' },
-            ].map((item) => (
-              <div key={item.agent} className="flex items-center gap-3 bg-white/5 rounded-xl px-4 py-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold"
-                  style={{ backgroundColor: item.color + '20', border: `1px solid ${item.color}40` }}>
-                  {item.agent[0]}
-                </div>
-                <div className="flex-1">
-                  <p className="text-white text-sm font-medium">{item.agent}</p>
-                  <p className="text-[#6B7280] text-xs">{item.status}</p>
-                </div>
-                <span className="text-[#6B7280] text-xs">{item.time}</span>
-              </div>
-            ))}
+        <p className="text-[13px] text-[#6B7280]">
+          Don't have an account?{' '}
+          <Link to="/signup" className="text-[#0066FF] font-medium hover:underline">Sign up</Link>
+        </p>
+      </nav>
+
+      {/* Main content */}
+      <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-16">
+        <div className="w-full max-w-[420px]">
+
+          {/* Eyebrow */}
+          <div className="eyebrow flex items-center gap-2.5 mb-6">
+            <span className="agent-dot" />
+            Welcome back
           </div>
-        </div>
-        <p className="text-[#4B5563] text-sm">© 2026 StratifyAI. All rights reserved.</p>
-      </div>
 
-      <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 py-12 lg:px-16">
-        <div className="max-w-md w-full mx-auto">
-          <Link to="/" className="flex items-center gap-2.5 mb-10 lg:hidden">
-            <div className="relative w-7 h-7 rounded-md bg-[#0A0A0A] flex items-center justify-center">
-              <span className="text-white font-mono text-[12px] font-medium tracking-tighter">SA</span>
-              <span className="absolute -right-0.5 -top-0.5 w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />
-            </div>
-            <span className="font-semibold text-[17px] tracking-tight">StratifyAI</span>
-          </Link>
+          {/* Heading — same size/weight as landing page h2 */}
+          <h1 className="text-[36px] sm:text-[44px] leading-[1.05] tracking-[-0.025em] font-medium text-[#0A0A0A] mb-3">
+            Sign in to your<br />
+            <span className="text-[#0066FF]">dashboard.</span>
+          </h1>
+          <p className="text-[16px] text-[#4B5563] leading-relaxed mb-8">
+            Manage your AI agents, track performance, and grow faster.
+          </p>
 
-          <h1 className="text-3xl font-semibold tracking-tight mb-2">Welcome back</h1>
-          <p className="text-[#6B7280] mb-8">Sign in to your dashboard to manage your agents.</p>
-
-          <button
-            onClick={handleGoogle}
-            disabled={googleLoading}
-            className="w-full flex items-center justify-center gap-3 border border-[#E5E7EB] rounded-xl py-3 px-4 text-sm font-medium text-[#0A0A0A] hover:bg-[#F9FAFB] transition-colors mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          {/* Google button */}
+          <button onClick={handleGoogle} disabled={googleLoading}
+            className="w-full flex items-center justify-center gap-3 px-5 py-3.5 rounded-full border border-[#E5E7EB] bg-white text-[15px] font-medium text-[#0A0A0A] hover:bg-[#F9FAFB] transition-colors mb-4 disabled:opacity-60">
             {googleLoading
-              ? <div className="w-4 h-4 border-2 border-[#0A0A0A] border-t-transparent rounded-full animate-spin" />
-              : <GoogleIcon />
-            }
+              ? <div className="w-4 h-4 border-2 border-[#0066FF] border-t-transparent rounded-full animate-spin" />
+              : <GoogleIcon />}
             Continue with Google
           </button>
 
+          {/* Divider */}
           <div className="flex items-center gap-3 mb-4">
             <div className="flex-1 h-px bg-[#E5E7EB]" />
-            <span className="text-xs text-[#9CA3AF]">or sign in with email</span>
+            <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#9CA3AF]">or</span>
             <div className="flex-1 h-px bg-[#E5E7EB]" />
           </div>
 
           {error && (
-            <div className="mb-6 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
+            <div className="mb-5 px-4 py-3 rounded-2xl bg-red-50 border border-red-200 text-[14px] text-red-700">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label className="block text-sm font-medium text-[#0A0A0A] mb-1.5">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-[#0A0A0A] text-sm outline-none focus:border-[#0066FF] focus:ring-2 focus:ring-[#0066FF]/10 transition-all"
-              />
+              <label className="block font-mono text-[11px] tracking-[0.18em] uppercase text-[#6B7280] mb-2">Email</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="you@company.com" required
+                className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-[15px] text-[#0A0A0A] outline-none focus:border-[#0066FF] focus:ring-2 focus:ring-[#0066FF]/10 transition-all bg-white" />
             </div>
+
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-sm font-medium text-[#0A0A0A]">Password</label>
-                <Link to="/forgot-password" className="text-sm text-[#0066FF] hover:underline">
-                  Forgot password?
-                </Link>
+              <div className="flex items-center justify-between mb-2">
+                <label className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#6B7280]">Password</label>
+                <Link to="/forgot-password" className="text-[13px] text-[#0066FF] hover:underline font-medium">Forgot password?</Link>
               </div>
               <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-[#0A0A0A] text-sm outline-none focus:border-[#0066FF] focus:ring-2 focus:ring-[#0066FF]/10 transition-all pr-10"
-                />
+                <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••" required
+                  className="w-full px-4 py-3 pr-11 rounded-xl border border-[#E5E7EB] text-[15px] text-[#0A0A0A] outline-none focus:border-[#0066FF] focus:ring-2 focus:ring-[#0066FF]/10 transition-all bg-white" />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#0A0A0A]">
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#0A0A0A] transition-colors">
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
+
             <button type="submit" disabled={loading}
-              className="w-full bg-[#0A0A0A] text-white py-3 rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-[#1a1a1a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2">
+              className="btn-primary mt-2 w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed">
               {loading
                 ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                : <>Sign in <ArrowRight className="w-4 h-4" /></>
-              }
+                : <><span>Sign in</span><ArrowRight className="w-4 h-4" /></>}
             </button>
           </form>
 
-          <p className="text-center text-sm text-[#6B7280] mt-6">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-[#0066FF] hover:underline font-medium">Sign up</Link>
+          <p className="text-center text-[13px] text-[#9CA3AF] mt-6">
+            © 2026 StratifyAI · <Link to="/privacy" className="hover:text-[#6B7280]">Privacy</Link> · <Link to="/terms" className="hover:text-[#6B7280]">Terms</Link>
           </p>
         </div>
       </div>
