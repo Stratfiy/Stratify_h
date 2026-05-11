@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuth } from '@/lib/AuthContext'
-import { ArrowRight, ArrowLeft, Mail, CheckCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { ArrowLeft, ArrowRight, Mail, CheckCircle } from 'lucide-react'
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
@@ -14,139 +13,80 @@ export default function ForgotPassword() {
     e.preventDefault()
     setError('')
     setLoading(true)
-
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     })
-
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-    } else {
-      setSent(true)
-      setLoading(false)
-    }
+    if (error) { setError(error.message); setLoading(false) }
+    else { setSent(true); setLoading(false) }
   }
 
-  if (sent) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-6">
-        <div className="max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-8 h-8 text-green-600" />
-          </div>
-          <h2 className="text-2xl font-semibold tracking-tight mb-3">Check your email</h2>
-          <p className="text-[#6B7280] mb-2">
-            We've sent a password reset link to
-          </p>
-          <p className="font-medium text-[#0A0A0A] mb-6">{email}</p>
-          <p className="text-sm text-[#9CA3AF] mb-8">
-            Didn't receive it? Check your spam folder or{' '}
-            <button
-              onClick={() => setSent(false)}
-              className="text-[#0066FF] hover:underline"
-            >
-              try again
-            </button>
-          </p>
-          <Link
-            to="/login"
-            className="inline-flex items-center gap-2 text-sm text-[#6B7280] hover:text-[#0A0A0A] transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to sign in
-          </Link>
+  if (sent) return (
+    <div style={{ minHeight:'100vh', background:'#F7F7FA', display:'flex', alignItems:'center', justifyContent:'center', padding:24, fontFamily:"-apple-system,sans-serif" }}>
+      <div style={{ maxWidth:420, width:'100%', background:'white', borderRadius:24, padding:40, textAlign:'center', boxShadow:'0 4px 32px rgba(0,0,0,0.08)' }}>
+        <div style={{ width:64, height:64, borderRadius:'50%', background:'#E9F9EE', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 20px' }}>
+          <CheckCircle style={{ width:32, height:32, color:'#30A46C' }} />
         </div>
+        <h2 style={{ fontSize:22, fontWeight:800, color:'#1A1A2E', marginBottom:8 }}>Check your email</h2>
+        <p style={{ fontSize:14, color:'#6B7280', marginBottom:6 }}>We sent a password reset link to</p>
+        <p style={{ fontSize:14, fontWeight:700, color:'#1A1A2E', marginBottom:24 }}>{email}</p>
+        <p style={{ fontSize:12, color:'#9CA3AF', marginBottom:28 }}>
+          Click the link in your email to set a new password. Didn't get it?{' '}
+          <button onClick={() => setSent(false)} style={{ color:'#5B5BD6', fontWeight:700, background:'none', border:'none', cursor:'pointer', fontSize:12 }}>Try again</button>
+        </p>
+        <Link to="/login" style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:13, fontWeight:700, color:'#6B7280', textDecoration:'none' }}>
+          <ArrowLeft style={{ width:14, height:14 }} /> Back to sign in
+        </Link>
       </div>
-    )
-  }
+    </div>
+  )
 
   return (
-    <div className="min-h-screen bg-white flex">
-      {/* Left — branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#0A0A0A] flex-col justify-between p-12">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="relative w-7 h-7 rounded-md bg-white/10 flex items-center justify-center">
-            <span className="text-white font-mono text-[12px] font-medium tracking-tighter">SA</span>
-            <span className="absolute -right-0.5 -top-0.5 w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />
+    <div style={{ minHeight:'100vh', background:'#F7F7FA', display:'flex', fontFamily:"-apple-system,sans-serif" }}>
+      <div className="hidden lg:flex" style={{ width:'45%', background:'linear-gradient(135deg,#5B5BD6,#7C3AED)', flexDirection:'column', justifyContent:'space-between', padding:48, position:'relative', overflow:'hidden' }}>
+        <div style={{ position:'absolute', top:-60, right:-60, width:240, height:240, borderRadius:'50%', background:'rgba(255,255,255,0.07)' }} />
+        <Link to="/" style={{ display:'flex', alignItems:'center', gap:10, textDecoration:'none', position:'relative', zIndex:2 }}>
+          <div style={{ width:36, height:36, borderRadius:10, background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+            <span style={{ color:'white', fontWeight:900, fontSize:13 }}>SA</span>
           </div>
-          <span className="font-semibold text-[17px] tracking-tight text-white">StratifyAI</span>
+          <span style={{ color:'white', fontWeight:900, fontSize:16 }}>StratifyAI</span>
         </Link>
-
-        <div>
-          <p className="text-[#6B7280] text-sm font-mono uppercase tracking-widest mb-4">ACCOUNT RECOVERY</p>
-          <h2 className="text-white text-4xl font-semibold tracking-tight leading-tight mb-6">
-            Happens to<br />the best of us.
-          </h2>
-          <p className="text-[#6B7280] text-sm leading-relaxed">
-            Enter your email and we'll send you a secure link to reset your password.
-            The link expires in 1 hour.
-          </p>
+        <div style={{ position:'relative', zIndex:2 }}>
+          <p style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:2, marginBottom:16 }}>ACCOUNT RECOVERY</p>
+          <h2 style={{ color:'white', fontSize:36, fontWeight:900, lineHeight:1.2, letterSpacing:-0.8, marginBottom:16 }}>Happens to<br />the best of us.</h2>
+          <p style={{ color:'rgba(255,255,255,0.6)', fontSize:14, lineHeight:1.7 }}>Enter your email and we'll send a secure link to reset your password.</p>
         </div>
-
-        <p className="text-[#4B5563] text-sm">© 2026 StratifyAI. All rights reserved.</p>
+        <p style={{ color:'rgba(255,255,255,0.3)', fontSize:12, position:'relative', zIndex:2 }}>© 2026 StratifyAI</p>
       </div>
 
-      {/* Right — form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 py-12 lg:px-16">
-        <div className="max-w-md w-full mx-auto">
-          {/* Mobile logo */}
-          <Link to="/" className="flex items-center gap-2.5 mb-10 lg:hidden">
-            <div className="relative w-7 h-7 rounded-md bg-[#0A0A0A] flex items-center justify-center">
-              <span className="text-white font-mono text-[12px] font-medium tracking-tighter">SA</span>
-              <span className="absolute -right-0.5 -top-0.5 w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />
-            </div>
-            <span className="font-semibold text-[17px] tracking-tight">StratifyAI</span>
-          </Link>
-
-          <div className="w-12 h-12 bg-[#F3F4F6] rounded-xl flex items-center justify-center mb-6">
-            <Mail className="w-6 h-6 text-[#0A0A0A]" />
+      <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 24px' }}>
+        <div style={{ maxWidth:420, width:'100%' }}>
+          <div style={{ width:48, height:48, borderRadius:14, background:'#EEEEFF', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:20 }}>
+            <Mail style={{ width:22, height:22, color:'#5B5BD6' }} />
           </div>
+          <h1 style={{ fontSize:28, fontWeight:900, color:'#1A1A2E', letterSpacing:-0.6, marginBottom:8 }}>Reset your password</h1>
+          <p style={{ fontSize:14, color:'#6B7280', marginBottom:28 }}>Enter the email you signed up with and we'll send you a reset link.</p>
 
-          <h1 className="text-3xl font-semibold tracking-tight mb-2">Reset your password</h1>
-          <p className="text-[#6B7280] mb-8">
-            Enter the email associated with your account and we'll send a reset link.
-          </p>
+          {error && <div style={{ background:'#FFF0EE', border:'1px solid #FCA5A5', borderRadius:12, padding:'12px 16px', marginBottom:20, fontSize:13, color:'#E54D2E' }}>{error}</div>}
 
-          {error && (
-            <div className="mb-6 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
-              {error}
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom:20 }}>
+              <label style={{ display:'block', fontSize:12, fontWeight:700, color:'#374151', marginBottom:6 }}>Email address</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@company.com" required
+                style={{ width:'100%', padding:'13px 16px', borderRadius:12, border:'1.5px solid #E5E7EB', fontSize:14, outline:'none', color:'#1A1A2E', boxSizing:'border-box' }}
+                onFocus={e => e.target.style.borderColor='#5B5BD6'} onBlur={e => e.target.style.borderColor='#E5E7EB'} />
             </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[#0A0A0A] mb-1.5">Email address</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-[#0A0A0A] text-sm outline-none focus:border-[#0066FF] focus:ring-2 focus:ring-[#0066FF]/10 transition-all"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#0A0A0A] text-white py-3 rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-[#1a1a1a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-            >
-              {loading ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>Send reset link <ArrowRight className="w-4 h-4" /></>
-              )}
+            <button type="submit" disabled={loading}
+              style={{ width:'100%', padding:13, borderRadius:12, border:'none', background:'linear-gradient(135deg,#5B5BD6,#7C3AED)', color:'white', fontSize:14, fontWeight:800, cursor:loading?'not-allowed':'pointer', opacity:loading?0.7:1, display:'flex', alignItems:'center', justifyContent:'center', gap:8, boxShadow:'0 4px 16px rgba(91,91,214,0.3)' }}>
+              {loading ? <div style={{ width:18, height:18, border:'2px solid white', borderTopColor:'transparent', borderRadius:'50%', animation:'spin 0.6s linear infinite' }} />
+                : <><span>Send reset link</span><ArrowRight style={{ width:16, height:16 }} /></>}
             </button>
           </form>
-
-          <Link
-            to="/login"
-            className="flex items-center justify-center gap-1.5 text-sm text-[#6B7280] hover:text-[#0A0A0A] transition-colors mt-6"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to sign in
+          <Link to="/login" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, marginTop:20, fontSize:13, fontWeight:700, color:'#6B7280', textDecoration:'none' }}>
+            <ArrowLeft style={{ width:14, height:14 }} /> Back to sign in
           </Link>
         </div>
       </div>
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   )
 }
