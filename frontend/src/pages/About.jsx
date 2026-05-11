@@ -58,11 +58,13 @@ export default function About() {
         </div>
       </section>
 
-      {/* Founder */}
+      {/* Founders */}
       <section className="py-20 md:py-28 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="about-founder">
         <div className="container-x">
           <FadeUp>
-            <div className="eyebrow mb-6">The founder</div>
+            <div className="eyebrow mb-10">The founders</div>
+
+            {/* Nithish — Founder & CEO */}
             <div className="grid md:grid-cols-12 gap-10 items-center">
               <div className="md:col-span-3">
                 <div className="aspect-square rounded-2xl bg-[#0A0A0A] flex items-center justify-center relative overflow-hidden">
@@ -78,7 +80,7 @@ export default function About() {
                   Nithish · Founder & CEO
                 </div>
                 <h3 className="mt-3 text-[26px] md:text-[34px] tracking-[-0.02em] font-medium leading-[1.15] max-w-[680px]">
-                  23. NIT Durgapur. Built my first AI agent at 21 to recover abandoned carts for a friend's Shopify store.
+                  NIT Durgapur. Built my first AI agent at 21 to recover abandoned carts for a friend's Shopify store.
                 </h3>
                 <p className="mt-5 text-[16px] text-[#4B5563] leading-relaxed max-w-[680px]">
                   It worked too well. He told 3 founders. They told 30. StratifyAI is what came out of that
@@ -87,6 +89,37 @@ export default function About() {
                 <div className="mt-7">
                   <Link to="/contact" className="btn-primary" data-testid="about-cta">
                     Talk to Nithish <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Sri Harsha — Co-Founder */}
+            <div className="grid md:grid-cols-12 gap-10 items-center mt-16 pt-16 border-t border-[#E5E7EB]">
+              <div className="md:col-span-3">
+                <div className="aspect-square rounded-2xl bg-[#0A0A0A] flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-grid-dark opacity-50" />
+                  <span className="text-white font-mono text-[88px] font-medium tracking-tighter relative">S</span>
+                  <span className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-[#00D4AA]/15 border border-[#00D4AA]/30 font-mono text-[10px] tracking-wider uppercase text-[#00D4AA]">
+                    Co-Founder
+                  </span>
+                </div>
+              </div>
+              <div className="md:col-span-9">
+                <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#0066FF]">
+                  Sri Harsha · Co-Founder
+                </div>
+                <h3 className="mt-3 text-[26px] md:text-[34px] tracking-[-0.02em] font-medium leading-[1.15] max-w-[680px]">
+                  NIT Durgapur. Ex-Samsung R&D. Linux kernel engineer turned AI builder.
+                </h3>
+                <p className="mt-5 text-[16px] text-[#4B5563] leading-relaxed max-w-[680px]">
+                  Patched CVEs, optimized kernel performance by 20%, and built custom Linux OS
+                  builds at Samsung Research. Now applying that same systems-level thinking to
+                  StratifyAI — building AI agents that actually work under the hood.
+                </p>
+                <div className="mt-7">
+                  <Link to="/contact" className="btn-primary">
+                    Talk to Sri Harsha <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               </div>
