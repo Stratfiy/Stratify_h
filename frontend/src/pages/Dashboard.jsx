@@ -362,7 +362,7 @@ export default function Dashboard() {
                   View all <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
-              <motion.div variants={fade} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <motion.div variants={fade} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" style={{ gridAutoRows: '1fr' }}>
                 {sorted.map((agent) => {
                   const cfg = AGENT_CFG[agent.name]
                   const stats = MOCK_STATS[agent.name]
@@ -370,55 +370,57 @@ export default function Dashboard() {
                   const isUnlocked = unlocked.includes(agent.name)
                   const status = statuses[agent.name]
 
-                  if (!isUnlocked) return (
-                    <div key={agent.name} className="bg-white rounded-2xl border border-[#E5E7EB] p-5 flex flex-col">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-xl bg-[#F3F4F6] flex items-center justify-center shrink-0">
-                          <Lock className="w-4 h-4 text-[#C4C4CC]" />
-                        </div>
-                        <div>
-                          <div className="text-[14px] font-medium text-[#9CA3AF]">{agent.name}</div>
-                          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#C4C4CC] mt-0.5">{cfg?.tag}</div>
-                        </div>
-                      </div>
-                      <p className="text-[13px] text-[#C4C4CC] leading-relaxed mb-4 flex-1">{agent.desc}</p>
-                      <div className="h-px bg-[#F3F4F6] mb-3" />
-                      <div className="flex items-center justify-between">
-                        <span className="text-[12px] text-[#C4C4CC]">Upgrade to unlock</span>
-                        <Link to="/pricing" className="text-[12px] font-medium text-[#0066FF] no-underline hover:underline">Upgrade →</Link>
-                      </div>
-                    </div>
-                  )
-
                   return (
                     <div
                       key={agent.name}
-                      className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-200 cursor-default flex flex-col"
+                      className={`bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden flex flex-col ${
+                        isUnlocked ? 'hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-200' : ''
+                      }`}
                     >
-                      <div className="h-[3px]" style={{ background: cfg?.grad }} />
+                      {/* Color bar — only for unlocked */}
+                      {isUnlocked && <div className="h-[3px]" style={{ background: cfg?.grad }} />}
+
                       <div className="p-5 flex flex-col flex-1">
-                        <div className="flex items-start justify-between mb-4">
+                        {/* Header — same structure for all */}
+                        <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: cfg?.grad }}>
-                              <Icon className="w-4 h-4 text-white" />
+                            <div
+                              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                              style={{ background: isUnlocked ? cfg?.grad : '#F3F4F6' }}
+                            >
+                              {isUnlocked
+                                ? <Icon className="w-4 h-4 text-white" />
+                                : <Lock className="w-4 h-4 text-[#C4C4CC]" />
+                              }
                             </div>
                             <div>
-                              <div className="text-[14px] font-medium tracking-tight text-[#0A0A0A]">{agent.name}</div>
-                              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#9CA3AF] mt-0.5">{cfg?.tag}</div>
+                              <div className={`text-[14px] font-medium tracking-tight ${isUnlocked ? 'text-[#0A0A0A]' : 'text-[#9CA3AF]'}`}>
+                                {agent.name}
+                              </div>
+                              <div className={`font-mono text-[10px] uppercase tracking-[0.12em] mt-0.5 ${isUnlocked ? 'text-[#9CA3AF]' : 'text-[#C4C4CC]'}`}>
+                                {cfg?.tag}
+                              </div>
                             </div>
                           </div>
-                          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full font-mono text-[10px] ${
-                            status === 'active' ? 'bg-[#E6FAF5] text-[#00B894]' :
-                            status === 'setup'  ? 'bg-[#FFF3E8] text-[#F76808]' :
-                            'bg-[#F3F4F6] text-[#9CA3AF]'
-                          }`}>
-                            {status === 'active' && <span className="w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />}
-                            {status === 'active' ? 'Active' : status === 'setup' ? 'Setup' : 'Pending'}
-                          </div>
+                          {isUnlocked && (
+                            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full font-mono text-[10px] shrink-0 ${
+                              status === 'active' ? 'bg-[#E6FAF5] text-[#00B894]' :
+                              'bg-[#FFF3E8] text-[#F76808]'
+                            }`}>
+                              {status === 'active' && <span className="w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />}
+                              {status === 'active' ? 'Active' : 'Setup'}
+                            </div>
+                          )}
                         </div>
 
+                        {/* Description — always shown */}
+                        <p className={`text-[13px] leading-relaxed mb-4 ${isUnlocked ? 'text-[#6B7280]' : 'text-[#C4C4CC]'}`}>
+                          {agent.desc}
+                        </p>
+
+                        {/* Middle content — flex-1 pushes footer down */}
                         <div className="flex-1">
-                          {status === 'active' && stats && (
+                          {isUnlocked && status === 'active' && stats && (
                             <div className="rounded-xl p-3.5 mb-4" style={{ background: cfg?.bg }}>
                               <div className="font-mono text-[10px] uppercase tracking-[0.1em] mb-2" style={{ color: `${cfg?.color}90` }}>{stats.label}</div>
                               <div className="flex items-baseline gap-2 mb-2">
@@ -431,7 +433,7 @@ export default function Dashboard() {
                             </div>
                           )}
 
-                          {status === 'setup' && (
+                          {isUnlocked && status === 'setup' && (
                             <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 mb-4 bg-[#FFFBF0] border border-[#FED7AA]">
                               <AlertCircle className="w-3.5 h-3.5 text-[#F76808] shrink-0" />
                               <span className="text-[12px] font-medium text-[#F76808]">Setup required to activate</span>
@@ -439,15 +441,23 @@ export default function Dashboard() {
                           )}
                         </div>
 
-                        <div className="h-px bg-[#F3F4F6] mb-3" />
-                        <Link
-                          to={`/dashboard/agent/${agent.name.toLowerCase()}`}
-                          className="flex items-center justify-between text-[13px] font-medium no-underline transition-opacity hover:opacity-70"
-                          style={{ color: cfg?.color }}
-                        >
-                          {status === 'setup' ? 'Complete setup' : 'View details'}
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </Link>
+                        {/* Footer — same structure for all */}
+                        <div className="h-px bg-[#E5E7EB] mb-3" />
+                        {isUnlocked ? (
+                          <Link
+                            to={`/dashboard/agent/${agent.name.toLowerCase()}`}
+                            className="flex items-center justify-between text-[13px] font-medium no-underline transition-opacity hover:opacity-70"
+                            style={{ color: cfg?.color }}
+                          >
+                            {status === 'setup' ? 'Complete setup' : 'View details'}
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </Link>
+                        ) : (
+                          <div className="flex items-center justify-between">
+                            <span className="text-[12px] text-[#C4C4CC]">Upgrade to unlock</span>
+                            <Link to="/pricing" className="text-[12px] font-medium text-[#0066FF] no-underline hover:underline">Upgrade →</Link>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )
@@ -466,7 +476,7 @@ export default function Dashboard() {
                   Sorted by your goals · {unlocked.length} active · {7 - unlocked.length} locked
                 </p>
               </motion.div>
-              <motion.div variants={fade} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <motion.div variants={fade} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" style={{ gridAutoRows: '1fr' }}>
                 {sorted.map((agent) => {
                   const cfg = AGENT_CFG[agent.name]
                   const stats = MOCK_STATS[agent.name]
@@ -474,53 +484,51 @@ export default function Dashboard() {
                   const isUnlocked = unlocked.includes(agent.name)
                   const status = statuses[agent.name]
 
-                  if (!isUnlocked) return (
-                    <div key={agent.name} className="bg-white rounded-2xl border border-[#E5E7EB] p-5 flex flex-col">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-xl bg-[#F3F4F6] flex items-center justify-center shrink-0">
-                          <Lock className="w-4 h-4 text-[#C4C4CC]" />
-                        </div>
-                        <div>
-                          <div className="text-[14px] font-medium text-[#9CA3AF]">{agent.name}</div>
-                          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#C4C4CC] mt-0.5">{cfg?.tag}</div>
-                        </div>
-                      </div>
-                      <p className="text-[13px] text-[#C4C4CC] leading-relaxed mb-4 flex-1">{agent.desc}</p>
-                      <div className="h-px bg-[#F3F4F6] mb-3" />
-                      <div className="flex items-center justify-between">
-                        <span className="text-[12px] text-[#C4C4CC]">Upgrade to unlock</span>
-                        <Link to="/pricing" className="text-[12px] font-medium text-[#0066FF] no-underline hover:underline">Upgrade →</Link>
-                      </div>
-                    </div>
-                  )
-
                   return (
                     <div
                       key={agent.name}
-                      className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col"
+                      className={`bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden flex flex-col ${
+                        isUnlocked ? 'hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-200' : ''
+                      }`}
                     >
-                      <div className="h-[3px]" style={{ background: cfg?.grad }} />
+                      {isUnlocked && <div className="h-[3px]" style={{ background: cfg?.grad }} />}
                       <div className="p-5 flex flex-col flex-1">
-                        <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: cfg?.grad }}>
-                              <Icon className="w-4 h-4 text-white" />
+                            <div
+                              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                              style={{ background: isUnlocked ? cfg?.grad : '#F3F4F6' }}
+                            >
+                              {isUnlocked
+                                ? <Icon className="w-4 h-4 text-white" />
+                                : <Lock className="w-4 h-4 text-[#C4C4CC]" />
+                              }
                             </div>
                             <div>
-                              <div className="text-[14px] font-medium tracking-tight text-[#0A0A0A]">{agent.name}</div>
-                              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#9CA3AF] mt-0.5">{cfg?.tag}</div>
+                              <div className={`text-[14px] font-medium tracking-tight ${isUnlocked ? 'text-[#0A0A0A]' : 'text-[#9CA3AF]'}`}>
+                                {agent.name}
+                              </div>
+                              <div className={`font-mono text-[10px] uppercase tracking-[0.12em] mt-0.5 ${isUnlocked ? 'text-[#9CA3AF]' : 'text-[#C4C4CC]'}`}>
+                                {cfg?.tag}
+                              </div>
                             </div>
                           </div>
-                          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full font-mono text-[10px] ${
-                            status === 'active' ? 'bg-[#E6FAF5] text-[#00B894]' : 'bg-[#FFF3E8] text-[#F76808]'
-                          }`}>
-                            {status === 'active' && <span className="w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />}
-                            {status === 'active' ? 'Active' : 'Setup needed'}
-                          </div>
+                          {isUnlocked && (
+                            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full font-mono text-[10px] shrink-0 ${
+                              status === 'active' ? 'bg-[#E6FAF5] text-[#00B894]' : 'bg-[#FFF3E8] text-[#F76808]'
+                            }`}>
+                              {status === 'active' && <span className="w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />}
+                              {status === 'active' ? 'Active' : 'Setup'}
+                            </div>
+                          )}
                         </div>
 
+                        <p className={`text-[13px] leading-relaxed mb-4 ${isUnlocked ? 'text-[#6B7280]' : 'text-[#C4C4CC]'}`}>
+                          {agent.desc}
+                        </p>
+
                         <div className="flex-1">
-                          {stats && status === 'active' && (
+                          {isUnlocked && status === 'active' && stats && (
                             <div className="rounded-xl p-3.5 mb-4" style={{ background: cfg?.bg }}>
                               <div className="font-mono text-[10px] uppercase tracking-[0.1em] mb-2" style={{ color: `${cfg?.color}90` }}>{stats.label}</div>
                               <div className="text-[22px] font-medium tracking-tight mb-2" style={{ color: cfg?.color }}>{stats.value}</div>
@@ -529,8 +537,7 @@ export default function Dashboard() {
                               </div>
                             </div>
                           )}
-
-                          {status === 'setup' && (
+                          {isUnlocked && status === 'setup' && (
                             <div className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 mb-4 bg-[#FFFBF0] border border-[#FED7AA]">
                               <AlertCircle className="w-3.5 h-3.5 text-[#F76808] shrink-0" />
                               <span className="text-[12px] font-medium text-[#F76808]">Setup required to activate</span>
@@ -538,15 +545,22 @@ export default function Dashboard() {
                           )}
                         </div>
 
-                        <div className="h-px bg-[#F3F4F6] mb-3" />
-                        <Link
-                          to={`/dashboard/agent/${agent.name.toLowerCase()}`}
-                          className="flex items-center justify-between text-[13px] font-medium no-underline hover:opacity-70 transition-opacity"
-                          style={{ color: cfg?.color }}
-                        >
-                          {status === 'setup' ? 'Complete setup' : 'View details'}
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </Link>
+                        <div className="h-px bg-[#E5E7EB] mb-3" />
+                        {isUnlocked ? (
+                          <Link
+                            to={`/dashboard/agent/${agent.name.toLowerCase()}`}
+                            className="flex items-center justify-between text-[13px] font-medium no-underline hover:opacity-70 transition-opacity"
+                            style={{ color: cfg?.color }}
+                          >
+                            {status === 'setup' ? 'Complete setup' : 'View details'}
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </Link>
+                        ) : (
+                          <div className="flex items-center justify-between">
+                            <span className="text-[12px] text-[#C4C4CC]">Upgrade to unlock</span>
+                            <Link to="/pricing" className="text-[12px] font-medium text-[#0066FF] no-underline hover:underline">Upgrade →</Link>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )
