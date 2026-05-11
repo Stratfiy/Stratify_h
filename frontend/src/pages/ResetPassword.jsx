@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
-import { ArrowRight, Eye, EyeOff, CheckCircle, AlertCircle, Lock } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff, Check, AlertCircle, Lock } from 'lucide-react'
 
 const rules = [
-  { id:'length',  label:'At least 8 characters',       test: p => p.length >= 8 },
-  { id:'upper',   label:'One uppercase letter (A–Z)',   test: p => /[A-Z]/.test(p) },
-  { id:'number',  label:'One number (0–9)',             test: p => /[0-9]/.test(p) },
-  { id:'special', label:'One special character (!@#$)', test: p => /[^A-Za-z0-9]/.test(p) },
+  { id:'length',  label:'8+ characters',     test: p => p.length >= 8 },
+  { id:'upper',   label:'Uppercase (A–Z)',    test: p => /[A-Z]/.test(p) },
+  { id:'number',  label:'Number (0–9)',       test: p => /[0-9]/.test(p) },
+  { id:'special', label:'Special char',      test: p => /[^A-Za-z0-9]/.test(p) },
 ]
 
 export default function ResetPassword() {
@@ -25,8 +25,7 @@ export default function ResetPassword() {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
-        setSessionReady(true)
-        setChecking(false)
+        setSessionReady(true); setChecking(false)
       }
     })
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -48,130 +47,155 @@ export default function ResetPassword() {
     setLoading(true)
     const { error } = await supabase.auth.updateUser({ password })
     if (error) { setError(error.message); setLoading(false) }
-    else {
-      setSuccess(true)
-      await supabase.auth.signOut()
-      setTimeout(() => navigate('/login'), 2500)
-    }
+    else { setSuccess(true); await supabase.auth.signOut(); setTimeout(() => navigate('/login'), 2500) }
   }
 
-  if (checking) return (
-    <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'#F7F7FA' }}>
-      <div style={{ width:24, height:24, border:'3px solid #5B5BD6', borderTopColor:'transparent', borderRadius:'50%', animation:'spin 0.6s linear infinite' }} />
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+  const PageShell = ({ children }) => (
+    <div className="min-h-screen bg-white relative overflow-hidden flex flex-col">
+      <div className="absolute inset-0 bg-grid-soft opacity-60 pointer-events-none" />
+      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
+      <div className="absolute top-40 -left-32 w-[400px] h-[400px] rounded-full bg-[#00D4AA]/10 blur-3xl pointer-events-none" />
+      <nav className="relative z-10 flex items-center justify-between px-6 md:px-14 h-16 border-b border-[#F3F4F6] bg-white/80 backdrop-blur-sm">
+        <Link to="/" className="flex items-center gap-2.5">
+          <div className="relative w-8 h-8 rounded-lg bg-[#0A0A0A] flex items-center justify-center">
+            <span className="text-white font-semibold text-[13px] tracking-tight">SA</span>
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#00D4AA] border border-white" />
+          </div>
+          <span className="font-semibold text-[17px] tracking-[-0.02em] text-[#0A0A0A]">StratifyAI</span>
+        </Link>
+      </nav>
+      <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-16">
+        <div className="w-full max-w-[420px]">{children}</div>
+      </div>
     </div>
+  )
+
+  if (checking) return (
+    <PageShell>
+      <div className="flex items-center justify-center py-20">
+        <div className="w-6 h-6 border-2 border-[#0066FF] border-t-transparent rounded-full animate-spin" />
+      </div>
+    </PageShell>
   )
 
   if (!sessionReady) return (
-    <div style={{ minHeight:'100vh', background:'#F7F7FA', display:'flex', alignItems:'center', justifyContent:'center', padding:24, fontFamily:"-apple-system,sans-serif" }}>
-      <div style={{ maxWidth:420, width:'100%', background:'white', borderRadius:24, padding:40, textAlign:'center', boxShadow:'0 4px 32px rgba(0,0,0,0.08)' }}>
-        <div style={{ width:64, height:64, borderRadius:'50%', background:'#FFF0EE', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 20px' }}>
-          <AlertCircle style={{ width:32, height:32, color:'#E54D2E' }} />
-        </div>
-        <h2 style={{ fontSize:22, fontWeight:800, color:'#1A1A2E', marginBottom:8 }}>Link expired or invalid</h2>
-        <p style={{ fontSize:14, color:'#6B7280', marginBottom:28, lineHeight:1.6 }}>This reset link has expired or already been used. Request a new one.</p>
-        <Link to="/forgot-password" style={{ display:'inline-flex', alignItems:'center', gap:8, background:'linear-gradient(135deg,#5B5BD6,#7C3AED)', color:'white', textDecoration:'none', padding:'12px 24px', borderRadius:12, fontWeight:800, fontSize:14 }}>
-          Request new link <ArrowRight style={{ width:16, height:16 }} />
-        </Link>
+    <PageShell>
+      <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center mb-6">
+        <AlertCircle className="w-5 h-5 text-red-600" />
       </div>
-    </div>
+      <div className="eyebrow flex items-center gap-2.5 mb-4">
+        <span className="agent-dot" />
+        Link expired
+      </div>
+      <h1 className="text-[36px] leading-[1.05] tracking-[-0.025em] font-medium text-[#0A0A0A] mb-3">
+        This link has<br /><span className="text-red-500">expired.</span>
+      </h1>
+      <p className="text-[16px] text-[#4B5563] leading-relaxed mb-8">
+        Reset links expire after 1 hour. Request a new one below.
+      </p>
+      <Link to="/forgot-password" className="btn-primary">
+        Request new link <ArrowRight className="w-4 h-4" />
+      </Link>
+    </PageShell>
   )
 
   if (success) return (
-    <div style={{ minHeight:'100vh', background:'#F7F7FA', display:'flex', alignItems:'center', justifyContent:'center', padding:24, fontFamily:"-apple-system,sans-serif" }}>
-      <div style={{ maxWidth:420, width:'100%', background:'white', borderRadius:24, padding:40, textAlign:'center', boxShadow:'0 4px 32px rgba(0,0,0,0.08)' }}>
-        <div style={{ width:64, height:64, borderRadius:'50%', background:'#E9F9EE', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 20px' }}>
-          <CheckCircle style={{ width:32, height:32, color:'#30A46C' }} />
-        </div>
-        <h2 style={{ fontSize:22, fontWeight:800, color:'#1A1A2E', marginBottom:8 }}>Password updated!</h2>
-        <p style={{ fontSize:14, color:'#6B7280' }}>Redirecting you to sign in with your new password...</p>
+    <PageShell>
+      <div className="w-12 h-12 rounded-2xl bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center mb-6">
+        <Check className="w-5 h-5 text-[#0066FF]" />
       </div>
-    </div>
+      <div className="eyebrow flex items-center gap-2.5 mb-4">
+        <span className="agent-dot" />
+        Password updated
+      </div>
+      <h1 className="text-[36px] leading-[1.05] tracking-[-0.025em] font-medium text-[#0A0A0A] mb-3">
+        You're all<br /><span className="text-[#0066FF]">set.</span>
+      </h1>
+      <p className="text-[16px] text-[#4B5563] leading-relaxed">Redirecting you to sign in...</p>
+    </PageShell>
   )
 
   return (
-    <div style={{ minHeight:'100vh', background:'#F7F7FA', display:'flex', fontFamily:"-apple-system,sans-serif" }}>
-      <div className="hidden lg:flex" style={{ width:'45%', background:'linear-gradient(135deg,#5B5BD6,#7C3AED)', flexDirection:'column', justifyContent:'space-between', padding:48, position:'relative', overflow:'hidden' }}>
-        <div style={{ position:'absolute', top:-60, right:-60, width:240, height:240, borderRadius:'50%', background:'rgba(255,255,255,0.07)' }} />
-        <Link to="/" style={{ display:'flex', alignItems:'center', gap:10, textDecoration:'none', position:'relative', zIndex:2 }}>
-          <div style={{ width:36, height:36, borderRadius:10, background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-            <span style={{ color:'white', fontWeight:900, fontSize:13 }}>SA</span>
-          </div>
-          <span style={{ color:'white', fontWeight:900, fontSize:16 }}>StratifyAI</span>
-        </Link>
-        <div style={{ position:'relative', zIndex:2 }}>
-          <p style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:2, marginBottom:16 }}>SET NEW PASSWORD</p>
-          <h2 style={{ color:'white', fontSize:36, fontWeight:900, lineHeight:1.2, letterSpacing:-0.8, marginBottom:16 }}>Choose something<br />strong.</h2>
-          <p style={{ color:'rgba(255,255,255,0.6)', fontSize:14, lineHeight:1.7 }}>Must be 8+ characters with uppercase, number, and special character.</p>
-        </div>
-        <p style={{ color:'rgba(255,255,255,0.3)', fontSize:12, position:'relative', zIndex:2 }}>© 2026 StratifyAI</p>
+    <PageShell>
+      <div className="w-12 h-12 rounded-2xl bg-[#0066FF]/10 border border-[#0066FF]/20 flex items-center justify-center mb-6">
+        <Lock className="w-5 h-5 text-[#0066FF]" />
       </div>
 
-      <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'40px 24px' }}>
-        <div style={{ maxWidth:420, width:'100%' }}>
-          <div style={{ width:48, height:48, borderRadius:14, background:'#EEEEFF', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:20 }}>
-            <Lock style={{ width:22, height:22, color:'#5B5BD6' }} />
-          </div>
-          <h1 style={{ fontSize:28, fontWeight:900, color:'#1A1A2E', letterSpacing:-0.6, marginBottom:8 }}>Set new password</h1>
-          <p style={{ fontSize:14, color:'#6B7280', marginBottom:28 }}>Enter and confirm your new password below.</p>
+      <div className="eyebrow flex items-center gap-2.5 mb-4">
+        <span className="agent-dot" />
+        Set new password
+      </div>
 
-          {error && <div style={{ background:'#FFF0EE', border:'1px solid #FCA5A5', borderRadius:12, padding:'12px 16px', marginBottom:20, fontSize:13, color:'#E54D2E' }}>{error}</div>}
+      <h1 className="text-[36px] sm:text-[44px] leading-[1.05] tracking-[-0.025em] font-medium text-[#0A0A0A] mb-3">
+        Choose something<br />
+        <span className="text-[#0066FF]">strong.</span>
+      </h1>
+      <p className="text-[16px] text-[#4B5563] leading-relaxed mb-8">
+        8+ characters with uppercase, number, and special character.
+      </p>
 
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom:16 }}>
-              <label style={{ display:'block', fontSize:12, fontWeight:700, color:'#374151', marginBottom:6 }}>New password</label>
-              <div style={{ position:'relative' }}>
-                <input type={showPassword?'text':'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Min 8 characters" required
-                  style={{ width:'100%', padding:'13px 44px 13px 16px', borderRadius:12, border:'1.5px solid #E5E7EB', fontSize:14, outline:'none', color:'#1A1A2E', boxSizing:'border-box' }}
-                  onFocus={e => e.target.style.borderColor='#5B5BD6'} onBlur={e => e.target.style.borderColor='#E5E7EB'} />
-                <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  style={{ position:'absolute', right:14, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'#9CA3AF', display:'flex' }}>
-                  {showPassword ? <EyeOff style={{ width:16, height:16 }} /> : <Eye style={{ width:16, height:16 }} />}
-                </button>
-              </div>
-              {password.length > 0 && (
-                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6, marginTop:10 }}>
-                  {rules.map(rule => {
-                    const passed = rule.test(password)
-                    return (
-                      <div key={rule.id} style={{ display:'flex', alignItems:'center', gap:6 }}>
-                        <div style={{ width:16, height:16, borderRadius:'50%', background:passed?'#30A46C':'#E5E7EB', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                          {passed && <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
-                        </div>
-                        <span style={{ fontSize:11, color:passed?'#30A46C':'#9CA3AF', fontWeight:passed?600:400 }}>{rule.label}</span>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
+      {error && (
+        <div className="mb-5 px-4 py-3 rounded-2xl bg-red-50 border border-red-200 text-[14px] text-red-700">{error}</div>
+      )}
 
-            <div style={{ marginBottom:24 }}>
-              <label style={{ display:'block', fontSize:12, fontWeight:700, color:'#374151', marginBottom:6 }}>Confirm password</label>
-              <div style={{ position:'relative' }}>
-                <input type={showConfirm?'text':'password'} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Re-enter your password" required
-                  style={{ width:'100%', padding:'13px 44px 13px 16px', borderRadius:12, border:`1.5px solid ${confirmPassword.length>0?(passwordsMatch?'#30A46C':'#EF4444'):'#E5E7EB'}`, fontSize:14, outline:'none', color:'#1A1A2E', boxSizing:'border-box' }} />
-                <button type="button" onClick={() => setShowConfirm(!showConfirm)}
-                  style={{ position:'absolute', right:14, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'#9CA3AF', display:'flex' }}>
-                  {showConfirm ? <EyeOff style={{ width:16, height:16 }} /> : <Eye style={{ width:16, height:16 }} />}
-                </button>
-              </div>
-              {confirmPassword.length > 0 && (
-                <p style={{ fontSize:12, marginTop:5, color:passwordsMatch?'#30A46C':'#EF4444', fontWeight:600 }}>
-                  {passwordsMatch ? '✓ Passwords match' : '✗ Passwords do not match'}
-                </p>
-              )}
-            </div>
-
-            <button type="submit" disabled={loading || !allRulesPassed || !passwordsMatch}
-              style={{ width:'100%', padding:13, borderRadius:12, border:'none', background:allRulesPassed&&passwordsMatch?'linear-gradient(135deg,#5B5BD6,#7C3AED)':'#E5E7EB', color:allRulesPassed&&passwordsMatch?'white':'#9CA3AF', fontSize:14, fontWeight:800, cursor:loading||!allRulesPassed||!passwordsMatch?'not-allowed':'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8, boxShadow:allRulesPassed&&passwordsMatch?'0 4px 16px rgba(91,91,214,0.3)':'none' }}>
-              {loading ? <div style={{ width:18, height:18, border:'2px solid white', borderTopColor:'transparent', borderRadius:'50%', animation:'spin 0.6s linear infinite' }} />
-                : <><span>Update password</span><ArrowRight style={{ width:16, height:16 }} /></>}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div>
+          <label className="block font-mono text-[11px] tracking-[0.18em] uppercase text-[#6B7280] mb-2">New password</label>
+          <div className="relative">
+            <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
+              placeholder="Min 8 characters" required
+              className="w-full px-4 py-3 pr-11 rounded-xl border border-[#E5E7EB] text-[15px] text-[#0A0A0A] outline-none focus:border-[#0066FF] focus:ring-2 focus:ring-[#0066FF]/10 transition-all bg-white" />
+            <button type="button" onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#0A0A0A] transition-colors">
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
-          </form>
+          </div>
+          {password.length > 0 && (
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              {rules.map(rule => {
+                const passed = rule.test(password)
+                return (
+                  <div key={rule.id} className="flex items-center gap-2">
+                    <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${passed ? 'bg-[#0066FF]' : 'bg-[#F3F4F6]'}`}>
+                      {passed && <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                    </div>
+                    <span className={`text-[12px] transition-colors ${passed ? 'text-[#0066FF]' : 'text-[#9CA3AF]'}`}>{rule.label}</span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
-      </div>
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-    </div>
+
+        <div>
+          <label className="block font-mono text-[11px] tracking-[0.18em] uppercase text-[#6B7280] mb-2">Confirm password</label>
+          <div className="relative">
+            <input type={showConfirm ? 'text' : 'password'} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
+              placeholder="Re-enter password" required
+              className={`w-full px-4 py-3 pr-11 rounded-xl border text-[15px] text-[#0A0A0A] outline-none transition-all bg-white ${
+                confirmPassword.length > 0
+                  ? passwordsMatch ? 'border-[#0066FF] ring-2 ring-[#0066FF]/10' : 'border-red-400 ring-2 ring-red-400/10'
+                  : 'border-[#E5E7EB] focus:border-[#0066FF] focus:ring-2 focus:ring-[#0066FF]/10'
+              }`} />
+            <button type="button" onClick={() => setShowConfirm(!showConfirm)}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#0A0A0A] transition-colors">
+              {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+          {confirmPassword.length > 0 && (
+            <p className={`text-[12px] mt-2 font-medium ${passwordsMatch ? 'text-[#0066FF]' : 'text-red-500'}`}>
+              {passwordsMatch ? '✓ Passwords match' : '✗ Passwords do not match'}
+            </p>
+          )}
+        </div>
+
+        <button type="submit" disabled={loading || !allRulesPassed || !passwordsMatch}
+          className="btn-primary mt-2 w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none">
+          {loading
+            ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            : <><span>Update password</span><ArrowRight className="w-4 h-4" /></>}
+        </button>
+      </form>
+    </PageShell>
   )
 }
