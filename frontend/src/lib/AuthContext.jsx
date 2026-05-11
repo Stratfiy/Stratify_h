@@ -38,11 +38,14 @@ export function AuthProvider({ children }) {
     return { data, error }
   }
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (options = {}) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        // Use the origin as a base, but allow the calling component 
+        // to override the path via the options argument.
+        redirectTo: window.location.origin, 
+        ...options.options // This merges any extra options you pass
       }
     })
     return { data, error }
