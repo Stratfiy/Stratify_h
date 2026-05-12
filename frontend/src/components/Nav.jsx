@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Menu, X, ArrowRight } from "lucide-react";
+import { ChevronDown, Menu, X, ArrowRight, LogOut } from "lucide-react";
 import { AGENTS } from "@/lib/site-data";
 
 const INDUSTRIES = [
@@ -166,6 +166,16 @@ export default function Nav() {
               Soon
             </span>
           </span>
+          {user && (
+            <button
+              onClick={signOut}
+              className="flex items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-4 py-2.5 text-[13px] font-medium text-[#6B7280] hover:text-[#0A0A0A] hover:border-[#D1D5DB] transition-colors cursor-pointer"
+              title="Log out"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Log out</span>
+            </button>
+          )}
           <button
             className="lg:hidden p-2 -mr-2"
             onClick={() => setMobileOpen((s) => !s)}
