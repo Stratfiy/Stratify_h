@@ -159,22 +159,28 @@ export default function Nav() {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Swap this span for <Link to="/dashboard"> when ready to launch */}
-          <span className="relative inline-flex items-center justify-center gap-2 rounded-full bg-[#0066FF] text-white font-medium text-[15px] px-6 py-3 cursor-not-allowed select-none opacity-85">
-            Dashboard <ArrowRight className="w-4 h-4" />
-            <span className="absolute -top-2 -right-3 bg-[#00D4AA] text-[#04342C] font-mono text-[9px] font-medium tracking-wider uppercase px-2 py-0.5 rounded-full">
-              Soon
-            </span>
-          </span>
-          {user && (
-            <button
-              onClick={signOut}
-              className="flex items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-4 py-2.5 text-[13px] font-medium text-[#6B7280] hover:text-[#0A0A0A] hover:border-[#D1D5DB] transition-colors cursor-pointer"
-              title="Log out"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Log out</span>
-            </button>
+          {user ? (
+            <>
+              {/* Swap this span for <Link to="/dashboard"> when ready to launch */}
+              <span className="relative inline-flex items-center justify-center gap-2 rounded-full bg-[#0066FF] text-white font-medium text-[15px] px-6 py-3 cursor-not-allowed select-none opacity-85">
+                Dashboard <ArrowRight className="w-4 h-4" />
+                <span className="absolute -top-2 -right-3 bg-[#00D4AA] text-[#04342C] font-mono text-[9px] font-medium tracking-wider uppercase px-2 py-0.5 rounded-full">
+                  Soon
+                </span>
+              </span>
+              <button
+                onClick={signOut}
+                className="flex items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-4 py-2.5 text-[13px] font-medium text-[#6B7280] hover:text-[#0A0A0A] hover:border-[#D1D5DB] transition-colors cursor-pointer"
+                title="Log out"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Log out</span>
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="btn-ghost" data-testid="nav-login-link">
+              Login
+            </Link>
           )}
           <button
             className="lg:hidden p-2 -mr-2"
