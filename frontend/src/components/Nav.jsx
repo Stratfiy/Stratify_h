@@ -159,15 +159,13 @@ export default function Nav() {
         </div>
 
         <div className="flex items-center gap-2">
-          {user ? (
-            <Link to="/dashboard" className="btn-primary" data-testid="nav-cta-dashboard">
-              Dashboard <ArrowRight className="w-4 h-4" />
-            </Link>
-          ) : (
-            <Link to="/login" className="btn-ghost" data-testid="nav-login-link">
-              Login
-            </Link>
-          )}
+          {/* Swap this span for <Link to="/dashboard"> when ready to launch */}
+          <span className="relative inline-flex items-center justify-center gap-2 rounded-full bg-[#0066FF] text-white font-medium text-[15px] px-6 py-3 cursor-not-allowed select-none opacity-85">
+            Dashboard <ArrowRight className="w-4 h-4" />
+            <span className="absolute -top-2 -right-3 bg-[#00D4AA] text-[#04342C] font-mono text-[9px] font-medium tracking-wider uppercase px-2 py-0.5 rounded-full">
+              Soon
+            </span>
+          </span>
           <button
             className="lg:hidden p-2 -mr-2"
             onClick={() => setMobileOpen((s) => !s)}
