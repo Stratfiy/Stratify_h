@@ -70,7 +70,7 @@ def send_lead_email(lead):
             return
 
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = f"New Enquiry: {lead.company_name} ({lead.industry})'
+        msg['Subject'] = f'New Enquiry: {lead.company_name} ({lead.industry})'
         msg['From'] = smtp_user
         msg['To'] = notify_email
 
