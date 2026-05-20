@@ -1,67 +1,88 @@
-# StratifyAI — Product Requirements Doc
+# NAutomation Labs — Product Requirements Doc
 
-## Original Problem Statement
-Build the **StratifyAI** marketing website end-to-end, based on the user-uploaded PRD ("AI-Powered E-Commerce Automation Suite") and the StratifyAI Website Build Plan. The site sells a team of named AI agents — Kai, Atlas, Nova, Remy, Echo, Sage, Pulse — that runs marketing, sales, support and analytics for DTC e-commerce ($1M–$10M) and healthcare practices. Reference benchmark: tinyfish.ai. Tagline: **"Hire an AI team. Not another tool."**
+## Original Problem
+NAutomation Labs is the rebrand of the **StratifyAI** marketing site. The previous version sold a packaged "team of named AI agents" (Kai/Atlas/Nova/Remy/Echo/Sage/Pulse + healthcare agents Iris/Ambra/Vera/Cora) at $1,497–$6,447/mo. The rebrand repositions the business as **India's first AI-native engineering labs** — a custom-deployment shop selling six services and a portfolio of shipped projects, with no published price tiers.
 
-## User Personas
-| Audience | Need | Action |
-|---|---|---|
-| DTC e-commerce founders ($1M–$10M) | Solve Meta ads, creative, retention chaos | Book a demo |
-| Healthcare practice owners | Recover no-shows, stop revenue leak | Book a demo |
-| Investors / partners | See infrastructure ambition, not agency | Read manifesto |
-| Future enterprise clients | Trust real outcomes & operators | Contact sales |
+## Positioning
+**India's first AI-native engineering labs. AI products and solutions, deployed.**
+
+- Problem to MVP in 5–7 days
+- Full production deployment in 14–21 days
+- Each engagement ends with a working product + client dashboard
+- Verticals: Ecommerce · Clinics · Manufacturing · Supply Chain
+- Founder: Nithish — Ex-Samsung, Ex-Reliance Industries, NIT graduate, 15+ client engagements
+
+## Information Architecture
+| Route | Page |
+|---|---|
+| `/` | Home — hero, verticals strip, services, process, outcomes, manifesto, testimonials, CTA |
+| `/services` | Six services + How we work + workshops/training CTA |
+| `/projects` | Portfolio (10–12 cards, mix of real + placeholders) |
+| `/projects/:slug` | Per-project: overview · tech spec · use case · numbers |
+| `/about` | About + founder card |
+| `/contact` | Lead form with service-of-interest prefill via `?service=…` |
+| `/privacy`, `/terms` | Legal (rewritten for NAutomation Labs) |
+
+## Services (six)
+1. RAG Chatbots
+2. Voice Agents
+3. Enterprise Software Integration
+4. End-to-End Automation
+5. Custom Product & Service Deployment
+6. AI Training & Lectures
+
+Each service tile links to `/contact?service=…` which pre-selects the service in the contact form.
+
+## Projects (initial)
+Two real, ten placeholders:
+1. AI Video Generation & Ad Posting (Ecommerce) — n8n + Lambda + FFmpeg + Meta Marketing API
+2. Sukhya · Healthcare Automation (Clinics) — voice intake + no-show recovery
+3–12. Coming soon placeholders across the four verticals
 
 ## Tech Stack
-- **Frontend**: React 19 + React Router 7, Tailwind, Framer Motion, react-fast-marquee, lucide-react, sonner. Fonts: **Geist** (display/body) + **JetBrains Mono** (technical labels) — *no Inter*.
-- **Backend**: FastAPI + Motor (MongoDB). Endpoints: `POST /api/leads`, `GET /api/leads`, `POST /api/feedback`, `POST /api/errors`, `GET /api/config`, `GET /api/health`.
-- **Design**: Light theme. Electric Blue `#0066FF` primary · Mint `#00D4AA` accent · Near-black `#0A0A0A` ink. Soft dotted-grid backgrounds, glass nav, dark manifesto band.
+- **Frontend**: React 19 + React Router 7, Vite, Tailwind, Framer Motion, lucide-react, react-fast-marquee, sonner. Fonts: Geist + JetBrains Mono.
+- **Backend**: FastAPI + Motor (MongoDB). Endpoints unchanged from previous build.
+- **Design**: Light theme. `#0066FF` Electric Blue · `#00D4AA` Mint · `#0A0A0A` near-black.
+- **Hosting**: Vercel (frontend) + Render (backend) + MongoDB Atlas. Domain TBD (likely nautomationlabs.com).
 
-## Core Requirements (Phase 1 + Pre-Launch Hardening — shipped)
-- [x] 8 routes: `/`, `/e-commerce`, `/healthcare`, `/pricing`, `/about`, `/contact`, `/privacy`, `/terms` + 404
-- [x] Sticky glass nav · 7-agent dropdown · Industries dropdown with "Soon" pills · mobile menu
-- [x] Homepage 11 sections incl. live `KaiDashboard` 9s loop animation, NDA logo marquee, problem split, 7+1 agent grid, 4-stage CREATE→ACQUIRE→CONVERT→RETAIN flow, dark "Coming next" industry card, animated outcomes counters, dark manifesto band, testimonials, final CTA
-- [x] /e-commerce vertical with skincare hero + interactive ROI calculator (3 sliders, real-time savings) + 3-tier pricing + FAQ
-- [x] /healthcare vertical with HIPAA badge + 6 healthcare agents (Iris/Ambra/Vera/Cora/Sage/Pulse) + compliance grid + pricing
-- [x] /pricing tabbed (E-com ⇄ Healthcare) + 6-question FAQ
-- [x] /about long-form manifesto + initials founder avatar
-- [x] /contact 8-field form → POST `/api/leads` → green success state, with 429 / 503 graceful handling
-- [x] /privacy + /terms full pages (GDPR-friendly + AI-clauses + ToS limitation of liability)
+## Brand
+- Email: `office@nautomationlabs.com`
+- Phone: `+91 73386 71878`
+- Logo mark: **NL** on near-black tile, mint dot accent (replaces the old SA mark)
 
-## Production-Readiness Layer (Apr 2026 sprint — shipped)
-- [x] **Kill switch** (`LEAD_FORM_ENABLED`, `MAINTENANCE_MODE` env vars) — flip in seconds, frontend reads `/api/config` and shows a "form paused" state
-- [x] **PII safety** — control-char stripping, `redact()` for log lines, salted SHA-256 IP hash (no raw IPs stored), Pydantic `EmailStr` validation
-- [x] **Per-endpoint rate limiting** — sliding-window in-memory limiter keyed by `(scope, ip_hash)`. Defaults: 10/hr leads, 30/hr feedback, 60/hr errors
-- [x] **Audit logs** — every lead create writes to `db.audit_logs` with `ip_hash`, `user_agent`, `action`, `ts`
-- [x] **Self-hosted error sink** — `POST /api/errors` writes to `db.client_errors` (drop-in until Sentry is wired)
-- [x] **Error boundary** — wraps the entire router; logs to `/api/errors` and shows a recoverable fallback
-- [x] **Cookie banner** — accept / reject persisted to `localStorage` `stratify_cookie_consent_v1`
-- [x] **Feedback widget** — bottom-left toggle, thumbs up/down + free-text note, posts to `/api/feedback`
-- [x] **Scroll restoration** on every route change
-- [x] **Load test harness** (`/app/scripts/load_test.py`) — verified 397 req/s, 0 failures, p95 204ms, rate-limit kicks in correctly
+## Catchy taglines used across the site
+- Hero: "AI products & solutions. Deployed."
+- Eyebrow: "India's first AI-native engineering labs"
+- Question: "The world is diving into AI. Is your industry ready?"
+- Process: "Problem to MVP in 5 days. Not slides."
+- Manifesto: "AI infused. Not bolted on."
+- CTA: "Book a call to see how AI fits into your organisation."
+- Training: "Book a free session on AI in your industry."
 
-## Test Coverage
-- **Backend pytest** — 19/19 passing (iteration_2): config flags, health flag, leads CRUD, feedback up/down + 422s, error sink, control-char stripping, audit log persistence, kill switch
-- **Frontend Playwright** — all critical flows: homepage animations, dropdowns, ROI sliders, pricing tabs, contact form (incl. 429/503 paths), cookie banner accept+reject persistence, feedback widget end-to-end, /privacy + /terms render, scroll-to-top, mobile viewport, **zero console errors**
-- **Code review pass (Apr 2026)** — applied: shared `PricingCard` (deduped 3×), `StepIcon` extract for KaiDashboard nested-ternary, `FormPanel`/`PausedCard`/`SuccessCard`/`DemoForm`/`Select` extracts for Contact, module-scope `MOTION` variants in `Motion.jsx`, stable log entry IDs in `KaiDashboard`, composite keys for duplicated NDA marquee, expanded comments on intentional empty catches in `CookieBanner` + `ErrorBoundary`, dev-mode console.warn on logging path failures. Skipped (false-positive linter complaints): wrong useEffect deps for module constants/setState setters/local effect variables, "localStorage is sensitive" warning for cookie consent (it isn't), arbitrary 50-line component-splitting for marketing pages.
+## What was removed from the previous build
+- All named-agent references (Kai/Atlas/Nova/Remy/Echo/Sage/Pulse + Iris/Ambra/Vera/Cora)
+- `/e-commerce`, `/healthcare`, `/pricing` pages (deleted)
+- `KaiDashboard` component → replaced with `WorkflowDashboard` (same animation, neutral language)
+- `RoiCalculator` component (was tied to the ecommerce vertical page)
+- Old packaged pricing tiers ($1,497 / $2,487 / $6,447)
+- Old contact email `hello@stratifyai.com` and the `stratify_cookie_consent_v1` localStorage key (auto-migrated on first visit)
 
-## What's Missing for Public Launch
-| Item | Owner |
-|---|---|
-| `og:image` 1200×630 hero render | designer / Figma |
-| `sitemap.xml` + `robots.txt` + schema.org markup | next sprint |
-| Real client logos (Quiet Protector, DTC Skincare) | Nithish |
-| Real client testimonial quotes (signed permission) | Nithish |
-| Founder photo for /about | Nithish |
-| Slack / Resend / SendGrid integration on `POST /api/leads` for instant notification | next sprint (call `integration_playbook_expert_v2`) |
-| Custom domain `stratifyai.com` + Emergent Deploy ($20/mo) | Nithish |
+## Production-readiness features (carried over)
+- Kill switch (`LEAD_FORM_ENABLED`, `MAINTENANCE_MODE`)
+- Per-endpoint sliding-window rate limits
+- PII-safe audit logs (salted SHA-256 IP hash)
+- Self-hosted error sink (`POST /api/errors`)
+- React error boundary
+- Cookie consent banner (with legacy key auto-migration)
+- Scroll restoration
+- Load-test harness
 
 ## Backlog
-- **P1**: Customers / case studies page, Blog (3 cornerstone MDX posts), Agent directory pages (`/agents/kai`, …)
-- **P2**: Gated GET `/api/leads` (admin token), Slack/email pipeline, OG image renderer
-- **P3**: B2B services / Finance / Manufacturing verticals, Careers page
-- **Phase 2 product** (separate engagement): Auth, dashboard, agent runtime (Kai first), Stripe billing, LLMOps stack (semantic caching, model routing, fallback, token budgets, hallucination tracking)
-
-## Next Tasks
-1. Deploy to `stratifyai.com` via Emergent (one-click, ~$20/mo)
-2. Wire Slack + Resend on lead submit → sub-4-minute reply guarantee
-3. Build the **Kai agent runtime** (the actual product) — week 2
+- **P0**: Fill in 8–10 remaining project case studies with real content
+- **P0**: New `og:image` 1200×630 with NAutomation Labs branding
+- **P0**: New favicon/`apple-touch-icon` with the NL mark
+- **P1**: New Google Analytics property (current code still ships GA `G-QYT4JJBLDQ` from the previous brand)
+- **P1**: `sitemap.xml`, `robots.txt`, schema.org Organization markup
+- **P1**: Slack/Resend notification on lead submit
+- **P2**: Blog (3 cornerstone MDX posts) — case studies + AI-adoption guides
+- **P2**: Repo rename from `Stratify_h` to `nautomation-labs`

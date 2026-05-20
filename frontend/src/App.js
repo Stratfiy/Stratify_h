@@ -1,9 +1,9 @@
 import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "@/pages/Home";
-import Ecommerce from "@/pages/Ecommerce";
-import Healthcare from "@/pages/Healthcare";
-import Pricing from "@/pages/Pricing";
+import Services from "@/pages/Services";
+import Projects from "@/pages/Projects";
+import ProjectDetail from "@/pages/ProjectDetail";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import Privacy from "@/pages/Privacy";
@@ -30,16 +30,16 @@ function App() {
               {/* Pages WITH Nav + Footer */}
               <Route element={<SiteShell />}>
                 <Route path="/" element={<Home />} />
-                <Route path="/e-commerce" element={<Ecommerce />} />
-                <Route path="/healthcare" element={<Healthcare />} />
-                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/projects/:slug" element={<ProjectDetail />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
               </Route>
 
-              {/* Standalone pages — no Nav/Footer */}
+              {/* Standalone — no Nav/Footer */}
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />

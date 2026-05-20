@@ -1,4 +1,4 @@
-"""Backend API tests for StratifyAI marketing site."""
+"""Backend API tests for NAutomation Labs marketing site."""
 import os
 import pytest
 import requests
@@ -29,7 +29,7 @@ class TestHealth:
         r = api.get(f"{BASE_URL}/api/")
         assert r.status_code == 200
         d = r.json()
-        assert d.get("service") == "StratifyAI"
+        assert d.get("service") == "NAutomation Labs"
         assert d.get("status") == "ok"
 
     def test_health(self, api):

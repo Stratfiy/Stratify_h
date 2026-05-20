@@ -19,10 +19,10 @@ const PageShell = ({ children }) => (
     <nav className="relative z-10 flex items-center justify-between px-6 md:px-14 h-16 border-b border-[#F3F4F6] bg-white/80 backdrop-blur-sm">
       <Link to="/" className="flex items-center gap-2.5">
         <div className="relative w-8 h-8 rounded-lg bg-[#0A0A0A] flex items-center justify-center">
-          <span className="text-white font-semibold text-[13px] tracking-tight">SA</span>
+          <span className="text-white font-semibold text-[12px] tracking-tight">NL</span>
           <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#00D4AA] border border-white" />
         </div>
-        <span className="font-semibold text-[17px] tracking-[-0.02em] text-[#0A0A0A]">StratifyAI</span>
+        <span className="font-semibold text-[17px] tracking-[-0.02em] text-[#0A0A0A]">NAutomation Labs</span>
       </Link>
     </nav>
     <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-16">

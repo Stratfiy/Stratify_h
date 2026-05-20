@@ -45,11 +45,11 @@ export default class ErrorBoundary extends Component {
               Something broke
             </div>
             <h1 className="mt-3 text-[36px] tracking-[-0.025em] font-medium leading-[1.1]">
-              An agent dropped a wrench.
+              Something hit a snag.
             </h1>
             <p className="mt-3 text-[15px] text-[#4B5563]">
-              We've logged the error. You can try refreshing — or email{" "}
-              <a className="text-[#0066FF]" href="mailto:hello@stratifyai.com">hello@stratifyai.com</a>.
+              We've logged the error. Try refreshing — or email{" "}
+              <a className="text-[#0066FF]" href="mailto:office@nautomationlabs.com">office@nautomationlabs.com</a>.
             </p>
             <button
               onClick={() => window.location.reload()}

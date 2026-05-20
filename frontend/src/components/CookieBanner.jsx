@@ -2,12 +2,30 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cookie } from "lucide-react";
 
-const KEY = "stratify_cookie_consent_v1";
+const KEY = "nautomationlabs_cookie_consent_v1";
+const LEGACY_KEY = "stratify_cookie_consent_v1";
+
+// One-time migration: if a returning user already accepted/rejected under the old
+// brand key, carry that choice across so we don't re-prompt them after the rebrand.
+function migrateLegacyConsent() {
+  try {
+    if (!localStorage.getItem(KEY)) {
+      const legacy = localStorage.getItem(LEGACY_KEY);
+      if (legacy) {
+        localStorage.setItem(KEY, legacy);
+        localStorage.removeItem(LEGACY_KEY);
+      }
+    }
+  } catch (_storageErr) {
+    // Private mode etc — nothing to migrate, banner will just show.
+  }
+}
 
 export default function CookieBanner() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    migrateLegacyConsent();
     const t = setTimeout(() => {
       try {
         if (!localStorage.getItem(KEY)) setShow(true);

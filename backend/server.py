@@ -29,7 +29,7 @@ db = client[os.environ['DB_NAME']]
 def flag(name: str, default: str = "true") -> bool:
     return os.environ.get(name, default).strip().lower() in ("1", "true", "yes", "on")
 
-app = FastAPI(title="StratifyAI API")
+app = FastAPI(title="NAutomation Labs API")
 api_router = APIRouter(prefix="/api")
 
 logging.basicConfig(
@@ -42,7 +42,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------- Helpers ----------------------------
 def hash_ip(ip: str) -> str:
     """One-way hash of IP for audit (GDPR-friendly: no raw IP stored)."""
-    salt = os.environ.get("IP_HASH_SALT", "stratifyai-default-salt")
+    salt = os.environ.get("IP_HASH_SALT", "nautomationlabs-default-salt")
     return hashlib.sha256(f"{salt}:{ip}".encode()).hexdigest()[:16]
 
 
@@ -61,23 +61,23 @@ def send_lead_email(lead):
     try:
         smtp_host = os.environ.get('SMTP_HOST', 'smtp.hostinger.com')
         smtp_port = int(os.environ.get('SMTP_PORT', '465'))
-        smtp_user = os.environ.get('SMTP_USER', 'office.nh@stratifyai.in')
+        smtp_user = os.environ.get('SMTP_USER', 'office@nautomationlabs.com')
         smtp_pass = os.environ.get('SMTP_PASS', '')
-        notify_email = os.environ.get('NOTIFY_EMAIL', 'office.nh@stratifyai.in')
+        notify_email = os.environ.get('NOTIFY_EMAIL', 'office@nautomationlabs.com')
 
         if not smtp_pass:
             logger.warning('SMTP_PASS not set, skipping email notification')
             return
 
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = f'New Demo Request: {lead.company_name} ({lead.industry})'
+        msg['Subject'] = f"New Enquiry: {lead.company_name} ({lead.industry})'
         msg['From'] = smtp_user
         msg['To'] = notify_email
 
         html = f"""
         <html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
         <div style="background:#000;padding:20px;border-radius:8px 8px 0 0;">
-            <h2 style="color:#fff;margin:0;">New Demo Request 🚀</h2>
+            <h2 style="color:#fff;margin:0;">New Enquiry 🚀</h2>
         </div>
         <div style="background:#f9f9f9;padding:24px;border-radius:0 0 8px 8px;">
             <table style="width:100%;border-collapse:collapse;">
@@ -94,7 +94,7 @@ def send_lead_email(lead):
                 <p style="margin:0;">{lead.challenge}</p>
             </div>
             <div style="margin-top:20px;text-align:center;">
-                <a href="mailto:{lead.work_email}?subject=Re: Stratify Demo Request" 
+                <a href="mailto:{lead.work_email}?subject=Re: NAutomation Labs Enquiry" 
                    style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;display:inline-block;">
                    Reply to {lead.full_name}
                 </a>
@@ -191,7 +191,7 @@ class ClientError(BaseModel):
 # ---------------------------- Routes ----------------------------
 @api_router.get("/")
 async def root():
-    return {"service": "StratifyAI", "status": "ok"}
+    return {"service": "NAutomation Labs", "status": "ok"}
 
 
 @api_router.get("/health")
@@ -216,7 +216,7 @@ async def public_config():
 @api_router.post("/leads", response_model=Lead, status_code=201)
 async def create_lead(payload: LeadCreate, request: Request):
     if not flag("LEAD_FORM_ENABLED"):
-        raise HTTPException(status_code=503, detail="Lead form temporarily disabled. Email hello@stratifyai.com.")
+        raise HTTPException(status_code=503, detail="Lead form temporarily disabled. Email office@nautomationlabs.com.")
 
     ip_hash = hash_ip(get_client_ip(request))
     if not rate_limit("leads", ip_hash):

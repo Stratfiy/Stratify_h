@@ -1,14 +1,25 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { ArrowRight, Check, Mail, ShieldAlert } from "lucide-react";
+import { ArrowRight, Check, Mail, Phone, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { FadeUp } from "@/components/Motion";
+import { CONTACT } from "@/lib/site-data";
 
 const API = `${import.meta.env.VITE_BACKEND_URL}/api`;
 
-const REVENUE_OPTIONS = ["< $100K", "$100K – $1M", "$1M – $10M", "$10M+"];
-const INDUSTRY_OPTIONS = ["E-commerce", "Healthcare", "B2B Services", "Other"];
-const SOURCE_OPTIONS = ["LinkedIn", "X / Twitter", "Referral", "Search", "Other"];
+const REVENUE_OPTIONS = ["< ₹1 Cr", "₹1–10 Cr", "₹10–100 Cr", "₹100 Cr+"];
+const INDUSTRY_OPTIONS = ["Ecommerce", "Clinics / Healthcare", "Manufacturing", "Supply Chain", "Other"];
+const SOURCE_OPTIONS = ["LinkedIn", "Referral", "Search", "Event / Talk", "Other"];
+const SERVICE_OPTIONS = [
+  "RAG Chatbots",
+  "Voice Agents",
+  "Enterprise Software Integration",
+  "End-to-End Automation",
+  "Custom Product & Service Deployment",
+  "AI Training & Lectures",
+  "Not sure yet",
+];
 
 const inputCls =
   "w-full rounded-xl border border-[#E5E7EB] bg-white px-4 py-3 text-[14px] text-[#0A0A0A] " +
@@ -19,24 +30,34 @@ const initial = {
   work_email: "",
   company_name: "",
   company_website: "",
-  industry: "E-commerce",
-  monthly_revenue: "$1M – $10M",
+  industry: "Ecommerce",
+  monthly_revenue: "₹1–10 Cr",
+  service_interest: "Not sure yet",
   challenge: "",
   referral_source: "",
 };
 
 export default function Contact() {
+  const [searchParams] = useSearchParams();
   const [form, setForm] = useState(initial);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [formEnabled, setFormEnabled] = useState(true);
+
+  // Pre-fill service of interest from ?service= query param (set from Services/Home links)
+  useEffect(() => {
+    const svc = searchParams.get("service");
+    if (svc && SERVICE_OPTIONS.includes(svc)) {
+      setForm((f) => ({ ...f, service_interest: svc }));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     let alive = true;
     axios
       .get(`${API}/config`)
       .then((r) => { if (alive) setFormEnabled(!!r.data?.lead_form_enabled); })
-      .catch(() => { /* network failure: keep form open, server will gate on submit */ });
+      .catch(() => { /* keep form open; server will gate on submit */ });
     return () => { alive = false; };
   }, []);
 
@@ -53,7 +74,15 @@ export default function Contact() {
 
     setSubmitting(true);
     try {
-      await axios.post(`${API}/leads`, form);
+      // Fold service_interest into the challenge field so we don't need a backend change.
+      const payload = {
+        ...form,
+        challenge: form.service_interest && form.service_interest !== "Not sure yet"
+          ? `[Interested in: ${form.service_interest}] ${form.challenge}`
+          : form.challenge,
+      };
+      delete payload.service_interest;
+      await axios.post(`${API}/leads`, payload);
       setDone(true);
       toast.success("Got it. We'll be in touch within 4 hours.");
     } catch (err) {
@@ -92,11 +121,11 @@ export default function Contact() {
 function handleSubmitError(err, setFormEnabled) {
   const status = err?.response?.status;
   if (status === 429) {
-    toast.error("Too many requests from this network. Try again in a bit, or email hello@stratifyai.com.");
+    toast.error(`Too many requests. Try again later, or email ${CONTACT.email}.`);
     return;
   }
   if (status === 503) {
-    toast.error("The form is paused right now. Please email hello@stratifyai.com.");
+    toast.error(`The form is paused right now. Please email ${CONTACT.email}.`);
     setFormEnabled(false);
     return;
   }
@@ -110,10 +139,11 @@ function ContactSidebar() {
       <FadeUp>
         <div className="eyebrow mb-5">Contact</div>
         <h1 className="text-[40px] md:text-[60px] tracking-[-0.025em] leading-[1.05] font-medium">
-          Let's talk.
+          Let's build.
         </h1>
         <p className="mt-5 text-[17px] md:text-[19px] text-[#4B5563] leading-[1.6] max-w-[440px]">
-          Tell us about your business. We'll show you which agents apply and what they'd do in your first 30 days.
+          Tell us what you're trying to fix. We'll map it to a service, quote you a 5-day MVP, and
+          send a working build back the same week.
         </p>
 
         <div className="mt-10 space-y-3 text-[14px]">
@@ -122,8 +152,17 @@ function ContactSidebar() {
               <Mail className="w-4 h-4 text-[#0066FF]" />
             </div>
             <div>
-              <div className="font-mono text-[11px] tracking-wider uppercase text-[#9CA3AF]">Or email directly</div>
-              <a href="mailto:hello@stratifyai.com" className="text-[#0A0A0A] font-medium">hello@stratifyai.com</a>
+              <div className="font-mono text-[11px] tracking-wider uppercase text-[#9CA3AF]">Email</div>
+              <a href={`mailto:${CONTACT.email}`} className="text-[#0A0A0A] font-medium">{CONTACT.email}</a>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#FBFBFD] border border-[#E5E7EB] flex items-center justify-center">
+              <Phone className="w-4 h-4 text-[#0066FF]" />
+            </div>
+            <div>
+              <div className="font-mono text-[11px] tracking-wider uppercase text-[#9CA3AF]">Phone</div>
+              <a href={`tel:${CONTACT.phoneRaw}`} className="text-[#0A0A0A] font-medium">{CONTACT.phone}</a>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -154,11 +193,11 @@ function PausedCard() {
         <ShieldAlert className="w-6 h-6 text-[#0066FF]" />
       </div>
       <h2 className="mt-6 text-[26px] md:text-[30px] tracking-[-0.02em] font-medium">
-        The demo form is paused.
+        The form is paused.
       </h2>
       <p className="mt-3 text-[15px] text-[#4B5563] max-w-[440px] mx-auto">
         We've temporarily disabled the form for maintenance. Email{" "}
-        <a href="mailto:hello@stratifyai.com" className="text-[#0066FF]">hello@stratifyai.com</a>{" "}
+        <a href={`mailto:${CONTACT.email}`} className="text-[#0066FF]">{CONTACT.email}</a>{" "}
         and we'll reply within 4 hours.
       </p>
     </div>
@@ -175,12 +214,11 @@ function SuccessCard() {
         Got it. We'll be in touch.
       </h2>
       <p className="mt-3 text-[15px] text-[#4B5563] max-w-[440px] mx-auto">
-        Your demo request is in the queue. Expect a personal note from Nithish within 4 hours.
-        Meanwhile, you can read the manifesto.
+        Your message is in. Expect a personal note from Nithish within 4 hours.
       </p>
       <div className="mt-8">
-        <a href="/about" className="btn-ghost">
-          Read the manifesto <ArrowRight className="w-4 h-4" />
+        <a href="/projects" className="btn-ghost">
+          See our projects <ArrowRight className="w-4 h-4" />
         </a>
       </div>
     </div>
@@ -192,92 +230,51 @@ function DemoForm({ form, update, submit, submitting }) {
     <form onSubmit={submit} className="space-y-5" data-testid="contact-form">
       <div className="grid md:grid-cols-2 gap-5">
         <Field label="Full name *">
-          <input
-            type="text"
-            required
-            value={form.full_name}
-            onChange={update("full_name")}
-            className={inputCls}
-            data-testid="contact-input-name"
-            placeholder="Jane Founder"
-          />
+          <input type="text" required value={form.full_name} onChange={update("full_name")}
+            className={inputCls} data-testid="contact-input-name" placeholder="Your name" />
         </Field>
         <Field label="Work email *">
-          <input
-            type="email"
-            required
-            value={form.work_email}
-            onChange={update("work_email")}
-            className={inputCls}
-            data-testid="contact-input-email"
-            placeholder="jane@yourbrand.com"
-          />
+          <input type="email" required value={form.work_email} onChange={update("work_email")}
+            className={inputCls} data-testid="contact-input-email" placeholder="you@yourcompany.com" />
         </Field>
       </div>
 
       <div className="grid md:grid-cols-2 gap-5">
         <Field label="Company name *">
-          <input
-            type="text"
-            required
-            value={form.company_name}
-            onChange={update("company_name")}
-            className={inputCls}
-            data-testid="contact-input-company"
-            placeholder="Your Brand Co."
-          />
+          <input type="text" required value={form.company_name} onChange={update("company_name")}
+            className={inputCls} data-testid="contact-input-company" placeholder="Your Company" />
         </Field>
         <Field label="Company website">
-          <input
-            type="text"
-            value={form.company_website}
-            onChange={update("company_website")}
-            className={inputCls}
-            data-testid="contact-input-website"
-            placeholder="yourbrand.com"
-          />
+          <input type="text" value={form.company_website} onChange={update("company_website")}
+            className={inputCls} data-testid="contact-input-website" placeholder="yourcompany.com" />
         </Field>
       </div>
 
       <div className="grid md:grid-cols-2 gap-5">
         <Field label="Industry">
-          <Select
-            value={form.industry}
-            onChange={update("industry")}
-            options={INDUSTRY_OPTIONS}
-            testId="contact-select-industry"
-          />
+          <Select value={form.industry} onChange={update("industry")} options={INDUSTRY_OPTIONS}
+            testId="contact-select-industry" />
         </Field>
-        <Field label="Approx. monthly revenue">
-          <Select
-            value={form.monthly_revenue}
-            onChange={update("monthly_revenue")}
-            options={REVENUE_OPTIONS}
-            testId="contact-select-revenue"
-          />
+        <Field label="Approx. revenue">
+          <Select value={form.monthly_revenue} onChange={update("monthly_revenue")}
+            options={REVENUE_OPTIONS} testId="contact-select-revenue" />
         </Field>
       </div>
 
+      <Field label="Service of interest">
+        <Select value={form.service_interest} onChange={update("service_interest")}
+          options={SERVICE_OPTIONS} testId="contact-select-service" />
+      </Field>
+
       <Field label="What are you trying to fix? *">
-        <textarea
-          required
-          rows={4}
-          value={form.challenge}
-          onChange={update("challenge")}
-          className={inputCls + " resize-none"}
-          data-testid="contact-input-challenge"
-          placeholder="We're spending $14K/mo on tools but our CAC keeps climbing..."
-        />
+        <textarea required rows={4} value={form.challenge} onChange={update("challenge")}
+          className={inputCls + " resize-none"} data-testid="contact-input-challenge"
+          placeholder="We're spending hours every day on X, and we'd like AI to take it over..." />
       </Field>
 
       <Field label="How did you hear about us?">
-        <Select
-          value={form.referral_source}
-          onChange={update("referral_source")}
-          options={SOURCE_OPTIONS}
-          testId="contact-select-source"
-          includeBlank
-        />
+        <Select value={form.referral_source} onChange={update("referral_source")}
+          options={SOURCE_OPTIONS} testId="contact-select-source" includeBlank />
       </Field>
 
       <button
@@ -286,10 +283,10 @@ function DemoForm({ form, update, submit, submitting }) {
         className="btn-primary w-full justify-center text-base py-4 mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
         data-testid="contact-submit-button"
       >
-        {submitting ? "Submitting..." : "Book my demo"} <ArrowRight className="w-4 h-4" />
+        {submitting ? "Submitting..." : "Book my call"} <ArrowRight className="w-4 h-4" />
       </button>
       <div className="text-[12px] font-mono tracking-wider uppercase text-[#9CA3AF] text-center">
-        No spam · We'll reply within 4 hours
+        No spam · Reply within 4 hours
       </div>
     </form>
   );
