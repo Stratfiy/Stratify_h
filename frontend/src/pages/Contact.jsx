@@ -214,7 +214,7 @@ function SuccessCard() {
         Got it. We'll be in touch.
       </h2>
       <p className="mt-3 text-[15px] text-[#4B5563] max-w-[440px] mx-auto">
-        Your message is in. Expect a personal note from Nithish within 4 hours.
+        Your message is in. Expect a personal note from the team within 4 hours.
       </p>
       <div className="mt-8">
         <a href="/projects" className="btn-ghost">

@@ -171,18 +171,41 @@ export const PROJECTS = [
   { slug: "p12", name: "Inventory Reconciliation Bot",vertical: "Manufacturing", summary: "Coming soon.", placeholder: true },
 ];
 
-export const FOUNDER = {
-  name: "Nithish",
-  title: "Founder",
-  background: [
-    "Ex-Samsung",
-    "Ex-Reliance Industries (RIL)",
-    "NIT graduate",
-    "15+ client engagements shipped",
-  ],
+export const FOUNDERS = [
+  {
+    name: "Nithish",
+    initial: "N",
+    title: "Co-Founder",
+    background: [
+      "Ex-Reliance Industries (RIL)",
+      "NIT graduate",
+    ],
+    bio:
+      "Years inside Reliance shipping systems that real users depended on, where \"almost working\" was a failure mode. I bring that same production discipline to the AI products we build.",
+  },
+  {
+    name: "Harsha",
+    initial: "H",
+    title: "Co-Founder",
+    background: [
+      "Ex-Samsung",
+      "NIT graduate",
+    ],
+    bio:
+      "Years at Samsung building software at scale. I focus on turning hard engineering problems into AI products that hold up in the real world — not just in a demo.",
+  },
+];
+
+// Shared founding story + combined credentials.
+export const FOUNDING_STORY = {
+  headline: "Fusion of core engineering knowledge and applied AI.",
   bio:
-    "Fusion of core engineering knowledge and applied AI. After years inside Samsung and Reliance shipping systems that real users depended on, I started NAutomation Labs to bring that same discipline to AI products — for businesses that need outcomes, not experiments.",
+    "We met at NIT and went on to ship production systems at Reliance and Samsung — places where software has to work for millions, not just in a demo. We started NAutomation Labs to bring that same discipline to AI products, for businesses that need outcomes, not experiments.",
+  creds: ["Ex-Samsung", "Ex-Reliance Industries (RIL)", "NIT graduates", "15+ client engagements shipped"],
 };
+
+// Back-compat alias (some components may still import FOUNDER).
+export const FOUNDER = FOUNDERS[0];
 
 export const CONTACT = {
   email: "office@nautomationlabs.com",

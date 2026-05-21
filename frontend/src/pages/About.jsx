@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Check } from "lucide-react";
-import { FadeUp } from "@/components/Motion";
-import { FOUNDER, TAGLINES } from "@/lib/site-data";
+import { FadeUp, StaggerGroup, StaggerItem } from "@/components/Motion";
+import { FOUNDERS, FOUNDING_STORY, TAGLINES } from "@/lib/site-data";
 
 export default function About() {
   return (
@@ -49,48 +49,59 @@ export default function About() {
         </div>
       </section>
 
-      {/* ===================== FOUNDER ===================== */}
-      <section className="py-20 md:py-28 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="about-founder">
+      {/* ===================== FOUNDERS ===================== */}
+      <section className="py-20 md:py-28 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="about-founders">
         <div className="container-x">
           <FadeUp>
-            <div className="eyebrow mb-10">The founder</div>
+            <div className="eyebrow mb-4">The founders</div>
+            <h3 className="text-[26px] md:text-[34px] tracking-[-0.02em] font-medium leading-[1.15] max-w-[680px]">
+              {FOUNDING_STORY.headline}
+            </h3>
+            <p className="mt-5 text-[16px] text-[#4B5563] leading-relaxed max-w-[720px]">
+              {FOUNDING_STORY.bio}
+            </p>
+          </FadeUp>
 
-            <div className="grid md:grid-cols-12 gap-10 items-center">
-              <div className="md:col-span-3">
-                <div className="aspect-square rounded-2xl bg-[#0A0A0A] flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-grid-dark opacity-50" />
-                  <span className="text-white font-mono text-[88px] font-medium tracking-tighter relative">N</span>
-                  <span className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-[#00D4AA]/15 border border-[#00D4AA]/30 font-mono text-[10px] tracking-wider uppercase text-[#00D4AA]">
-                    {FOUNDER.title}
-                  </span>
+          <StaggerGroup className="mt-12 grid md:grid-cols-2 gap-5">
+            {FOUNDERS.map((f) => (
+              <StaggerItem key={f.name}>
+                <div className="card-base p-6 md:p-7 h-full flex flex-col sm:flex-row gap-6 items-start">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-[#0A0A0A] flex items-center justify-center relative overflow-hidden flex-shrink-0">
+                    <div className="absolute inset-0 bg-grid-dark opacity-50" />
+                    <span className="text-white font-mono text-[44px] sm:text-[52px] font-medium tracking-tighter relative">{f.initial}</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[20px] font-medium tracking-tight text-[#0A0A0A]">{f.name}</div>
+                    <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#0066FF] mt-1">
+                      {f.title}
+                    </div>
+                    <p className="mt-3 text-[14.5px] text-[#4B5563] leading-relaxed">{f.bio}</p>
+                    <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5">
+                      {f.background.map((b) => (
+                        <li key={b} className="flex items-center gap-2 text-[13px] text-[#0A0A0A]">
+                          <Check className="w-3.5 h-3.5 text-[#00A37D] flex-shrink-0" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-              <div className="md:col-span-9">
-                <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#0066FF]">
-                  {FOUNDER.name} · {FOUNDER.title}
-                </div>
-                <h3 className="mt-3 text-[26px] md:text-[34px] tracking-[-0.02em] font-medium leading-[1.15] max-w-[680px]">
-                  Fusion of core engineering knowledge and applied AI.
-                </h3>
-                <p className="mt-5 text-[16px] text-[#4B5563] leading-relaxed max-w-[680px]">
-                  {FOUNDER.bio}
-                </p>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
 
-                <ul className="mt-7 grid sm:grid-cols-2 gap-2.5 max-w-[600px]">
-                  {FOUNDER.background.map((b) => (
-                    <li key={b} className="flex items-center gap-2.5 text-[14.5px] text-[#0A0A0A]">
-                      <Check className="w-4 h-4 text-[#00A37D] flex-shrink-0" />
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-8">
-                  <Link to="/contact" className="btn-primary" data-testid="about-cta">
-                    Talk to {FOUNDER.name} <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
+          <FadeUp delay={0.1}>
+            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <Link to="/contact" className="btn-primary" data-testid="about-cta">
+                Talk to the founders <ArrowRight className="w-4 h-4" />
+              </Link>
+              <ul className="flex flex-wrap gap-x-5 gap-y-1.5">
+                {FOUNDING_STORY.creds.map((c) => (
+                  <li key={c} className="flex items-center gap-2 text-[13px] text-[#6B7280]">
+                    <span className="agent-dot" /> {c}
+                  </li>
+                ))}
+              </ul>
             </div>
           </FadeUp>
         </div>
