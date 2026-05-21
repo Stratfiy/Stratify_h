@@ -19,6 +19,8 @@ html, body, #root {
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "ss01", "ss02";
 }
+#root { overflow-x: clip; }
+.App { overflow-x: clip; }
 
 ::selection {
   background: #0066FF;
