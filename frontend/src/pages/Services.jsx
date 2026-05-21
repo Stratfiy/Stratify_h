@@ -18,7 +18,7 @@ export default function Services() {
   return (
     <>
       {/* ===================== HERO ===================== */}
-      <section className="relative pt-20 md:pt-28 pb-16" data-testid="services-hero">
+      <section className="relative pt-20 md:pt-28 pb-16 overflow-hidden" data-testid="services-hero">
         <div className="absolute inset-0 bg-grid-soft opacity-50 pointer-events-none" />
         <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -86,29 +86,34 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ===================== HOW WE WORK ===================== */}
-      <section className="py-24 md:py-32 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="services-process">
-        <div className="container-x">
+      {/* ===================== HOW WE WORK (dark band) ===================== */}
+      <section className="relative py-24 md:py-32 bg-[#0A0A0A] text-white overflow-hidden" data-testid="services-process">
+        <div className="absolute inset-0 bg-grid-dark opacity-50 pointer-events-none" />
+        <div className="absolute -top-32 right-0 w-[520px] h-[520px] rounded-full bg-[#0066FF]/15 blur-3xl pointer-events-none" />
+        <div className="container-x relative">
           <FadeUp>
-            <div className="eyebrow mb-4">How we work</div>
-            <h2 className="text-4xl md:text-5xl lg:text-[56px] tracking-[-0.02em] max-w-[820px] leading-[1.05]">
+            <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#00D4AA] mb-4">How we work</div>
+            <h2 className="text-4xl md:text-5xl lg:text-[56px] tracking-[-0.02em] max-w-[820px] leading-[1.05] font-medium">
               {TAGLINES.problemToMvp}
             </h2>
-            <p className="mt-6 text-[17px] text-[#4B5563] max-w-[680px] leading-relaxed">
+            <p className="mt-6 text-[17px] text-white/70 max-w-[680px] leading-relaxed">
               A predictable engagement model. You see working software fast, refine it against real
               usage, and get a production-grade deployment plus your own dashboard.
             </p>
           </FadeUp>
 
-          <StaggerGroup className="mt-14 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {PROCESS_STEPS.map((step) => (
+          <StaggerGroup className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {PROCESS_STEPS.map((step, i, arr) => (
               <StaggerItem key={step.n}>
-                <div className="card-base p-6 h-full">
-                  <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#0066FF]">
+                <div className="relative rounded-2xl border border-white/12 bg-white/[0.03] p-6 h-full">
+                  <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#00D4AA]">
                     Step {step.n}
                   </div>
-                  <div className="mt-3 text-[19px] font-medium text-[#0A0A0A] tracking-tight">{step.title}</div>
-                  <p className="mt-2 text-[14px] text-[#4B5563] leading-relaxed">{step.desc}</p>
+                  <div className="mt-2 text-[22px] font-medium tracking-tight">{step.title}</div>
+                  <p className="mt-3 text-[14px] text-white/65 leading-relaxed">{step.desc}</p>
+                  {i < arr.length - 1 && (
+                    <ArrowRight className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#0A0A0A] bg-[#00D4AA] rounded-full p-0.5 z-10" />
+                  )}
                 </div>
               </StaggerItem>
             ))}

@@ -7,7 +7,7 @@ export default function About() {
   return (
     <>
       {/* ===================== HERO ===================== */}
-      <section className="relative pt-20 md:pt-28 pb-16" data-testid="about-hero">
+      <section className="relative pt-20 md:pt-28 pb-16 overflow-hidden" data-testid="about-hero">
         <div className="absolute inset-0 bg-grid-soft opacity-50 pointer-events-none" />
         <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
         <div className="container-x relative">

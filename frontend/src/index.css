@@ -22,6 +22,20 @@ html, body, #root {
 #root { overflow-x: clip; }
 .App { overflow-x: clip; }
 
+/* Prevent decorative blur circles / absolute glows from creating a
+   horizontal scrollbar that shifts the whole page sideways and clips content. */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+#root {
+  overflow-x: clip;
+}
+.App {
+  overflow-x: clip;
+}
+
 ::selection {
   background: #0066FF;
   color: white;
