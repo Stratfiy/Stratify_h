@@ -48,7 +48,7 @@ export default function ProjectDetail() {
         <section className="py-16 md:py-20 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="project-detail-numbers">
           <div className="container-x">
             <FadeUp>
-              <div className="eyebrow mb-4">Numbers</div>
+              <div className="eyebrow mb-6">Numbers</div>
               <h2 className="text-3xl md:text-4xl tracking-[-0.02em] max-w-[640px]">Results in production.</h2>
             </FadeUp>
             <StaggerGroup className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -70,11 +70,11 @@ export default function ProjectDetail() {
       )}
 
       {/* ===================== OVERVIEW + STACK ===================== */}
-      <section className="py-20 md:py-28" data-testid="project-detail-overview">
+      <section className="py-28 md:py-40" data-testid="project-detail-overview">
         <div className="container-x grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-8">
             <FadeUp>
-              <div className="eyebrow mb-4">Use case</div>
+              <div className="eyebrow mb-6">Use case</div>
               <h2 className="text-3xl md:text-4xl tracking-[-0.02em] leading-[1.1] max-w-[680px]">
                 What we built and why.
               </h2>
@@ -88,7 +88,7 @@ export default function ProjectDetail() {
             <div className="lg:col-span-4">
               <FadeUp delay={0.05}>
                 <div className="card-base p-6 md:p-7 sticky top-24">
-                  <div className="eyebrow mb-4">Specification</div>
+                  <div className="eyebrow mb-6">Specification</div>
                   <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#6B7280] mb-3">Tech stack</div>
                   <ul className="space-y-2.5">
                     {project.stack.map((s) => (
@@ -106,13 +106,13 @@ export default function ProjectDetail() {
       </section>
 
       {/* ===================== CTA ===================== */}
-      <section className="pb-28 md:pb-36" data-testid="project-detail-cta">
+      <section className="pb-36 md:pb-52" data-testid="project-detail-cta">
         <div className="container-x">
           <div className="card-base p-10 md:p-14 text-center relative overflow-hidden">
             <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
             <div className="relative">
-              <div className="eyebrow mb-4">Got a similar problem?</div>
-              <h2 className="text-3xl md:text-4xl lg:text-[48px] tracking-[-0.02em] leading-[1.05] max-w-[760px] mx-auto">
+              <div className="eyebrow mb-6">Got a similar problem?</div>
+              <h2 className="text-4xl md:text-5xl lg:text-[52px] tracking-[-0.02em] leading-[1.05] max-w-[760px] mx-auto">
                 Let's build yours. <span className="text-[#0066FF]">MVP in 5 days.</span>
               </h2>
               <div className="mt-9">

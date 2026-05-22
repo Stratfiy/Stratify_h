@@ -93,7 +93,7 @@ export default function Contact() {
   };
 
   return (
-    <section className="relative pt-20 md:pt-28 pb-28 overflow-hidden" data-testid="contact-page">
+    <section className="relative pt-28 md:pt-40 pb-28 overflow-hidden" data-testid="contact-page">
       <div className="absolute inset-0 bg-grid-soft opacity-40 pointer-events-none" />
       <div className="container-x relative grid lg:grid-cols-12 gap-12">
         <ContactSidebar />

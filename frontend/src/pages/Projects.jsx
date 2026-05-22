@@ -7,7 +7,7 @@ export default function Projects() {
   return (
     <>
       {/* ===================== HERO ===================== */}
-      <section className="relative pt-20 md:pt-28 pb-16 overflow-hidden" data-testid="projects-hero">
+      <section className="relative pt-28 md:pt-40 pb-16 overflow-hidden" data-testid="projects-hero">
         <div className="absolute inset-0 bg-grid-soft opacity-50 pointer-events-none" />
         <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-[#00D4AA]/10 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -45,8 +45,8 @@ export default function Projects() {
       <section className="pb-28" data-testid="projects-final-cta">
         <div className="container-x text-center">
           <FadeUp>
-            <div className="eyebrow mb-4">Yours next?</div>
-            <h2 className="text-3xl md:text-4xl lg:text-[48px] tracking-[-0.02em] leading-[1.05] max-w-[760px] mx-auto">
+            <div className="eyebrow mb-6">Yours next?</div>
+            <h2 className="text-4xl md:text-5xl lg:text-[52px] tracking-[-0.02em] leading-[1.05] max-w-[760px] mx-auto">
               Tell us the problem. We'll show you the MVP.
             </h2>
             <div className="mt-9">

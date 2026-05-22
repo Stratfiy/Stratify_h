@@ -51,13 +51,13 @@ export default function Home() {
   return (
     <>
       {/* ===================== HERO ===================== */}
-      <section className="relative pt-12 md:pt-16 pb-20 md:pb-28 overflow-hidden" data-testid="home-hero">
+      <section className="relative pt-16 md:pt-28 pb-28 md:pb-40 overflow-hidden" data-testid="home-hero">
         <div className="absolute inset-0 bg-grid-soft opacity-60 pointer-events-none" />
-        <div className="absolute -top-32 -right-32 w-[520px] h-[520px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
-        <div className="absolute top-40 -left-32 w-[420px] h-[420px] rounded-full bg-[#00D4AA]/10 blur-3xl pointer-events-none" />
+        <div className="absolute -top-40 -right-40 w-[720px] h-[720px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
+        <div className="absolute top-32 -left-40 w-[600px] h-[600px] rounded-full bg-[#00D4AA]/[0.08] blur-3xl pointer-events-none" />
 
         <div className="container-x relative">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-7">
               <FadeUp>
                 <div className="eyebrow flex items-center gap-2.5">
@@ -67,7 +67,7 @@ export default function Home() {
               </FadeUp>
 
               <FadeUp delay={0.05}>
-                <h1 className="mt-6 text-[44px] sm:text-[60px] lg:text-[80px] leading-[0.98] tracking-[-0.025em] font-medium">
+                <h1 className="mt-7 text-[48px] sm:text-[68px] lg:text-[92px] leading-[0.96] tracking-[-0.03em] font-medium">
                   Stop buying AI tools.
                   <br />
                   <span className="text-[#0066FF]">Ship AI products.</span>
@@ -75,7 +75,7 @@ export default function Home() {
               </FadeUp>
 
               <FadeUp delay={0.1}>
-                <p className="mt-7 text-[17px] md:text-[19px] leading-[1.55] text-[#4B5563] max-w-[560px]">
+                <p className="mt-8 text-[18px] md:text-[21px] leading-[1.6] text-[#4B5563] max-w-[600px]">
                   We design, build, and deploy AI products for ecommerce, clinics, manufacturing,
                   and supply chain. Engineered into your operations — not bolted on. Working MVP in
                   5–7 days. Production in 14–21.
@@ -83,7 +83,7 @@ export default function Home() {
               </FadeUp>
 
               <FadeUp delay={0.15}>
-                <div className="mt-9 flex flex-wrap items-center gap-3">
+                <div className="mt-10 flex flex-wrap items-center gap-3">
                   <Link to="/contact" className="btn-primary" data-testid="hero-cta-book-call">
                     Book a call <ArrowRight className="w-4 h-4" />
                   </Link>
@@ -94,7 +94,7 @@ export default function Home() {
               </FadeUp>
 
               <FadeUp delay={0.2}>
-                <div className="mt-8 flex items-center gap-3 text-[13px] text-[#6B7280]">
+                <div className="mt-10 flex items-center gap-3 text-[13px] text-[#6B7280]">
                   <span className="agent-dot" />
                   <span className="font-mono tracking-wider uppercase text-[11px]">
                     15+ engagements · Ex-Samsung · Ex-RIL · NIT
@@ -125,11 +125,11 @@ export default function Home() {
       </section>
 
       {/* ===================== PROBLEM (villain table) ===================== */}
-      <section className="py-24 md:py-32" data-testid="home-problem">
+      <section className="py-32 md:py-44" data-testid="home-problem">
         <div className="container-x">
           <FadeUp>
-            <div className="eyebrow mb-4">The status quo is broken</div>
-            <h2 className="text-4xl md:text-5xl lg:text-[56px] leading-[1.05] tracking-[-0.02em] max-w-[900px]">
+            <div className="eyebrow mb-6">The status quo is broken</div>
+            <h2 className="text-4xl md:text-5xl lg:text-[64px] leading-[1.05] tracking-[-0.02em] max-w-[900px]">
               You don't need another AI tool. <span className="text-[#9CA3AF]">You need it shipped into your business.</span>
             </h2>
             <p className="mt-6 text-[17px] md:text-[18px] text-[#4B5563] max-w-[760px] leading-relaxed">
@@ -139,7 +139,7 @@ export default function Home() {
             </p>
           </FadeUp>
 
-          <div className="mt-14 grid md:grid-cols-2 rounded-2xl overflow-hidden border border-[#E5E7EB]">
+          <div className="mt-16 grid md:grid-cols-2 rounded-2xl overflow-hidden border border-[#E5E7EB]">
             <div className="bg-[#FBFBFD] p-6 md:p-8 border-b md:border-b-0 md:border-r border-[#E5E7EB]">
               <div className="eyebrow mb-5 text-[#9CA3AF]">The old way</div>
               <ul className="space-y-4">
@@ -171,11 +171,11 @@ export default function Home() {
       </section>
 
       {/* ===================== SERVICES ===================== */}
-      <section id="services" className="py-24 md:py-32 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="home-services">
+      <section id="services" className="py-32 md:py-44 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="home-services">
         <div className="container-x">
           <FadeUp>
-            <div className="eyebrow mb-4">What we build</div>
-            <h2 className="text-4xl md:text-5xl lg:text-[56px] tracking-[-0.02em] max-w-[800px] leading-[1.05]">
+            <div className="eyebrow mb-6">What we build</div>
+            <h2 className="text-4xl md:text-5xl lg:text-[64px] tracking-[-0.02em] max-w-[800px] leading-[1.05]">
               Six services. <span className="text-[#0066FF]">One outcome — AI that ships.</span>
             </h2>
             <p className="mt-5 text-[17px] md:text-[18px] text-[#4B5563] max-w-[680px]">
@@ -184,7 +184,7 @@ export default function Home() {
             </p>
           </FadeUp>
 
-          <StaggerGroup className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+          <StaggerGroup className="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
             {SERVICES.map((s) => {
               const Icon = SERVICE_ICON[s.slug] || Bot;
               return (
@@ -239,7 +239,7 @@ export default function Home() {
       </section>
 
       {/* ===================== HOW WE WORK — dark flywheel ===================== */}
-      <section className="relative py-24 md:py-32 bg-[#0A0A0A] text-white overflow-hidden" data-testid="home-process">
+      <section className="relative py-32 md:py-44 bg-[#0A0A0A] text-white overflow-hidden" data-testid="home-process">
         <div className="absolute inset-0 bg-grid-dark opacity-50 pointer-events-none" />
         <div className="absolute -top-32 right-0 w-[520px] h-[520px] rounded-full bg-[#0066FF]/15 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -247,7 +247,7 @@ export default function Home() {
             <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#00D4AA] mb-4">
               How we work
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-[56px] tracking-[-0.02em] max-w-[860px] leading-[1.05] font-medium">
+            <h2 className="text-4xl md:text-5xl lg:text-[64px] tracking-[-0.02em] max-w-[860px] leading-[1.05] font-medium">
               {TAGLINES.problemToMvp}
             </h2>
             <p className="mt-5 text-[17px] md:text-[18px] text-white/70 max-w-[680px]">
@@ -256,7 +256,7 @@ export default function Home() {
             </p>
           </FadeUp>
 
-          <StaggerGroup className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StaggerGroup className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { n: "01", title: "Schedule a call",      desc: "30 minutes. We listen. No slides, no fluff." },
               { n: "02", title: "MVP in 5–7 days",      desc: "Working software, not a deck. Your data, your stack." },
@@ -281,16 +281,16 @@ export default function Home() {
       </section>
 
       {/* ===================== VERTICALS ===================== */}
-      <section className="py-24 md:py-32" data-testid="home-verticals">
+      <section className="py-32 md:py-44" data-testid="home-verticals">
         <div className="container-x">
           <FadeUp>
-            <div className="eyebrow mb-4">Verticals</div>
-            <h2 className="text-4xl md:text-5xl lg:text-[56px] tracking-[-0.02em] max-w-[940px] leading-[1.05]">
+            <div className="eyebrow mb-6">Verticals</div>
+            <h2 className="text-4xl md:text-5xl lg:text-[64px] tracking-[-0.02em] max-w-[940px] leading-[1.05]">
               Built for the operations-heavy industries where AI changes the math.
             </h2>
           </FadeUp>
 
-          <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="mt-16 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {VERTICALS.map((v) => (
               <FadeUp key={v.name} className="group card-base p-7 hover:border-[#0066FF] transition-colors">
                 <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#0066FF]">
@@ -304,16 +304,16 @@ export default function Home() {
       </section>
 
       {/* ===================== RECEIPTS ===================== */}
-      <section className="py-24 md:py-32 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="home-outcomes">
+      <section className="py-32 md:py-44 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="home-outcomes">
         <div className="container-x">
           <FadeUp>
-            <div className="eyebrow mb-4">The receipts</div>
-            <h2 className="text-4xl md:text-5xl lg:text-[56px] tracking-[-0.02em] max-w-[700px] leading-[1.05]">
+            <div className="eyebrow mb-6">The receipts</div>
+            <h2 className="text-4xl md:text-5xl lg:text-[64px] tracking-[-0.02em] max-w-[700px] leading-[1.05]">
               Real numbers. Real deployments.
             </h2>
           </FadeUp>
 
-          <StaggerGroup className="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+          <StaggerGroup className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
             {RECEIPTS.map((o) => (
               <StaggerItem key={o.label}>
                 <div>
@@ -333,7 +333,7 @@ export default function Home() {
       </section>
 
       {/* ===================== MANIFESTO (dark band) ===================== */}
-      <section className="relative py-28 md:py-36 bg-[#0A0A0A] text-white overflow-hidden" data-testid="home-manifesto">
+      <section className="relative py-36 md:py-52 bg-[#0A0A0A] text-white overflow-hidden" data-testid="home-manifesto">
         <div className="absolute inset-0 bg-grid-dark opacity-60 pointer-events-none" />
         <div className="absolute -top-40 left-1/3 w-[600px] h-[600px] rounded-full bg-[#0066FF]/15 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -365,16 +365,16 @@ export default function Home() {
       </section>
 
       {/* ===================== TESTIMONIALS ===================== */}
-      <section className="py-24 md:py-32" data-testid="home-testimonials">
+      <section className="py-32 md:py-44" data-testid="home-testimonials">
         <div className="container-x">
           <FadeUp>
-            <div className="eyebrow mb-4">What clients say</div>
+            <div className="eyebrow mb-6">What clients say</div>
             <h2 className="text-4xl md:text-5xl tracking-[-0.02em] max-w-[700px] leading-[1.05]">
               Quotes from real engagements.
             </h2>
           </FadeUp>
 
-          <div className="mt-14 grid md:grid-cols-2 gap-5">
+          <div className="mt-16 grid md:grid-cols-2 gap-5">
             {TESTIMONIALS.map((t) => (
               <FadeUp key={t.name + t.role} className="card-base p-7 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
@@ -396,12 +396,12 @@ export default function Home() {
       </section>
 
       {/* ===================== FINAL CTA ===================== */}
-      <section className="pt-8 pb-28 md:pb-36" data-testid="home-final-cta">
+      <section className="pt-8 pb-36 md:pb-52" data-testid="home-final-cta">
         <div className="container-x">
           <div className="card-base p-10 md:p-16 text-center relative overflow-hidden">
             <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
             <div className="relative">
-              <div className="eyebrow mb-4">The next move</div>
+              <div className="eyebrow mb-6">The next move</div>
               <h2 className="text-4xl md:text-5xl lg:text-[60px] tracking-[-0.02em] leading-[1.05] max-w-[900px] mx-auto">
                 Stop reading about AI. <span className="text-[#0066FF]">Start shipping it.</span>
               </h2>

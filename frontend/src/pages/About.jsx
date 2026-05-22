@@ -7,7 +7,7 @@ export default function About() {
   return (
     <>
       {/* ===================== HERO ===================== */}
-      <section className="relative pt-20 md:pt-28 pb-16 overflow-hidden" data-testid="about-hero">
+      <section className="relative pt-28 md:pt-40 pb-16 overflow-hidden" data-testid="about-hero">
         <div className="absolute inset-0 bg-grid-soft opacity-50 pointer-events-none" />
         <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -21,7 +21,7 @@ export default function About() {
       </section>
 
       {/* ===================== BODY ===================== */}
-      <section className="pb-20 md:pb-28" data-testid="about-body">
+      <section className="pb-28 md:pb-40" data-testid="about-body">
         <div className="container-x">
           <article className="max-w-[760px] text-[18px] md:text-[19px] leading-[1.75] text-[#1f2937] space-y-7">
             <p>
@@ -50,10 +50,10 @@ export default function About() {
       </section>
 
       {/* ===================== FOUNDERS ===================== */}
-      <section className="py-20 md:py-28 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="about-founders">
+      <section className="py-28 md:py-40 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="about-founders">
         <div className="container-x">
           <FadeUp>
-            <div className="eyebrow mb-4">The founders</div>
+            <div className="eyebrow mb-6">The founders</div>
             <h3 className="text-[26px] md:text-[34px] tracking-[-0.02em] font-medium leading-[1.15] max-w-[680px]">
               {FOUNDING_STORY.headline}
             </h3>
@@ -111,7 +111,7 @@ export default function About() {
       <section className="py-24 md:py-28" data-testid="about-final-cta">
         <div className="container-x text-center">
           <FadeUp>
-            <h2 className="text-3xl md:text-4xl lg:text-[48px] tracking-[-0.02em] leading-[1.05] max-w-[800px] mx-auto">
+            <h2 className="text-4xl md:text-5xl lg:text-[52px] tracking-[-0.02em] leading-[1.05] max-w-[800px] mx-auto">
               {TAGLINES.bookCall}
             </h2>
             <div className="mt-9 flex flex-wrap justify-center gap-3">

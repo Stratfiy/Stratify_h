@@ -18,7 +18,7 @@ export default function Services() {
   return (
     <>
       {/* ===================== HERO ===================== */}
-      <section className="relative pt-20 md:pt-28 pb-16 overflow-hidden" data-testid="services-hero">
+      <section className="relative pt-28 md:pt-40 pb-16 overflow-hidden" data-testid="services-hero">
         <div className="absolute inset-0 bg-grid-soft opacity-50 pointer-events-none" />
         <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-[#0066FF]/10 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -36,7 +36,7 @@ export default function Services() {
       </section>
 
       {/* ===================== SERVICES LIST ===================== */}
-      <section className="pb-20 md:pb-28" data-testid="services-grid">
+      <section className="pb-28 md:pb-40" data-testid="services-grid">
         <div className="container-x">
           <StaggerGroup className="grid md:grid-cols-2 gap-5">
             {SERVICES.map((s) => {
@@ -87,13 +87,13 @@ export default function Services() {
       </section>
 
       {/* ===================== HOW WE WORK (dark band) ===================== */}
-      <section className="relative py-24 md:py-32 bg-[#0A0A0A] text-white overflow-hidden" data-testid="services-process">
+      <section className="relative py-32 md:py-44 bg-[#0A0A0A] text-white overflow-hidden" data-testid="services-process">
         <div className="absolute inset-0 bg-grid-dark opacity-50 pointer-events-none" />
         <div className="absolute -top-32 right-0 w-[520px] h-[520px] rounded-full bg-[#0066FF]/15 blur-3xl pointer-events-none" />
         <div className="container-x relative">
           <FadeUp>
             <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#00D4AA] mb-4">How we work</div>
-            <h2 className="text-4xl md:text-5xl lg:text-[56px] tracking-[-0.02em] max-w-[820px] leading-[1.05] font-medium">
+            <h2 className="text-4xl md:text-5xl lg:text-[64px] tracking-[-0.02em] max-w-[820px] leading-[1.05] font-medium">
               {TAGLINES.problemToMvp}
             </h2>
             <p className="mt-6 text-[17px] text-white/70 max-w-[680px] leading-relaxed">
@@ -102,7 +102,7 @@ export default function Services() {
             </p>
           </FadeUp>
 
-          <StaggerGroup className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StaggerGroup className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {PROCESS_STEPS.map((step, i, arr) => (
               <StaggerItem key={step.n}>
                 <div className="relative rounded-2xl border border-white/12 bg-white/[0.03] p-6 h-full">
@@ -122,13 +122,13 @@ export default function Services() {
       </section>
 
       {/* ===================== TRAINING CTA ===================== */}
-      <section className="py-24 md:py-32" data-testid="services-training-cta">
+      <section className="py-32 md:py-44" data-testid="services-training-cta">
         <div className="container-x">
           <div className="card-base p-10 md:p-14 relative overflow-hidden">
             <div className="absolute -top-20 -right-20 w-[420px] h-[420px] rounded-full bg-[#00D4AA]/15 blur-3xl pointer-events-none" />
             <div className="relative grid lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-8">
-                <div className="eyebrow mb-4">Workshops & training</div>
+                <div className="eyebrow mb-6">Workshops & training</div>
                 <h2 className="text-3xl md:text-4xl lg:text-[44px] tracking-[-0.02em] leading-[1.1] max-w-[680px]">
                   Want your team to actually <span className="text-[#0066FF]">use</span> AI?
                 </h2>
@@ -155,8 +155,8 @@ export default function Services() {
       <section className="pb-28" data-testid="services-final-cta">
         <div className="container-x text-center">
           <FadeUp>
-            <div className="eyebrow mb-4">Ready?</div>
-            <h2 className="text-3xl md:text-4xl lg:text-[48px] tracking-[-0.02em] leading-[1.05] max-w-[760px] mx-auto">
+            <div className="eyebrow mb-6">Ready?</div>
+            <h2 className="text-4xl md:text-5xl lg:text-[52px] tracking-[-0.02em] leading-[1.05] max-w-[760px] mx-auto">
               {TAGLINES.bookCall}
             </h2>
             <div className="mt-9">
