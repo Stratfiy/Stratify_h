@@ -54,7 +54,7 @@ export default function About() {
       </section>
 
       {/* ===================== FOUNDERS ===================== */}
-      <section className="py-28 md:py-40 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="about-founders">
+      <section className="py-28 md:py-40 glass-band border-y border-white/50" data-testid="about-founders">
         <div className="container-x">
           <FadeUp>
             <div className="eyebrow mb-6">The founders</div>

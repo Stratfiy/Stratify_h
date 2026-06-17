@@ -14,7 +14,7 @@ export default function SiteShell() {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen bg-white text-[#0A0A0A]">
+    <div className="min-h-screen bg-transparent text-[#0A0A0A]">
       <Nav />
       <main>
         <Outlet />

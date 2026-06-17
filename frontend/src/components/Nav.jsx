@@ -49,7 +49,7 @@ export default function Nav() {
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/80 backdrop-blur-xl border-b border-[#E5E7EB]"
+          ? "glass-nav"
           : "bg-white/0 border-b border-transparent"
       }`}
       data-testid="site-nav"

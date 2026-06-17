@@ -52,7 +52,7 @@ export default function Industries() {
                     data-testid={`industry-card-${ind.slug}`}
                   >
                     <div className="flex items-start justify-between">
-                      <div className="w-11 h-11 rounded-xl bg-[#0A0A0A] text-white flex items-center justify-center">
+                      <div className="w-11 h-11 rounded-xl ink-band text-white flex items-center justify-center">
                         <Icon className="w-5 h-5" />
                       </div>
                       <ArrowRight className="w-4 h-4 text-[#9CA3AF] group-hover:text-[#1E9BE0] group-hover:translate-x-0.5 transition-all" />
@@ -70,7 +70,7 @@ export default function Industries() {
       </section>
 
       {/* ===================== ONE ENGINE ===================== */}
-      <section className="py-28 md:py-40 bg-[#0A0A0A] text-white border-y border-white/5 relative overflow-hidden" data-testid="industries-engine">
+      <section className="py-28 md:py-40 ink-band text-white border-y border-white/5 relative overflow-hidden" data-testid="industries-engine">
         <div className="absolute inset-0 bg-grid-dark opacity-50 pointer-events-none" />
         <div className="absolute -top-32 right-0 w-[520px] h-[520px] rounded-full bg-[#1E9BE0]/15 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -92,7 +92,7 @@ export default function Industries() {
           <StaggerGroup className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {ENGINE.map((e) => (
               <StaggerItem key={e.key}>
-                <div className="rounded-2xl border border-white/12 bg-white/[0.03] p-6 h-full">
+                <div className="glass-dark p-6 h-full">
                   <div className="text-[18px] font-medium tracking-tight text-white">{e.title}</div>
                   <p className="mt-3 text-[14px] text-white/65 leading-relaxed">{e.desc}</p>
                 </div>

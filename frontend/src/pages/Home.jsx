@@ -112,7 +112,7 @@ export default function Home() {
       </section>
 
       {/* ===================== LOGO BAR ===================== */}
-      <section className="py-12 border-y border-[#F3F4F6] bg-[#FBFBFD]" data-testid="home-logos">
+      <section className="py-12 border-y border-white/50 glass-band" data-testid="home-logos">
         <div className="container-x">
           <div className="text-center eyebrow mb-6">Built and delivered — in production</div>
           <Marquee speed={28} gradient gradientColor="#FBFBFD" gradientWidth={80}>
@@ -138,8 +138,8 @@ export default function Home() {
             </p>
           </FadeUp>
 
-          <div className="mt-16 grid md:grid-cols-2 rounded-2xl overflow-hidden border border-[#E5E7EB]">
-            <div className="bg-[#FBFBFD] p-6 md:p-8 border-b md:border-b-0 md:border-r border-[#E5E7EB]">
+          <div className="mt-16 grid md:grid-cols-2 rounded-2xl overflow-hidden card-base">
+            <div className="bg-white/30 p-6 md:p-8 border-b md:border-b-0 md:border-r border-white/50">
               <div className="eyebrow mb-5 text-[#9CA3AF]">The old way</div>
               <ul className="space-y-4">
                 {PROBLEM_ROWS.map((r) => (
@@ -152,7 +152,7 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-            <div className="bg-white p-6 md:p-8">
+            <div className="bg-white/45 p-6 md:p-8">
               <div className="eyebrow mb-5 text-[#1E9BE0]">The NAutomation Labs way</div>
               <ul className="space-y-4">
                 {PROBLEM_ROWS.map((r) => (
@@ -170,7 +170,7 @@ export default function Home() {
       </section>
 
       {/* ===================== CAPABILITIES (services) ===================== */}
-      <section id="services" className="py-32 md:py-44 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="home-services">
+      <section id="services" className="py-32 md:py-44 glass-band border-y border-white/50" data-testid="home-services">
         <div className="container-x">
           <FadeUp>
             <div className="eyebrow mb-6">The platform</div>
@@ -194,7 +194,7 @@ export default function Home() {
                     data-testid={`service-card-${s.slug}`}
                   >
                     <div className="flex items-start justify-between">
-                      <div className="w-11 h-11 rounded-xl bg-[#0A0A0A] text-white flex items-center justify-center">
+                      <div className="w-11 h-11 rounded-xl ink-band text-white flex items-center justify-center">
                         <Icon className="w-5 h-5" />
                       </div>
                       <ArrowRight className="w-4 h-4 text-[#9CA3AF] group-hover:text-[#1E9BE0] group-hover:translate-x-0.5 transition-all" />
@@ -215,7 +215,7 @@ export default function Home() {
       </section>
 
       {/* ===================== HOW WE WORK ===================== */}
-      <section className="relative py-32 md:py-44 bg-[#0A0A0A] text-white overflow-hidden" data-testid="home-process">
+      <section className="relative py-32 md:py-44 ink-band text-white overflow-hidden" data-testid="home-process">
         <div className="absolute inset-0 bg-grid-dark opacity-50 pointer-events-none" />
         <div className="absolute -top-32 right-0 w-[520px] h-[520px] rounded-full bg-[#1E9BE0]/15 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -240,7 +240,7 @@ export default function Home() {
               { n: "04", title: "Scale the plant",     desc: "Roll out across lines and sites with your own dashboards and audit trail." },
             ].map((s, i, arr) => (
               <StaggerItem key={s.n}>
-                <div className="relative rounded-2xl border border-white/12 bg-white/[0.03] p-6 h-full">
+                <div className="relative glass-dark p-6 h-full">
                   <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#4FB8EE]">
                     Step {s.n}
                   </div>
@@ -291,7 +291,7 @@ export default function Home() {
       </section>
 
       {/* ===================== ONE ENGINE ===================== */}
-      <section className="relative py-32 md:py-44 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="home-engine">
+      <section className="relative py-32 md:py-44 glass-band border-y border-white/50" data-testid="home-engine">
         <div className="container-x">
           <FadeUp>
             <div className="eyebrow mb-6">One engine beneath every use case</div>
@@ -342,7 +342,7 @@ export default function Home() {
       </section>
 
       {/* ===================== MANIFESTO ===================== */}
-      <section className="relative py-36 md:py-52 bg-[#0A0A0A] text-white overflow-hidden" data-testid="home-manifesto">
+      <section className="relative py-36 md:py-52 ink-band text-white overflow-hidden" data-testid="home-manifesto">
         <div className="absolute inset-0 bg-grid-dark opacity-60 pointer-events-none" />
         <div className="absolute -top-40 left-1/3 w-[600px] h-[600px] rounded-full bg-[#1E9BE0]/15 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -387,7 +387,7 @@ export default function Home() {
             {TESTIMONIALS.map((t) => (
               <FadeUp key={t.name + t.role} className="card-base p-7 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-full bg-[#0A0A0A] text-white flex items-center justify-center font-mono text-[12px] font-medium tracking-tighter">
+                  <div className="w-10 h-10 rounded-full ink-band text-white flex items-center justify-center font-mono text-[12px] font-medium tracking-tighter">
                     {t.initial}
                   </div>
                   <div>

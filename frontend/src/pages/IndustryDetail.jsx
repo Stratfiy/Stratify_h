@@ -45,7 +45,7 @@ export default function IndustryDetail() {
       </section>
 
       {/* ===================== STATS ===================== */}
-      <section className="py-16 md:py-20 bg-[#0A0A0A] text-white border-y border-white/5 relative overflow-hidden" data-testid="industry-stats">
+      <section className="py-16 md:py-20 ink-band text-white border-y border-white/5 relative overflow-hidden" data-testid="industry-stats">
         <div className="absolute inset-0 bg-grid-dark opacity-40 pointer-events-none" />
         <div className="container-x relative">
           <FadeUp>
@@ -83,7 +83,7 @@ export default function IndustryDetail() {
       </section>
 
       {/* ===================== USE CASES ===================== */}
-      <section className="py-16 md:py-24 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="industry-usecases">
+      <section className="py-16 md:py-24 glass-band border-y border-white/50" data-testid="industry-usecases">
         <div className="container-x">
           <FadeUp>
             <div className="eyebrow mb-6">Use cases in detail</div>
@@ -132,7 +132,7 @@ export default function IndustryDetail() {
       </section>
 
       {/* ===================== ONE ENGINE ===================== */}
-      <section className="py-20 md:py-28 bg-[#0A0A0A] text-white relative overflow-hidden" data-testid="industry-engine">
+      <section className="py-20 md:py-28 ink-band text-white relative overflow-hidden" data-testid="industry-engine">
         <div className="absolute inset-0 bg-grid-dark opacity-50 pointer-events-none" />
         <div className="absolute -top-32 left-1/4 w-[520px] h-[520px] rounded-full bg-[#1E9BE0]/15 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -147,7 +147,7 @@ export default function IndustryDetail() {
           <StaggerGroup className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {ENGINE.map((e) => (
               <StaggerItem key={e.key}>
-                <div className="rounded-2xl border border-white/12 bg-white/[0.03] p-6 h-full">
+                <div className="glass-dark p-6 h-full">
                   <div className="text-[17px] font-medium tracking-tight text-white">{e.title}</div>
                   <p className="mt-3 text-[13.5px] text-white/65 leading-relaxed">{e.desc}</p>
                 </div>

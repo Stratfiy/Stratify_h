@@ -89,7 +89,7 @@ export default function Services() {
       </section>
 
       {/* ===================== HOW WE WORK (dark band) ===================== */}
-      <section className="relative py-32 md:py-44 bg-[#0A0A0A] text-white overflow-hidden" data-testid="services-process">
+      <section className="relative py-32 md:py-44 ink-band text-white overflow-hidden" data-testid="services-process">
         <div className="absolute inset-0 bg-grid-dark opacity-50 pointer-events-none" />
         <div className="absolute -top-32 right-0 w-[520px] h-[520px] rounded-full bg-[#1E9BE0]/15 blur-3xl pointer-events-none" />
         <div className="container-x relative">
@@ -107,7 +107,7 @@ export default function Services() {
           <StaggerGroup className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {PROCESS_STEPS.map((step, i, arr) => (
               <StaggerItem key={step.n}>
-                <div className="relative rounded-2xl border border-white/12 bg-white/[0.03] p-6 h-full">
+                <div className="relative glass-dark p-6 h-full">
                   <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#4FB8EE]">
                     Step {step.n}
                   </div>

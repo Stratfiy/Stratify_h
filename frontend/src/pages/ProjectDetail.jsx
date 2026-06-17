@@ -44,7 +44,7 @@ export default function ProjectDetail() {
 
       {/* ===================== NUMBERS ===================== */}
       {project.numbers && (
-        <section className="py-16 md:py-20 bg-[#FBFBFD] border-y border-[#F3F4F6]" data-testid="project-detail-numbers">
+        <section className="py-16 md:py-20 glass-band border-y border-white/50" data-testid="project-detail-numbers">
           <div className="container-x">
             <FadeUp>
               <div className="eyebrow mb-6">Numbers</div>
