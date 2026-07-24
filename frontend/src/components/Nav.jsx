@@ -21,9 +21,9 @@ function Logo() {
 
 const NAV_LINKS = [
   { to: "/",            label: "Home",       end: true  },
-  { to: "/industries",  label: "Industries"             },
   { to: "/services",    label: "Services"               },
   { to: "/projects",    label: "Projects"               },
+  { to: "/industries",  label: "Industries"             },
   { to: "/about",       label: "About Us"               },
   { to: "/contact",     label: "Contact"                },
 ];

@@ -27,6 +27,8 @@ module.exports = {
           'blue-hover': '#1781BE',
           'blue-soft': '#E6F0FF',
           mint: '#4FB8EE',
+          navy: '#0A0E14',
+          teal: '#3FE0D0',
           ink: '#0A0A0A',
           surface: '#F9FAFB',
           line: '#E5E7EB',
