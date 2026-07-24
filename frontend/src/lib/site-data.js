@@ -631,3 +631,83 @@ export const TAGLINES = {
   bookFreeSession: "Book a free session on AI in your industry.",
   manifesto: "AI infused. Not bolted on.",
 };
+
+/* ----------------------------------------------------------------------------
+   DECIBYL — flagship product. Studio homepage features it; decibyl.ai carries
+   its full story.
+---------------------------------------------------------------------------- */
+export const DECIBYL = {
+  name: "decibyl",
+  tagline: "Voice agents that turn calls into outcomes.",
+  url: "https://decibyl.ai",
+  description:
+    "decibyl builds AI voice agents that make and answer calls like a trained rep — connected to the tools and CRMs you already run. No scripts to maintain, no servers to manage.",
+  features: [
+    {
+      title: "Answers and makes calls",
+      desc: "A voice agent trained on your process, live on the phone — not a script tree.",
+    },
+    {
+      title: "Connects to your stack",
+      desc: "Reads and writes to the CRMs and tools you already run, so every call updates the record.",
+    },
+    {
+      title: "Turns conversations into outcomes",
+      desc: "Recovered payments, resolved support, booked meetings — the call closes the loop, not just logs it.",
+    },
+  ],
+  outcomes: [
+    { label: "No scripts to maintain" },
+    { label: "No servers to manage" },
+    { label: "Live on every call" },
+  ],
+};
+
+/* ----------------------------------------------------------------------------
+   STUDIO PRINCIPLES — how we build. Design north stars, doubles as the
+   homepage "how we build" section.
+---------------------------------------------------------------------------- */
+export const STUDIO_PRINCIPLES = [
+  {
+    n: "01",
+    title: "AI-native, not AI-added",
+    desc: "We don't bolt a chatbot onto an existing product. Every workflow is designed around what the model can actually do end to end.",
+  },
+  {
+    n: "02",
+    title: "Reliability is the feature",
+    desc: "Built for the live call at 2am, not the demo. If it can't be trusted unattended, it isn't done.",
+  },
+  {
+    n: "03",
+    title: "Deep, not wide",
+    desc: "We solve one workflow completely before widening. One product, done right, beats five half-built ones.",
+  },
+];
+
+/* ----------------------------------------------------------------------------
+   FAQS — question-form copy shared by the visible FAQ accordion and the
+   FAQPage JSON-LD. Keep q/a identical between the two.
+---------------------------------------------------------------------------- */
+export const FAQS = [
+  {
+    q: "What is an AI voice agent?",
+    a: "An AI voice agent is software that makes or answers phone calls on its own, holding a real conversation and taking action in your systems — not a script tree or a static IVR menu.",
+  },
+  {
+    q: "What does decibyl do?",
+    a: "decibyl is NAutomation Labs' AI voice agent platform. It runs live voice conversations, integrates with the CRMs and tools you already use, and turns calls into outcomes like recovered payments or resolved support.",
+  },
+  {
+    q: "Is decibyl a separate product from NAutomation Labs?",
+    a: "decibyl is built and run by NAutomation Labs. It has its own identity and site at decibyl.ai — NAutomation Labs is the studio behind it.",
+  },
+  {
+    q: "How does an AI voice agent integrate with a CRM?",
+    a: "decibyl reads and writes directly to the CRMs and tools you already run, so every call updates the record automatically — no manual re-entry after the conversation ends.",
+  },
+  {
+    q: "Does NAutomation Labs still work on industrial AI (ERP, SCADA, IoT)?",
+    a: "Yes — that work continues on the industrials side. decibyl is the current flagship product; explore the industries pages for the operations-intelligence work.",
+  },
+];

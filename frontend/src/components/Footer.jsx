@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Linkedin, Mail, Phone } from "lucide-react";
-import { CONTACT } from "@/lib/site-data";
+import { CONTACT, DECIBYL } from "@/lib/site-data";
 
 export default function Footer() {
   return (
@@ -14,6 +14,11 @@ export default function Footer() {
               <li><Link to="/services" className="hover:text-white">Services</Link></li>
               <li><Link to="/projects" className="hover:text-white">Projects</Link></li>
               <li><Link to="/about" className="hover:text-white">About Us</Link></li>
+              <li>
+                <a href={DECIBYL.url} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+                  decibyl — AI voice agents
+                </a>
+              </li>
             </ul>
           </div>
           <div>
@@ -71,7 +76,7 @@ export default function Footer() {
             <span>·</span>
             <a href="/terms" className="hover:text-white">Terms</a>
             <span>·</span>
-            <span>The AI operating layer for industry</span>
+            <span>AI-native studio · home of decibyl</span>
           </div>
         </div>
       </div>

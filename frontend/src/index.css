@@ -4,6 +4,9 @@
 @import '@fontsource/geist-sans/700.css';
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/bricolage-grotesque/600.css';
+@import '@fontsource/bricolage-grotesque/700.css';
+@import '@fontsource/bricolage-grotesque/800.css';
 
 @tailwind base;
 @tailwind components;
@@ -36,6 +39,13 @@ body::before {
 }
 #root { overflow-x: clip; }
 .App { overflow-x: clip; }
+
+/* Bold, characterful display type for headings — the "wise" direction:
+   a heavy grotesque for headlines, kept distinct from the clean Geist body. */
+h1, h2, h3, h4 {
+  font-family: 'Bricolage Grotesque', 'Geist', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+}
 
 /* Prevent decorative blur circles / absolute glows from creating a
    horizontal scrollbar that shifts the whole page sideways and clips content. */
