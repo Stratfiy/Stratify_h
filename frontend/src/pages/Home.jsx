@@ -1,19 +1,99 @@
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 import { ArrowRight } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeroSpectrum from "@/components/HeroSpectrum";
 import DecibylMark from "@/components/DecibylMark";
+import WaveformDivider from "@/components/WaveformDivider";
 import JsonLd from "@/components/JsonLd";
 import {
   Accordion, AccordionItem, AccordionTrigger, AccordionContent,
 } from "@/components/ui/accordion";
-import { FadeUp, StaggerGroup, StaggerItem } from "@/components/Motion";
+import { FadeUp } from "@/components/Motion";
 import { DECIBYL, STUDIO_PRINCIPLES, FAQS, NDA_BRANDS } from "@/lib/site-data";
 import {
   buildOrganizationSchema, buildSoftwareApplicationSchema, buildFaqSchema,
 } from "@/lib/seo-data";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function Home() {
+  const heroSectionRef = useRef(null);
+  const heroTextRef = useRef(null);
+  const decibylFeaturesRef = useRef(null);
+  const principlesGridRef = useRef(null);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return undefined;
+
+    const triggers = [];
+
+    // Hero exit handoff — text column eases out as the hero scrolls past,
+    // scrubbed against the same scroll range driving the 3D bars.
+    if (heroSectionRef.current && heroTextRef.current) {
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: heroSectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+          onUpdate: (self) => {
+            gsap.set(heroTextRef.current, {
+              opacity: 1 - self.progress * 0.6,
+              y: -self.progress * 40,
+            });
+          },
+        })
+      );
+    }
+
+    // decibyl feature cards — scrubbed reveal, like a fader row activating
+    // as the section scrolls into view, rather than a one-shot fade-up.
+    const featureCards = decibylFeaturesRef.current?.querySelectorAll("[data-feature-card]");
+    if (featureCards?.length) {
+      gsap.set(featureCards, { opacity: 0, x: -30 });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: decibylFeaturesRef.current,
+          start: "top 85%",
+          end: "top 40%",
+          scrub: true,
+        },
+      });
+      tl.to(featureCards, { opacity: 1, x: 0, stagger: 0.15, ease: "none" });
+      triggers.push(tl.scrollTrigger);
+    }
+
+    // Studio-principle cards + connectors — sequenced left to right so the
+    // section reads as a flow, not three tiles appearing at once.
+    const principleCards = principlesGridRef.current?.querySelectorAll("[data-principle-card]");
+    const connectors = principlesGridRef.current?.querySelectorAll("[data-principle-connector]");
+    if (principleCards?.length) {
+      gsap.set(principleCards, { opacity: 0, y: 20 });
+      if (connectors?.length) gsap.set(connectors, { opacity: 0, scale: 0.5 });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: principlesGridRef.current,
+          start: "top 85%",
+          end: "top 35%",
+          scrub: true,
+        },
+      });
+      principleCards.forEach((card, i) => {
+        tl.to(card, { opacity: 1, y: 0, ease: "none" }, i * 0.3);
+        if (connectors?.[i]) {
+          tl.to(connectors[i], { opacity: 1, scale: 1, ease: "none" }, i * 0.3 + 0.15);
+        }
+      });
+      triggers.push(tl.scrollTrigger);
+    }
+
+    return () => triggers.forEach((t) => t?.kill());
+  }, []);
+
   return (
     <>
       <JsonLd data={buildOrganizationSchema()} />
@@ -22,6 +102,7 @@ export default function Home() {
 
       {/* ===================== HERO ===================== */}
       <section
+        ref={heroSectionRef}
         className="relative py-24 md:py-32 lg:py-36 overflow-hidden bg-brand-navy text-white"
         data-testid="home-hero"
       >
@@ -31,7 +112,7 @@ export default function Home() {
 
         <div className="container-x relative">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            <div className="lg:col-span-7">
+            <div ref={heroTextRef} className="lg:col-span-7">
               <FadeUp>
                 <div className="eyebrow flex items-center gap-2.5 text-[#4FB8EE]">
                   <span className="agent-dot" />
@@ -40,7 +121,7 @@ export default function Home() {
               </FadeUp>
 
               <FadeUp delay={0.05}>
-                <h1 className="mt-7 text-[38px] sm:text-[54px] lg:text-[72px] leading-[1.03] tracking-[-0.03em] font-medium">
+                <h1 className="mt-7 text-[38px] sm:text-[54px] lg:text-[72px] leading-[1.03] tracking-[-0.03em] font-extrabold">
                   An AI-native studio.
                   <br />
                   We build agents that <span className="text-[#3FE0D0]">operate</span> — not just assist.
@@ -133,16 +214,14 @@ export default function Home() {
             </p>
           </FadeUp>
 
-          <StaggerGroup className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+          <div ref={decibylFeaturesRef} className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {DECIBYL.features.map((f) => (
-              <StaggerItem key={f.title}>
-                <div className="card-base p-6 h-full">
-                  <div className="text-[18px] font-medium tracking-tight text-[#0A0A0A]">{f.title}</div>
-                  <p className="mt-3 text-[14px] text-[#4B5563] leading-relaxed">{f.desc}</p>
-                </div>
-              </StaggerItem>
+              <div key={f.title} data-feature-card className="card-base p-6 h-full">
+                <div className="text-[18px] font-medium tracking-tight text-[#0A0A0A]">{f.title}</div>
+                <p className="mt-3 text-[14px] text-[#4B5563] leading-relaxed">{f.desc}</p>
+              </div>
             ))}
-          </StaggerGroup>
+          </div>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3">
             {DECIBYL.outcomes.map((o) => (
@@ -167,6 +246,8 @@ export default function Home() {
         </div>
       </section>
 
+      <WaveformDivider className="opacity-80" />
+
       {/* ===================== HOW WE BUILD ===================== */}
       <section className="relative py-32 md:py-44 ink-band text-white overflow-hidden" data-testid="home-principles">
         <div className="absolute inset-0 bg-grid-dark opacity-50 pointer-events-none" />
@@ -176,27 +257,28 @@ export default function Home() {
             <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#4FB8EE] mb-4">
               How we build
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-[60px] tracking-[-0.02em] max-w-[880px] leading-[1.05] font-medium">
+            <h2 className="text-4xl md:text-5xl lg:text-[60px] tracking-[-0.02em] max-w-[880px] leading-[1.05]">
               Studio principles — our design north stars.
             </h2>
           </FadeUp>
 
-          <StaggerGroup className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div ref={principlesGridRef} className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-4">
             {STUDIO_PRINCIPLES.map((p, i, arr) => (
-              <StaggerItem key={p.n}>
-                <div className="relative glass-dark p-6 h-full">
-                  <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#4FB8EE]">
-                    {p.n}
-                  </div>
-                  <div className="mt-2 text-[22px] font-medium tracking-tight">{p.title}</div>
-                  <p className="mt-3 text-[14px] text-white/65 leading-relaxed">{p.desc}</p>
-                  {i < arr.length - 1 && (
-                    <ArrowRight className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white bg-[#1E9BE0] rounded-full p-0.5 z-10" />
-                  )}
+              <div key={p.n} data-principle-card className="relative glass-dark p-6 h-full">
+                <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#4FB8EE]">
+                  {p.n}
                 </div>
-              </StaggerItem>
+                <div className="mt-2 text-[22px] font-medium tracking-tight">{p.title}</div>
+                <p className="mt-3 text-[14px] text-white/65 leading-relaxed">{p.desc}</p>
+                {i < arr.length - 1 && (
+                  <ArrowRight
+                    data-principle-connector
+                    className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white bg-[#1E9BE0] rounded-full p-0.5 z-10"
+                  />
+                )}
+              </div>
             ))}
-          </StaggerGroup>
+          </div>
         </div>
       </section>
 
@@ -205,7 +287,7 @@ export default function Home() {
         <div className="container-x">
           <FadeUp className="max-w-[720px]">
             <div className="eyebrow mb-4 text-[#9CA3AF]">What's next</div>
-            <h3 className="text-2xl md:text-3xl tracking-[-0.01em] leading-[1.2] text-[#0A0A0A]">
+            <h3 className="text-2xl md:text-3xl tracking-[-0.01em] leading-[1.2] text-[#0A0A0A] font-medium">
               We also build AI on top of the ERP, SCADA, and IoT heavy industry already runs.
             </h3>
             <p className="mt-4 text-[15px] text-[#4B5563] leading-relaxed">
@@ -218,6 +300,8 @@ export default function Home() {
           </FadeUp>
         </div>
       </section>
+
+      <WaveformDivider className="opacity-80" />
 
       {/* ===================== FAQ ===================== */}
       <section className="py-32 md:py-44 glass-band border-y border-white/50" data-testid="home-faq">
