@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { FadeUp, StaggerGroup, StaggerItem } from "@/components/Motion";
 import { PROJECTS, PROJECT_GROUPS } from "@/lib/site-data";
+import { OPERATIONAL_PROJECTS, OPERATIONAL_PROJECT_GROUPS } from "@/lib/project-additions";
+
+const ALL_PROJECTS = [...OPERATIONAL_PROJECTS, ...PROJECTS];
+const ALL_GROUPS = Array.from(new Set([...OPERATIONAL_PROJECT_GROUPS, ...PROJECT_GROUPS]));
 
 export default function Projects() {
   return (
@@ -12,13 +16,14 @@ export default function Projects() {
         <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-[#1E9BE0]/10 blur-3xl pointer-events-none" />
         <div className="container-x relative">
           <FadeUp>
-            <div className="eyebrow mb-5">Portfolio</div>
+            <div className="eyebrow mb-5">Selected systems</div>
             <h1 className="text-[40px] md:text-[60px] lg:text-[76px] leading-[1.04] tracking-[-0.025em] font-medium max-w-[1080px]">
-              Shipped. <span className="text-[#1E9BE0]">In production.</span>
+              Operational software for <span className="text-[#1E9BE0]">expensive workflows.</span>
             </h1>
-            <p className="mt-7 text-[17px] md:text-[19px] text-[#4B5563] max-w-[720px] leading-relaxed">
-              AI products and automation we've designed, built, and deployed end to end — across
-              manufacturing, supply chain, safety, healthcare, e-commerce, and IT services.
+            <p className="mt-7 text-[17px] md:text-[19px] text-[#4B5563] max-w-[820px] leading-relaxed">
+              Custom AI-native systems for production, maintenance, procurement, warehouses, inventory,
+              logistics, quality, document-heavy operations, and cross-functional execution — built to
+              reduce manual effort, operating cost, delays, and exception-handling time.
             </p>
           </FadeUp>
         </div>
@@ -27,8 +32,8 @@ export default function Projects() {
       {/* ===================== GROUPED PROJECTS ===================== */}
       <section className="pb-20 md:pb-28" data-testid="projects-grid">
         <div className="container-x space-y-20">
-          {PROJECT_GROUPS.map((group) => {
-            const items = PROJECTS.filter((p) => p.vertical === group);
+          {ALL_GROUPS.map((group) => {
+            const items = ALL_PROJECTS.filter((p) => p.vertical === group);
             if (!items.length) return null;
             return (
               <div key={group}>
@@ -39,7 +44,7 @@ export default function Projects() {
                     </h2>
                     <div className="flex-1 h-px bg-[#E5E7EB]" />
                     <span className="font-mono text-[11px] tracking-[0.16em] uppercase text-[#9CA3AF]">
-                      {items.length} {items.length === 1 ? "project" : "projects"}
+                      {items.length} {items.length === 1 ? "system" : "systems"}
                     </span>
                   </div>
                 </FadeUp>
@@ -60,13 +65,13 @@ export default function Projects() {
       <section className="pb-28" data-testid="projects-final-cta">
         <div className="container-x text-center">
           <FadeUp>
-            <div className="eyebrow mb-6">Yours next?</div>
-            <h2 className="text-4xl md:text-5xl lg:text-[52px] tracking-[-0.02em] leading-[1.05] max-w-[760px] mx-auto">
-              Tell us the problem. We'll show you the build.
+            <div className="eyebrow mb-6">Your operation next?</div>
+            <h2 className="text-4xl md:text-5xl lg:text-[52px] tracking-[-0.02em] leading-[1.05] max-w-[820px] mx-auto">
+              Show us the expensive workflow. We'll design the operating layer around it.
             </h2>
             <div className="mt-9">
               <Link to="/contact" className="btn-primary text-base px-8 py-4">
-                Book a call <ArrowRight className="w-4 h-4" />
+                Book an operations AI call <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </FadeUp>
@@ -95,7 +100,7 @@ function ProjectCard({ project }) {
       </h3>
       <p className="mt-3 text-[14px] text-[#4B5563] leading-relaxed">{project.summary}</p>
       <span className="mt-5 inline-flex items-center gap-1.5 text-[#1E9BE0] text-[14px] font-medium">
-        Know more <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+        See the workflow <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
       </span>
     </Link>
   );

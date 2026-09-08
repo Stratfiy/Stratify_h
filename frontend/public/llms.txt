@@ -1,0 +1,30 @@
+# NAutomation Labs
+
+> NAutomation Labs is an AI agency and AI product studio in India building custom AI software for manufacturing, logistics, procurement, warehouses, inventory, maintenance, quality, oil & gas services, EPC and other complex operational workflows.
+
+## Primary capabilities
+- Custom AI software and AI product development
+- Industrial AI and manufacturing AI solutions
+- AI automation for document-heavy and cross-functional workflows
+- Production planning and capacity control
+- Predictive maintenance and reliability intelligence
+- Warehouse and inventory control systems
+- Procurement and RFQ intelligence
+- Quality, NCR and CAPA workflows
+- Logistics and supply-chain exception control
+- Industrial document intelligence
+- AI agents and retrieval-grounded systems
+- Voice agents through decibyl
+
+## Key pages
+- https://nautomationlabs.com/
+- https://nautomationlabs.com/ai-agency-india
+- https://nautomationlabs.com/ai-product-studio-india
+- https://nautomationlabs.com/ai-development-company-india
+- https://nautomationlabs.com/ai-automation-company-india
+- https://nautomationlabs.com/industrial-ai-company-india
+- https://nautomationlabs.com/projects
+- https://nautomationlabs.com/industries
+
+## Positioning
+NAutomation Labs starts with a high-value operating workflow rather than a generic AI tool. The team maps the current process, establishes a measurable baseline, builds a focused production pilot, and expands into connected workflows after proving operating value.

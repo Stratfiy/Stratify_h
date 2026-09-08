@@ -2,10 +2,13 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Sparkles, Check } from "lucide-react";
 import { FadeUp, StaggerGroup, StaggerItem } from "@/components/Motion";
 import { PROJECTS } from "@/lib/site-data";
+import { OPERATIONAL_PROJECTS } from "@/lib/project-additions";
+
+const ALL_PROJECTS = [...OPERATIONAL_PROJECTS, ...PROJECTS];
 
 export default function ProjectDetail() {
   const { slug } = useParams();
-  const project = PROJECTS.find((p) => p.slug === slug);
+  const project = ALL_PROJECTS.find((p) => p.slug === slug);
 
   if (!project) return <Navigate to="/projects" replace />;
 
@@ -17,7 +20,7 @@ export default function ProjectDetail() {
         <div className="container-x relative">
           <FadeUp>
             <Link to="/projects" className="inline-flex items-center gap-1.5 text-[13px] text-[#6B7280] hover:text-[#0A0A0A] transition-colors mb-8">
-              <ArrowLeft className="w-3.5 h-3.5" /> Back to projects
+              <ArrowLeft className="w-3.5 h-3.5" /> Back to systems
             </Link>
             <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#1E9BE0]">
               {project.vertical}
@@ -42,13 +45,13 @@ export default function ProjectDetail() {
         </div>
       </section>
 
-      {/* ===================== NUMBERS ===================== */}
+      {/* ===================== OUTCOMES ===================== */}
       {project.numbers && (
         <section className="py-16 md:py-20 glass-band border-y border-white/50" data-testid="project-detail-numbers">
           <div className="container-x">
             <FadeUp>
-              <div className="eyebrow mb-6">Numbers</div>
-              <h2 className="text-3xl md:text-4xl tracking-[-0.02em] max-w-[640px]">Results in production.</h2>
+              <div className="eyebrow mb-6">Operating outcomes</div>
+              <h2 className="text-3xl md:text-4xl tracking-[-0.02em] max-w-[680px]">Designed around measurable operational leverage.</h2>
             </FadeUp>
             <StaggerGroup className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-5">
               {project.numbers.map((n) => (
@@ -73,9 +76,9 @@ export default function ProjectDetail() {
         <div className="container-x grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-8">
             <FadeUp>
-              <div className="eyebrow mb-6">Use case</div>
+              <div className="eyebrow mb-6">Operational workflow</div>
               <h2 className="text-3xl md:text-4xl tracking-[-0.02em] leading-[1.1] max-w-[680px]">
-                What we built and why.
+                The problem, the operating layer, and where the manual work disappears.
               </h2>
               <p className="mt-6 text-[17px] text-[#1f2937] leading-[1.75]">
                 {project.useCase}
@@ -87,8 +90,8 @@ export default function ProjectDetail() {
             <div className="lg:col-span-4">
               <FadeUp delay={0.05}>
                 <div className="card-base p-6 md:p-7 sticky top-24">
-                  <div className="eyebrow mb-6">Specification</div>
-                  <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#6B7280] mb-3">Tech stack</div>
+                  <div className="eyebrow mb-6">System layer</div>
+                  <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#6B7280] mb-3">Core capabilities</div>
                   <ul className="space-y-2.5">
                     {project.stack.map((s) => (
                       <li key={s} className="flex items-center gap-2.5 text-[14px] text-[#0A0A0A]">
@@ -110,13 +113,13 @@ export default function ProjectDetail() {
           <div className="card-base p-10 md:p-14 text-center relative overflow-hidden">
             <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full bg-[#1E9BE0]/10 blur-3xl pointer-events-none" />
             <div className="relative">
-              <div className="eyebrow mb-6">Got a similar problem?</div>
-              <h2 className="text-4xl md:text-5xl lg:text-[52px] tracking-[-0.02em] leading-[1.05] max-w-[760px] mx-auto">
-                Let's build yours. <span className="text-[#1E9BE0]">On your data.</span>
+              <div className="eyebrow mb-6">Have a similar bottleneck?</div>
+              <h2 className="text-4xl md:text-5xl lg:text-[52px] tracking-[-0.02em] leading-[1.05] max-w-[820px] mx-auto">
+                We'll map the workflow, prove the leverage, and build around your existing systems.
               </h2>
               <div className="mt-9">
                 <Link to="/contact" className="btn-primary text-base px-8 py-4">
-                  Book a call <ArrowRight className="w-4 h-4" />
+                  Book an operations AI call <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>

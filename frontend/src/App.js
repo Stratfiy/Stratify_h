@@ -16,6 +16,7 @@ import Signup from "@/pages/Signup";
 import Dashboard from "@/pages/Dashboard";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
+import AIMarketLanding from "@/pages/AIMarketLanding";
 import SiteShell from "@/components/SiteShell";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -41,6 +42,13 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
+
+                {/* Search-intent landing pages */}
+                <Route path="/ai-agency-india" element={<AIMarketLanding pageKey="ai-agency-india" />} />
+                <Route path="/ai-product-studio-india" element={<AIMarketLanding pageKey="ai-product-studio-india" />} />
+                <Route path="/industrial-ai-company-india" element={<AIMarketLanding pageKey="industrial-ai-company-india" />} />
+                <Route path="/ai-automation-company-india" element={<AIMarketLanding pageKey="ai-automation-company-india" />} />
+                <Route path="/ai-development-company-india" element={<AIMarketLanding pageKey="ai-development-company-india" />} />
               </Route>
 
               {/* Standalone — no Nav/Footer */}
