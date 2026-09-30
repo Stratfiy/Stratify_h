@@ -1,0 +1,23 @@
+name: nautomation-web
+on:
+  pull_request:
+    paths: ['nautomation-web/**']
+  push:
+    branches: [main]
+    paths: ['nautomation-web/**']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: nautomation-web } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: nautomation-web/package-lock.json }
+      - run: npm ci
+      - run: npm run check
+      - run: npx tsc -p workers/tsconfig.json
+      - run: npm run build
+      - name: Assert every page has one H1 and no JS bundle on Home
+        run: |
+          for f in $(find dist -name '*.html'); do n=$(grep -o '<h1' "$f" | wc -l); [ "$n" = "1" ] || { echo "$f has $n h1"; exit 1; }; done
+          ! grep -q '<script[^>]*src="/_astro' dist/index.html

@@ -1,0 +1,24 @@
+---
+interface Props { class?: string }
+const { class: cls = 'w-full h-auto' } = Astro.props;
+const phases = [
+  { d: 'Day 0–30', t: 'Scope and build', b: 'One task, one channel, one team. Success criteria and kill criterion agreed.' },
+  { d: 'Day 31–60', t: 'Shadow mode', b: 'Agents draft; your people approve every action. The record fills up.' },
+  { d: 'Day 61–90', t: 'Live on one channel', b: 'Agents act within limits. Approvals stay for send, spend, delete.' },
+  { d: 'Day 90', t: 'Review', b: 'Scorecard against the criteria. Expand, adjust, or stop.' },
+];
+---
+<svg class={cls} viewBox="0 0 720 200" role="img" aria-label="90-day pilot timeline: scope and build, shadow mode, live on one channel, day-90 review" font-family="Inter Variable, Inter, system-ui, sans-serif">
+  <rect x="20" y="30" width="680" height="6" rx="3" fill="var(--border)"/>
+  <rect x="20" y="30" width="226" height="6" rx="3" fill="var(--accent-2)"/>
+  <rect x="246" y="30" width="226" height="6" fill="var(--ask)"/>
+  <rect x="472" y="30" width="200" height="6" fill="var(--done)"/>
+  <circle cx="700" cy="33" r="9" fill="var(--panel)" stroke="var(--ink)" stroke-width="2"/>
+  {phases.map((p, i) => (
+    <g transform={`translate(${20 + i * 172} 56)`}>
+      <text x="0" y="14" font-size="11" font-weight="600" fill="var(--ink-3)">{p.d.toUpperCase()}</text>
+      <text x="0" y="36" font-size="14" font-weight="600" fill="var(--ink)">{p.t}</text>
+      <foreignObject x="0" y="44" width="160" height="100"><div style="font-size:11.5px;line-height:1.4;color:var(--ink-2);">{p.b}</div></foreignObject>
+    </g>
+  ))}
+</svg>

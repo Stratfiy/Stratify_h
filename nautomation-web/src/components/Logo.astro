@@ -1,0 +1,9 @@
+---
+interface Props { class?: string }
+const { class: cls = 'h-7 w-7' } = Astro.props;
+---
+<!-- TODO(founder): replace with the final logo mark in the new system. Placeholder: "NL" monogram on an indigo tile. -->
+<svg class={cls} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+  <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+  <text x="16" y="21.5" text-anchor="middle" font-family="Instrument Serif, Georgia, serif" font-size="17" fill="var(--on-accent)">NL</text>
+</svg>

@@ -1,0 +1,47 @@
+---
+import Legal from '@/layouts/Legal.astro';
+import { SITE } from '@/lib/site';
+---
+<!-- TODO(founder): CA to review before launch. Generated from the compliance folder's privacy notice structure. -->
+<Legal title="Privacy notice — NAutomation Labs" description="How NAutomation Labs collects and uses data on nautomationlabs.com, including the waitlist, the contact form, PostHog analytics, retention and your rights." path="/legal/privacy" heading="Privacy notice" updated="2026-09-30">
+  <p>This notice covers <strong>nautomationlabs.com</strong>, operated by NAutomation Labs, registered in Hosur, Tamil Nadu, India. Our product, Decibyl, has its own privacy notice at decibyl.ai. For managed engagements, the data processing agreement (DPA) governs customer data and takes precedence over this notice.</p>
+
+  <h2>What we collect, and why</h2>
+  <table>
+    <thead><tr><th>Where</th><th>What</th><th>Why</th><th>Kept for</th></tr></thead>
+    <tbody>
+      <tr><td>Contact form</td><td>Name, work email, company, the work you want done, preferred channel, message, the page you sent it from</td><td>To reply and set up a proof of value. Stored as a lead in our CRM (Zoho) and emailed to office@.</td><td>24 months after last contact</td></tr>
+      <tr><td>Waitlist</td><td>Work email; optionally name, company, the work you want done, country (from your network location, editable); your position, referral code and who referred you; UTM tags</td><td>To invite you in order, run referrals and send a confirmation email (double opt-in).</td><td>Until launch plus 12 months</td></tr>
+      <tr><td>Analytics (PostHog)</td><td>Pages viewed, buttons clicked, form submissions (without message text), approximate location, device type</td><td>To see which pages help people find what they need.</td><td>Memory only until you accept cookies; then 12 months</td></tr>
+      <tr><td>Bot protection (Cloudflare Turnstile)</td><td>A challenge token and technical signals</td><td>To keep bots out of the forms.</td><td>Not stored by us</td></tr>
+      <tr><td>Server logs (Cloudflare)</td><td>IP address, request details</td><td>Security and rate limiting. We hash IPs for rate limits.</td><td>Up to 30 days</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Cookies and analytics</h2>
+  <p>Until you accept cookies, PostHog runs in memory only: nothing is written to your device and each visit is separate. If you accept, PostHog stores an identifier in your browser for 12 months so we can see return visits. You can decline, and you can change your mind by clearing site data.</p>
+
+  <h2>Who we share data with</h2>
+  <ul>
+    <li><strong>Cloudflare</strong> (hosting, forms, bot protection, waitlist database).</li>
+    <li><strong>Zoho CRM</strong> (leads from the contact form and waitlist).</li>
+    <li><strong>Resend</strong> (confirmation and welcome emails).</li>
+    <li><strong>PostHog</strong> (analytics).</li>
+  </ul>
+  <p>We do not sell data. We do not share it with advertisers.</p>
+
+  <h2>Where data is stored</h2>
+  <p>Records for managed engagements and Decibyl are hosted in Mumbai, India. Some website services above process data in other regions under their own agreements.</p>
+
+  <h2>Your rights</h2>
+  <p>You can ask for a copy of your data, a correction, or deletion at any time by writing to <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. We respond within 30 days and confirm deletions in writing. Waitlist and contact data is deleted on request.</p>
+
+  <h2>Calls made by our agents</h2>
+  <p>Every call opens with the agent identifying itself as an AI assistant and stating that the call is recorded. Transcripts and audio are stored in the customer's record under the DPA. Indian calls follow TRAI and DND rules.</p>
+
+  <h2>Changes</h2>
+  <p>We update the date at the top when this notice changes. Material changes are announced on the blog.</p>
+
+  <h2>Contact</h2>
+  <p>NAutomation Labs · Hosur, Tamil Nadu, India · <a href={`mailto:${SITE.email}`}>{SITE.email}</a> · security questions: <a href={`mailto:${SITE.securityEmail}`}>{SITE.securityEmail}</a>.</p>
+</Legal>

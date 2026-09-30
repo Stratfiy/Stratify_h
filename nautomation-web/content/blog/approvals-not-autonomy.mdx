@@ -1,0 +1,54 @@
+---
+title: "Approvals, not autonomy: why your AI agent should ask before it sends"
+description: "Fully autonomous agents are a demo. Agents that ask before they send, spend or delete are a business tool. Why the record matters more than speed."
+date: 2026-10-06
+tags: ["approvals", "agents"]
+---
+
+Every agent demo ends the same way: the agent does everything, the presenter smiles, nobody asks what happens when it is wrong.
+
+In a business, wrong has a cost. A purchase order to the wrong vendor. A quote sent with last year's price. A customer told a delivery date nobody agreed. So we build agents the other way around.
+
+## The rule
+
+An agent may work on its own until it is about to do one of three things:
+
+- **Send** something outside the company: an email, a message, a call.
+- **Spend** or commit money: a purchase order, a payment, a contract term.
+- **Delete** or overwrite data.
+
+At that point it stops and asks a named person. The person sees exactly what will happen, can edit it, and approves or rejects. Then the agent continues.
+
+<figure>
+<svg viewBox="0 0 640 220" role="img" aria-label="Flow: agent drafts, then an approval gate, then either send with record or reject with reason." style="width:100%;height:auto" font-family="Inter Variable, Inter, system-ui, sans-serif">
+  <rect x="0.5" y="80.5" width="160" height="60" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+  <text x="80" y="115" text-anchor="middle" font-size="14" fill="var(--ink)">Agent drafts</text>
+  <path d="M161 110h60" stroke="var(--ink-3)" stroke-width="1.5"/><path d="m216 105 6 5-6 5" fill="none" stroke="var(--ink-3)" stroke-width="1.5"/>
+  <rect x="222.5" y="70.5" width="180" height="80" rx="10" fill="var(--ask-soft)" stroke="var(--ask)"/>
+  <text x="312" y="105" text-anchor="middle" font-size="14" font-weight="600" fill="var(--ask)">Asks first</text>
+  <text x="312" y="126" text-anchor="middle" font-size="12" fill="var(--ink-2)">send · spend · delete</text>
+  <path d="M403 95 Q440 40 478 40" fill="none" stroke="var(--done)" stroke-width="1.5"/>
+  <path d="M403 125 Q440 180 478 180" fill="none" stroke="var(--ask)" stroke-width="1.5"/>
+  <rect x="479.5" y="10.5" width="160" height="60" rx="10" fill="var(--done-soft)" stroke="var(--done)"/>
+  <text x="560" y="36" text-anchor="middle" font-size="13" font-weight="600" fill="var(--done)">Approved → done</text>
+  <text x="560" y="56" text-anchor="middle" font-size="11" fill="var(--ink-2)">on record, with who and when</text>
+  <rect x="479.5" y="150.5" width="160" height="60" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+  <text x="560" y="176" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink)">Rejected → not sent</text>
+  <text x="560" y="196" text-anchor="middle" font-size="11" fill="var(--ink-2)">reason on record; agent learns</text>
+</svg>
+<figcaption>The gate is the product. Everything before it is a draft.</figcaption>
+</figure>
+
+## "Doesn't that slow it down?"
+
+Less than you'd think. Most of the work is before the gate: reading the thread, finding the spec, drafting the message, comparing quotes. The approval itself is a ten-second decision on a card. What you lose in seconds you gain in never having to apologise to a supplier.
+
+And approvals shrink over time. After a few weeks the record shows which actions were always approved unchanged. Those can be moved to a lighter check, with the change itself on record.
+
+## Why the record matters more than the approval
+
+An approval protects you from one bad action. The record protects you from not knowing. When a customer asks "who told you that date?", the answer is a row with a time, a transcript and a name. When an auditor asks how AI is used, the answer is an export.
+
+## What we ship
+
+Every agent we set up, managed or self-serve on [Decibyl](/decibyl), ships with the send-spend-delete rule on by default and an exportable record. You can loosen it. We won't ship without it. See the [security page](/security) for the full list.

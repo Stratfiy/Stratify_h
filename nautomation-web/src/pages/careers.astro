@@ -1,0 +1,29 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import RoleList from '@/components/RoleList.astro';
+import roles from '@content/roles.json';
+import { jobPosting } from '@/lib/schema';
+const crumbs = [{ name: 'Careers', path: '/careers' }];
+const steps = [
+  { t: 'The application is the work sample', b: 'No cover letter. Send the thing the role would produce: a short piece, a small build, an outreach message. Instructions are in each post.' },
+  { t: 'Paid task for the shortlist', b: 'A few hours of real work, paid, on a real problem. You see how we work; we see how you work.' },
+  { t: 'Decision within a week', b: 'After the task, a conversation, then a yes or a no, in writing, within a week.' },
+];
+---
+<Base title="Careers — open roles at NAutomation Labs" description="Open roles at NAutomation Labs: full-stack engineer for AI products, business development, content, and DevRel interns. Remote in India. The application is the work sample." path="/careers" crumbs={crumbs} schema={roles.map((r) => jobPosting(r))}>
+  <PageHero eyebrow="Careers" title="Do work that ends up on the record." sub="A small remote team across India. Every role is defined by the work it produces, and we hire the same way." crumbs={crumbs} />
+  <section class="wrap pb-16 sm:pb-24" aria-labelledby="roles-h">
+    <h2 id="roles-h" class="sr-only">Open roles</h2>
+    <RoleList />
+  </section>
+  <section class="border-y border-line bg-panel" aria-labelledby="hire-h">
+    <div class="wrap section">
+      <p class="eyebrow">How we hire</p>
+      <h2 id="hire-h" class="mt-3 max-w-2xl">Three steps, one week.</h2>
+      <ol class="mt-10 grid gap-6 md:grid-cols-3">
+        {steps.map((s, i) => <li class="card"><span class="display text-4xl text-accent-2">{i + 1}</span><h3 class="mt-3 !font-sans text-lg font-semibold !leading-snug">{s.t}</h3><p class="mt-2 text-ink-2">{s.b}</p></li>)}
+      </ol>
+    </div>
+  </section>
+</Base>

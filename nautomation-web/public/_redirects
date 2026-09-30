@@ -1,0 +1,24 @@
+# 301s from the old React site routes. Cloudflare Pages format.
+/services                              /what-we-do        301
+/projects                              /what-we-do        301
+/projects/*                            /what-we-do        301
+/industries                            /procurement       301
+/industries/*                          /procurement       301
+/ai-agency-india                       /                  301
+/ai-product-studio-india               /what-we-do        301
+/industrial-ai-company-india           /procurement       301
+/ai-automation-company-india           /what-we-do        301
+/ai-development-company-india          /what-we-do        301
+/privacy                               /legal/privacy     301
+/terms                                 /legal/terms       301
+/login                                 https://app.decibyl.ai/login   301
+/signup                                https://app.decibyl.ai/signup  301
+/forgot-password                       https://app.decibyl.ai/login   301
+/reset-password                        https://app.decibyl.ai/login   301
+/dashboard                             https://app.decibyl.ai/        301
+# Trailing-slash variants
+/services/                             /what-we-do        301
+/about/                                /about             301
+/contact/                              /contact           301
+# TODO(founder): /lab — keep the 3D showcase (noindex) or retire. Redirects home until decided.
+/lab                                   /                  302

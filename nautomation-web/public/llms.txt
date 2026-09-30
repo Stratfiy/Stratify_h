@@ -1,0 +1,10 @@
+# NAutomation Labs
+> An AI-native studio that gets businesses' work done through AI agents, with approvals before anything is sent, spent or deleted, and a record of every action.
+
+- Managed service for procurement and logistics teams: https://nautomationlabs.com/procurement
+- Self-serve product for every other team, Decibyl: https://decibyl.ai
+- What we do: https://nautomationlabs.com/what-we-do
+- How it works (proof of value → 90-day pilot → run → expand): https://nautomationlabs.com/how-it-works
+- Security statements: https://nautomationlabs.com/security
+- Blog: https://nautomationlabs.com/blog
+- Contact: https://nautomationlabs.com/contact · office@nautomationlabs.com

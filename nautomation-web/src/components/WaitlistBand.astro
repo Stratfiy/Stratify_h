@@ -1,0 +1,13 @@
+---
+import WaitlistForm from './WaitlistForm.astro';
+---
+<section class="border-t border-line bg-surface" aria-labelledby="wl-band-h">
+  <div class="wrap section grid gap-8 lg:grid-cols-2 lg:items-start">
+    <div>
+      <p class="eyebrow">Waitlist</p>
+      <h2 id="wl-band-h" class="mt-3">Get in line for an agent that does your work.</h2>
+      <p class="mt-4 lede">We invite people in order. Tell us the work, and we'll set you up when it's your turn. <a class="link" href="/waitlist">Full waitlist page</a>.</p>
+    </div>
+    <div class="card"><WaitlistForm compact id="waitlist-band" /></div>
+  </div>
+</section>

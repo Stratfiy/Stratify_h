@@ -1,0 +1,119 @@
+---
+import '@/styles/global.css';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import WaitlistBand from '@/components/WaitlistBand.astro';
+import { SITE } from '@/lib/site';
+import { organization, breadcrumbs } from '@/lib/schema';
+import serifUrl from '@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2?url';
+import interUrl from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  /** Extra JSON-LD objects (FAQPage, JobPosting, Article...) */
+  schema?: Record<string, unknown>[];
+  crumbs?: { name: string; path: string }[];
+  canonical?: string;
+  noindex?: boolean;
+  /** Hide nav, footer and waitlist band (single-purpose pages) */
+  bare?: boolean;
+  /** Hide the waitlist band only */
+  noWaitlist?: boolean;
+  ogImage?: string;
+  type?: 'website' | 'article';
+}
+const {
+  title, description, path, schema = [], crumbs = [], canonical, noindex = false, bare = false, noWaitlist = false,
+  ogImage, type = 'website',
+} = Astro.props;
+
+const url = `${SITE.url}${path === '/' ? '/' : path}`;
+const canonicalHref = canonical ?? url;
+const ogSlug = path === '/' ? 'home' : path.replace(/^\//, '').replace(/\//g, '-');
+const og = ogImage ?? `${SITE.url}/og/${ogSlug}.png`;
+const ld = [organization(), ...(crumbs.length ? [breadcrumbs(crumbs)] : []), ...schema];
+const ph = SITE.posthogKey;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalHref} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)" />
+    <link rel="preload" as="font" type="font/woff2" href={serifUrl} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={interUrl} crossorigin />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={og} />
+    <script is:inline>
+      // Theme: honour a saved choice; otherwise follow the OS. Runs before paint to avoid a flash.
+      try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+    </script>
+    {ld.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] btn-primary">Skip to content</a>
+    {!bare && <Nav currentPath={path} />}
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    {!bare && !noWaitlist && <WaitlistBand />}
+    {!bare && <Footer />}
+    {ph && (
+      <script is:inline define:vars={{ key: ph, host: SITE.posthogHost }}>
+        // PostHog: memory-only persistence until the visitor accepts cookies (see CookieNotice).
+        !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset set_config".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+        var consent = null; try { consent = localStorage.getItem('cookie-consent'); } catch (e) {}
+        posthog.init(key, { api_host: host, persistence: consent === 'accepted' ? 'localStorage+cookie' : 'memory', capture_pageview: true, autocapture: false });
+        document.addEventListener('click', function (ev) {
+          var el = ev.target && ev.target.closest && ev.target.closest('[data-cta]');
+          if (el) posthog.capture('cta_click', { label: el.getAttribute('data-cta'), href: el.getAttribute('href') });
+          var r = ev.target && ev.target.closest && ev.target.closest('[data-role]');
+          if (r) posthog.capture('role_click', { role: r.getAttribute('data-role') });
+        });
+        window.addEventListener('cookie-consent', function () { posthog.set_config({ persistence: 'localStorage+cookie' }); });
+      </script>
+    )}
+    <script>
+      // Tiny cookie notice; PostHog stays memory-only until accepted.
+      const KEY = 'cookie-consent';
+      let v: string | null = null;
+      try { v = localStorage.getItem(KEY); } catch {}
+      if (!v) {
+        const n = document.createElement('div');
+        n.setAttribute('role', 'region');
+        n.setAttribute('aria-label', 'Cookie notice');
+        n.className = 'fixed bottom-4 left-4 right-4 sm:left-auto sm:max-w-sm z-50 card text-sm shadow-none';
+        n.innerHTML = `<p class="text-ink-2">We use PostHog to see which pages help. Nothing is stored on your device until you accept. <a class="link" href="/legal/privacy">Privacy</a></p>
+          <div class="mt-3 flex gap-2"><button class="btn-primary !py-2 !px-3 text-sm" data-c="accepted">Accept</button><button class="btn-secondary !py-2 !px-3 text-sm" data-c="declined">Decline</button></div>`;
+        n.addEventListener('click', (e) => {
+          const b = (e.target as HTMLElement).closest('button[data-c]') as HTMLButtonElement | null;
+          if (!b) return;
+          try { localStorage.setItem(KEY, b.dataset.c!); } catch {}
+          if (b.dataset.c === 'accepted') window.dispatchEvent(new Event('cookie-consent'));
+          n.remove();
+        });
+        document.body.appendChild(n);
+      }
+    </script>
+  </body>
+</html>

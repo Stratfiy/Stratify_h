@@ -1,0 +1,15 @@
+name = "nautomation-contact"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+routes = [{ pattern = "nautomationlabs.com/api/contact", zone_name = "nautomationlabs.com" }]
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "TODO_KV_NAMESPACE_ID"
+
+[vars]
+SITE_URL = "https://nautomationlabs.com"
+OFFICE_EMAIL = "office@nautomationlabs.com"
+FROM_EMAIL = "NAutomation Labs <office@nautomationlabs.com>"
+POSTHOG_HOST = "https://us.i.posthog.com"
+# Secrets (wrangler secret put): TURNSTILE_SECRET, RESEND_API_KEY, ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, ZOHO_REFRESH_TOKEN, POSTHOG_KEY

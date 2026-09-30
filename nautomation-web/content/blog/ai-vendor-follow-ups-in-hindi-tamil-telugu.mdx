@@ -1,0 +1,49 @@
+---
+title: "AI vendor follow-ups in Hindi, Tamil and Telugu: how it works"
+description: "How an agent calls a supplier in their language, keeps a transcript, and stays inside TRAI rules. What it can do today and what it cannot."
+date: 2026-10-13
+tags: ["procurement", "calls"]
+---
+
+Most supplier follow-ups in India are not emails. They are calls, in whichever language the person on the other end is comfortable with. An agent that only writes English emails would miss half the job. Here is how ours handle calls.
+
+## What a follow-up call looks like
+
+1. The agent has a reason to call: a PO confirmation is three days late.
+2. It calls the supplier's number on record, introduces itself as an AI assistant calling on behalf of your company, and says the call is recorded.
+3. It asks the question in the supplier's language: Hindi, Tamil, Telugu or English. If the supplier switches language, it follows.
+4. It gets an answer, confirms it back, and ends the call.
+5. The transcript, the audio, and a one-line summary go into the record. If the answer changes anything (a new date, a price), that update is an approval for your team, not an automatic change.
+
+<figure>
+<svg viewBox="0 0 640 210" role="img" aria-label="Call flow: reason to call, disclosure, question in the supplier's language, answer confirmed, transcript on record, change becomes an approval." style="width:100%;height:auto" font-family="Inter Variable, Inter, system-ui, sans-serif">
+  {[["Reason","PO late 3 days"],["Disclose","AI, on behalf of you, recorded"],["Ask","in Hindi / Tamil / Telugu"],["Confirm","reads answer back"],["Record","transcript + audio"],["Approve","any change asks first"]].map(([a,b],i)=>(
+    <g transform={`translate(${i*106} 0)`}>
+      <rect x="0.5" y="40.5" width="98" height="110" rx="10" fill={i===5?"var(--ask-soft)":i===4?"var(--done-soft)":"var(--panel)"} stroke="var(--border)"/>
+      <text x="49" y="70" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink)">{a}</text>
+      <foreignObject x="6" y="80" width="86" height="64"><div style="font-size:11px;line-height:1.35;text-align:center;color:var(--ink-2)">{b}</div></foreignObject>
+      {i<5 && <path d="m99 95 6 0" stroke="var(--ink-3)" stroke-width="1.5"/>}
+    </g>
+  ))}
+</svg>
+<figcaption>Six steps. The agent never changes a date or a price on its own.</figcaption>
+</figure>
+
+## What it can do today
+
+- Confirm dates, quantities and dispatch status.
+- Ask for a document (test certificate, invoice copy) and log the promise.
+- Read back a quote and confirm the terms.
+- Escalate: if the supplier asks for a person, the agent ends the call politely and creates a task for your team.
+
+## What it cannot do, on purpose
+
+- Negotiate price. It can collect a quote; it will not agree one.
+- Commit your company to anything. Every commitment is an approval.
+- Call outside permitted hours or numbers on the do-not-disturb registry. TRAI rules are enforced in software, not by memory.
+
+## The honest part about accents and noise
+
+Factory floors are loud, and every district has its own way of saying things. Recognition is good, not perfect. That is why the agent confirms every answer back before ending the call, and why the audio stays in the record. When it is unsure, it says so and a person follows up.
+
+This is the front-desk and vendor-coordination work we run for [procurement and logistics teams](/procurement). The same calling agent is available on [Decibyl](/decibyl).

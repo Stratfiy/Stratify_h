@@ -1,0 +1,116 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import FAQ from '@/components/FAQ.astro';
+import CTABand from '@/components/CTABand.astro';
+import ProcurementRing from '@/illustrations/ProcurementRing.astro';
+import PilotTimeline from '@/illustrations/PilotTimeline.astro';
+import ActionLedger from '@/illustrations/ActionLedger.astro';
+import { faqPage } from '@/lib/schema';
+const crumbs = [{ name: 'Procurement & logistics', path: '/procurement' }];
+const stages = [
+  ['Request', 'Requisitions read, specs checked, missing details chased internally.'],
+  ['Source', 'RFQs drafted and sent to approved vendors; non-responders called.'],
+  ['Negotiate', 'Quotes collected and compared in one table. Terms confirmed back. No price agreed without you.'],
+  ['Order', 'PO drafted from the chosen quote, approved by your buyer, sent, acknowledged.'],
+  ['Pay', 'Invoice matched to PO and receipt; mismatches flagged; payment is always an approval.'],
+  ['Manage suppliers', 'Documents collected and renewed: GST, certificates, bank details, with reminders.'],
+  ['Analyse spend', 'Monthly spend by vendor, category and site from the record itself.'],
+  ['Logistics', 'Dispatch, transporter and delivery follow-ups by call or WhatsApp; ETAs on record.'],
+];
+const picker = [
+  { task: 'rfqs-quotes', title: 'RFQs & quotes', body: 'Send RFQs, chase replies, compare quotes in one table.' },
+  { task: 'po-followups-deliveries', title: 'PO follow-ups & deliveries', body: 'Confirmations, dispatch dates and delivery ETAs chased by call, email or WhatsApp.' },
+  { task: 'invoice-matching', title: 'Invoice matching', body: 'Three-way match, mismatches flagged, payment queued for approval.' },
+  { task: 'supplier-onboarding-documents', title: 'Supplier onboarding & documents', body: 'Forms, GST, certificates and bank details collected and kept current.' },
+];
+const faq = [
+  { q: 'Which systems do the agents work in?', a: 'Your existing ones: email (Google Workspace, Microsoft 365, Zoho), WhatsApp Business, phone, spreadsheets, and common ERPs through their export or API. The agents work under your accounts, so nothing moves out of your systems.' },
+  { q: 'Do the agents ever place an order or make a payment on their own?', a: 'No. Every purchase order, payment and contractual commitment is approved by a named person on your team before it happens. The record shows who approved it and when.' },
+  { q: 'What languages do vendor calls work in?', a: 'Hindi, Tamil, Telugu and English, with the agent following if the supplier switches. Every call is disclosed as an AI assistant, recorded, and transcribed into the record.' },
+  { q: 'What does the proof of value need from us?', a: 'A named owner, read access to the data for one task (for example the RFQ mailbox and the vendor list), and 30 minutes a week for two to three weeks. We agree success criteria and the price of the pilot before we start.' },
+  { q: 'What if it does not work?', a: 'We agree a kill criterion on day 0 of the pilot. If we miss it, we stop, and you keep the record and the scorecard.' },
+];
+---
+<Base title="AI agents for procurement and logistics teams | NAutomation Labs" description="Procurement and logistics work done through AI agents we set up and run: RFQs, quote comparison, PO follow-ups, delivery chasing, invoice matching. Every call and email logged." path="/procurement" crumbs={crumbs} schema={[faqPage(faq)]}>
+  <PageHero eyebrow="For procurement & logistics teams" title="Your procurement team shouldn't chase suppliers by hand." sub="We get procurement and logistics work done through AI agents we set up and run: RFQs, quote comparison, PO follow-ups, delivery chasing, invoice matching, supplier documents. Every call and email logged. Every payment or commitment approved by your people." crumbs={crumbs}>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="/contact?task=rfqs-quotes" class="btn-primary" data-cta="proc_hero_book_pov">Book a proof of value</a>
+      <a href="#pilot" class="btn-secondary">See the 90-day pilot</a>
+    </div>
+    <p class="mt-3 text-sm text-ink-3">Free, two to three weeks, on your data.</p>
+  </PageHero>
+
+  <section class="wrap pb-16 sm:pb-24" aria-labelledby="cycle-h">
+    <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+      <ProcurementRing />
+      <div>
+        <p class="eyebrow">The cycle</p>
+        <h2 id="cycle-h" class="mt-3">Eight stages. Start with one.</h2>
+        <ol class="mt-6 divide-y divide-line border-y border-line">
+          {stages.map(([t, b], i) => (
+            <li class="grid grid-cols-[32px_1fr] gap-3 py-3"><span class="display text-xl text-accent-2">{i + 1}</span><div><p class="font-medium text-ink">{t}</p><p class="text-sm text-ink-2">{b}</p></div></li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-line bg-panel" aria-labelledby="picker-h">
+    <div class="wrap section">
+      <p class="eyebrow">Start with one task</p>
+      <h2 id="picker-h" class="mt-3 max-w-2xl">Pick the one your team complains about most.</h2>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {picker.map((p) => (
+          <a href={`/contact?task=${p.task}`} class="card group flex flex-col hover:border-accent-2 transition-colors duration-200" data-cta={`proc_picker_${p.task}`}>
+            <h3 class="!font-sans text-lg font-semibold !leading-snug">{p.title}</h3>
+            <p class="mt-2 flex-1 text-sm text-ink-2">{p.body}</p>
+            <span class="mt-4 text-sm font-medium text-accent group-hover:underline">Start here →</span>
+          </a>
+        ))}
+      </div>
+      <p class="mt-4 text-sm text-ink-3">Each choice pre-fills the contact form.</p>
+    </div>
+  </section>
+
+  <section id="pilot" class="wrap section" aria-labelledby="pilot-h">
+    <p class="eyebrow">The 90-day pilot</p>
+    <h2 id="pilot-h" class="mt-3 max-w-2xl">One task, one channel, one team. A decision at day 90.</h2>
+    <div class="mt-10 card overflow-x-auto"><div class="min-w-[640px]"><PilotTimeline /></div></div>
+    <ul class="mt-8 grid gap-4 md:grid-cols-4 text-sm">
+      <li class="card"><p class="font-medium text-ink">Day 0–30</p><p class="mt-1 text-ink-2">Scope and build. Success criteria and a kill criterion agreed up front.</p></li>
+      <li class="card"><p class="font-medium text-ink">Day 31–60</p><p class="mt-1 text-ink-2">Shadow mode with approvals on every action.</p></li>
+      <li class="card"><p class="font-medium text-ink">Day 61–90</p><p class="mt-1 text-ink-2">Live on one channel. Send, spend and delete still ask first.</p></li>
+      <li class="card"><p class="font-medium text-ink">Day 90</p><p class="mt-1 text-ink-2">Review with a scorecard. Expand, adjust, or stop.</p></li>
+    </ul>
+  </section>
+
+  <section class="border-y border-line bg-panel" aria-labelledby="calls-h">
+    <div class="wrap section grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div>
+        <p class="eyebrow">Vendor calls</p>
+        <h2 id="calls-h" class="mt-3">In Hindi, Tamil, Telugu and English. Each with a transcript.</h2>
+        <p class="mt-5 lede">The agent introduces itself as an AI assistant, says the call is recorded, and follows the supplier's language. Dates, quantities and dispatch status get confirmed back. Any change to a price or a commitment becomes an approval for your buyer. TRAI and DND rules are enforced in software.</p>
+        <p class="mt-4"><a href="/blog/ai-vendor-follow-ups-in-hindi-tamil-telugu" class="link">How vendor calls work</a></p>
+      </div>
+      <ActionLedger />
+    </div>
+  </section>
+
+  <section class="wrap section" aria-labelledby="who-h">
+    <div class="grid gap-8 lg:grid-cols-[1fr_2fr]">
+      <div><p class="eyebrow">Who it's for</p></div>
+      <div>
+        <h2 id="who-h">Mid-size companies with a small procurement team and a lot of suppliers.</h2>
+        <ul class="mt-6 grid gap-4 sm:grid-cols-2 text-ink-2">
+          <li class="card"><p class="text-ink font-medium">India</p><p class="mt-1">₹200 crore to ₹5,000 crore revenue.</p></li>
+          <li class="card"><p class="text-ink font-medium">Overseas</p><p class="mt-1">$25M to $1B revenue.</p></li>
+          <li class="card sm:col-span-2"><p class="text-ink font-medium">Team</p><p class="mt-1">Procurement teams of two to ten people who will approve the agents' actions.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <FAQ items={faq} title="Questions procurement heads ask" />
+  <CTABand title="Book a proof of value." body="Free, two to three weeks, on your data. A named owner, data access for one task, and 30 minutes a week from you. We agree success criteria and the price of the pilot before we start." secondary={{ href: '/how-it-works', label: 'How it works' }} />
+</Base>

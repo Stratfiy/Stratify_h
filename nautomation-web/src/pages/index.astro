@@ -1,0 +1,77 @@
+---
+import Base from '@/layouts/Base.astro';
+import JobCard from '@/components/JobCard.astro';
+import StepRow from '@/components/StepRow.astro';
+import WhyNowBand from '@/components/WhyNowBand.astro';
+import TwoWays from '@/components/TwoWays.astro';
+import ProofStrip from '@/components/ProofStrip.astro';
+import FAQ from '@/components/FAQ.astro';
+import CTABand from '@/components/CTABand.astro';
+import TrustStrip from '@/components/TrustStrip.astro';
+import ApprovalCard from '@/illustrations/ApprovalCard.astro';
+import { SITE } from '@/lib/site';
+import { faqPage } from '@/lib/schema';
+
+const jobs = [
+  { title: 'Follow-ups', body: "Quotes, invoices, appointments and documents, chased until they're done." },
+  { title: 'Vendor coordination', body: 'RFQs sent, quotes compared, deliveries tracked, invoices matched.' },
+  { title: 'Front desk', body: 'Calls and messages answered in your language, with a record.' },
+  { title: 'Back office', body: 'Reminders, reports and data entry between the tools you already use.' },
+];
+const steps = [
+  { title: 'Tell us the work.', body: 'In plain words: the task, where it lives, and what "done" looks like.' },
+  { title: 'Agents do it.', body: 'From your own email, WhatsApp and apps, under your accounts.' },
+  { title: 'You approve what matters.', body: 'Send, spend, delete: a person says yes first. Every action is on record.' },
+];
+const faq = [
+  { q: 'Is this "super intelligence"?', a: 'No. It is AI agents set up to do defined business work, with approvals and a record. The phrase was used a lot on 29 September 2026; what we sell is the work done, and the record of it.' },
+  { q: 'What can the agents do today?', a: 'Follow-ups on quotes, invoices, appointments and documents; vendor coordination from RFQ to invoice matching; front-desk calls and messages in Hindi, Tamil, Telugu and English; and back-office tasks like reminders, reports and data entry between your existing tools.' },
+  { q: 'Do agents send emails or pay anyone without approval?', a: 'No. Before an agent sends anything outside your company, commits money, or deletes data, a named person on your team approves it. Inside those limits it can draft, compare, chase and summarise on its own.' },
+  { q: 'Where is my data?', a: 'Agents work from your own accounts, so your email, messages and files stay where they are. Our records are hosted in Mumbai, India. Enterprise hosting options are available on request. See the security page.' },
+  { q: 'What does it cost?', a: 'The proof of value is free. For managed procurement and logistics work we agree the price of the 90-day pilot before the proof of value starts, so there are no surprises. Self-serve on Decibyl starts free.' },
+];
+---
+<Base title="NAutomation Labs — AI agents that get your business's work done" description={SITE.description} path="/" schema={[faqPage(faq)]}>
+  <section class="wrap pt-14 pb-16 sm:pt-24 sm:pb-24">
+    <div class="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+      <div>
+        <p class="eyebrow">AI-native studio · India and worldwide</p>
+        <h1 class="mt-4 reveal">The work, done.</h1>
+        <p class="mt-6 max-w-xl lede">NAutomation Labs gets your business's work done through AI agents. You tell us the work. Our agents do it. Your people approve what matters. Every action is on record.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact" class="btn-primary" data-cta="hero_book_pov">Book a proof of value</a>
+          <a href={SITE.decibylSignup} class="btn-secondary" data-cta="hero_decibyl_signup">Start free on Decibyl</a>
+        </div>
+        <p class="mt-4 text-sm text-ink-2">Not ready yet? <a href="/waitlist" class="link" data-cta="hero_waitlist">Join the waitlist</a>.</p>
+      </div>
+      <div class="lg:pl-6"><ApprovalCard /></div>
+    </div>
+  </section>
+
+  <section class="wrap section pt-0" aria-labelledby="jobs-h">
+    <p class="eyebrow">What we take off your plate</p>
+    <h2 id="jobs-h" class="mt-3 max-w-2xl">Four kinds of work, done for you.</h2>
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {jobs.map((j) => <JobCard title={j.title} body={j.body} href="/what-we-do" />)}
+    </div>
+  </section>
+
+  <StepRow steps={steps} />
+  <WhyNowBand />
+  <TwoWays />
+  <ProofStrip />
+
+  <section class="wrap section" aria-labelledby="built-h">
+    <div class="grid gap-8 lg:grid-cols-[1fr_2fr]">
+      <div><p class="eyebrow">Built by people who did the work</p></div>
+      <div>
+        <h2 id="built-h">Mechanical engineering, maintenance and procurement, inside a large Fortune 500 industrial company.</h2>
+        <p class="mt-5 lede">That's where the procurement agents started: chasing suppliers, matching invoices, and keeping a record because someone would ask. We built the agents we wished we'd had. <a href="/about" class="link">About us</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <FAQ items={faq} />
+  <CTABand />
+  <section class="wrap pb-16"><TrustStrip /></section>
+</Base>

@@ -1,0 +1,53 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import CTABand from '@/components/CTABand.astro';
+import SixAreas from '@/illustrations/SixAreas.astro';
+import { SITE } from '@/lib/site';
+const crumbs = [{ name: 'About', path: '/about' }];
+const how = [
+  { t: 'Friday written updates', b: 'Every customer and every team gets a written update on Friday: what was done, what was asked about, what’s next.' },
+  { t: 'Everything on record', b: 'Our own decisions, approvals and actions are logged the same way our agents’ are.' },
+  { t: 'We run on Decibyl', b: 'Our own follow-ups, front desk and back office run on our product. If it annoys us, we fix it before it reaches you.' },
+];
+---
+<Base title="About NAutomation Labs — an AI-native studio" description="An AI-native studio registered in Hosur, Tamil Nadu, with a remote team across India. How we work, our six areas, and where the procurement agents came from." path="/about" crumbs={crumbs}>
+  <PageHero eyebrow="About" title="An AI-native studio that gets the work done." sub={`We set up AI agents that do defined business work, we run them, and we are accountable for the result. Founded ${SITE.founded}. Registered in ${SITE.registeredIn}. A remote team across India, serving India and global customers.`} crumbs={crumbs} />
+
+  <section class="wrap pb-16 sm:pb-24" aria-labelledby="how-h">
+    <p class="eyebrow">How we work</p>
+    <h2 id="how-h" class="mt-3 max-w-2xl">Written, on record, on our own product.</h2>
+    <div class="mt-10 grid gap-6 md:grid-cols-3">
+      {how.map((h) => <div class="card"><h3 class="!font-sans text-lg font-semibold !leading-snug">{h.t}</h3><p class="mt-2 text-ink-2">{h.b}</p></div>)}
+    </div>
+  </section>
+
+  <section class="border-y border-line bg-panel" aria-labelledby="areas-h">
+    <div class="wrap section">
+      <p class="eyebrow">The six areas</p>
+      <h2 id="areas-h" class="mt-3 max-w-2xl">Small team, clear seats.</h2>
+      <div class="mt-10 card overflow-x-auto"><div class="min-w-[720px]"><SixAreas /></div></div>
+      <p class="mt-4 text-sm text-ink-3">Role titles only. Open seats are on the <a href="/careers" class="link">careers page</a>.</p>
+    </div>
+  </section>
+
+  <section class="wrap section" aria-labelledby="arch-h">
+    <p class="eyebrow">Operating architecture</p>
+    <h2 id="arch-h" class="mt-3 max-w-2xl">How the work flows.</h2>
+    <!-- TODO(founder): drop the operating architecture SVG (from Founder Private) at public/illustrations/operating-architecture.svg and remove this placeholder. -->
+    <div class="mt-10 card grid place-items-center min-h-56 text-center text-sm text-ink-3">
+      <p>Operating architecture diagram to be added.<br /><span class="font-mono text-xs">public/illustrations/operating-architecture.svg</span></p>
+    </div>
+  </section>
+
+  <section class="border-y border-line bg-panel">
+    <div class="wrap section grid gap-8 lg:grid-cols-[1fr_2fr]">
+      <div><p class="eyebrow">Founder</p></div>
+      <div>
+        <h2>Built procurement agents inside a large Fortune 500 industrial company.</h2>
+        <p class="mt-5 lede">Nithish Kalyan, CEO. Mechanical engineering, maintenance and procurement, then the agents that did the chasing. NAutomation Labs is the studio that grew out of that work.</p>
+      </div>
+    </div>
+  </section>
+  <CTABand />
+</Base>

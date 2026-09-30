@@ -1,0 +1,49 @@
+---
+title: "The four layers of controls, translated for a small company"
+description: "The AI accord talks about four layers of controls. Here is what each one means when your whole company fits in one WhatsApp group."
+date: 2026-10-02
+tags: ["controls", "plain words"]
+---
+
+The accord signed on 29 September 2026 says safe AI needs controls and audits, in layers. The documents are written for AI companies and regulators. Here is the same idea for a company with twenty people and one accountant.
+
+<figure>
+<svg viewBox="0 0 640 260" role="img" aria-label="Four stacked layers: what the agent may touch, what it must ask about, what gets recorded, and who checks the record." style="width:100%;height:auto" font-family="Inter Variable, Inter, system-ui, sans-serif">
+  {[["1 · Scope","What the agent may touch"],["2 · Approvals","What it must ask about first"],["3 · Record","What gets written down, every time"],["4 · Review","Who reads the record, and how often"]].map(([a,b],i)=>(
+    <g transform={`translate(0 ${i*62})`}>
+      <rect x="0.5" y="0.5" width="639" height="52" rx="10" fill={i%2?"var(--panel)":"var(--accent-soft)"} stroke="var(--border)"/>
+      <text x="20" y="32" font-size="14" font-weight="600" fill="var(--ink)">{a}</text>
+      <text x="200" y="32" font-size="14" fill="var(--ink-2)">{b}</text>
+    </g>
+  ))}
+</svg>
+<figcaption>Four layers. Each one is a question you can answer in a sentence.</figcaption>
+</figure>
+
+## Layer 1: Scope
+
+*What may the agent touch?*
+
+Write it as a list. "The procurement inbox, the vendor WhatsApp group, the purchase-order sheet." Not "our systems". If it is not on the list, the agent cannot reach it. This is the cheapest control and the one most people skip.
+
+## Layer 2: Approvals
+
+*What must it ask about first?*
+
+Our rule is three words: send, spend, delete. Before an agent sends anything outside the company, commits money, or removes data, a named person approves it. Inside those limits it can work on its own: draft, compare, chase, summarise.
+
+## Layer 3: Record
+
+*What gets written down?*
+
+Every action, with the time, what it did, who approved it, and what happened next. Calls get a transcript. Emails get the sent copy. The record is the thing you show the auditor, the customer, or yourself at 11 pm when something feels off.
+
+## Layer 4: Review
+
+*Who reads the record, and how often?*
+
+Once a week is enough for most teams. A fifteen-minute look at what the agent did, what it asked about, and what was rejected. Rejections are the useful part: they tell you where the scope or the instructions need tightening.
+
+## Doing it without a compliance team
+
+You do not need a policy document. You need the four answers above, written down, and software that enforces them rather than trusting people to remember. That is how we set up every agent, whether [we run it for you](/procurement) or you run it yourself on [Decibyl](/decibyl).

@@ -1,0 +1,33 @@
+---
+import Logo from './Logo.astro';
+import TrustStrip from './TrustStrip.astro';
+import { SITE } from '@/lib/site';
+const year = new Date().getFullYear();
+const cols = [
+  { h: 'Company', links: [['/what-we-do', 'What we do'], ['/how-it-works', 'How it works'], ['/about', 'About'], ['/careers', 'Careers'], ['/blog', 'Blog'], ['/contact', 'Contact']] },
+  { h: 'Work with us', links: [['/procurement', 'Procurement & logistics teams'], ['/decibyl', 'Decibyl for every team'], ['/waitlist', 'Join the waitlist'], [SITE.decibylSignup, 'Start free on Decibyl']] },
+  { h: 'Trust', links: [['/security', 'Security'], ['/legal/privacy', 'Privacy'], ['/legal/terms', 'Terms'], [`mailto:${SITE.securityEmail}`, 'security@nautomationlabs.com']] },
+];
+---
+<footer class="border-t border-line bg-panel">
+  <div class="wrap py-8 border-b border-line"><TrustStrip /></div>
+  <div class="wrap py-12 grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div>
+      <a href="/" class="flex items-center gap-2.5 text-ink font-medium"><Logo /> NAutomation Labs</a>
+      <p class="mt-4 text-sm text-ink-2 max-w-xs">An AI-native studio that gets your business's work done through AI agents. Registered in {SITE.registeredIn}. Remote team across India.</p>
+      <p class="mt-4 text-sm"><a class="link" href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+    </div>
+    {cols.map((c) => (
+      <div>
+        <h2 class="!font-sans text-xs font-medium uppercase tracking-[0.14em] text-ink-3 !leading-normal">{c.h}</h2>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {c.links.map(([href, label]) => <li><a href={href} class="text-ink-2 hover:text-ink transition-colors duration-150">{label}</a></li>)}
+        </ul>
+      </div>
+    ))}
+  </div>
+  <div class="wrap pb-8 flex flex-col sm:flex-row gap-2 sm:items-center justify-between text-xs text-ink-3">
+    <p>© {year} NAutomation Labs. Founded {SITE.founded}.</p>
+    <p><a href={SITE.linkedin} class="hover:text-ink" rel="me">LinkedIn</a> · <a href={SITE.decibyl} class="hover:text-ink">decibyl.ai</a></p>
+  </div>
+</footer>

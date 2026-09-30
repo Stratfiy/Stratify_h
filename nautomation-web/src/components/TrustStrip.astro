@@ -1,0 +1,11 @@
+---
+import { TRUST } from '@/lib/site';
+---
+<ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-3 text-sm text-ink-2" aria-label="Trust statements">
+  {TRUST.map((t) => (
+    <li class="flex items-center gap-2">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="var(--done)" stroke-width="1.4"/><path d="m4.8 8.2 2 2 4.4-4.6" stroke="var(--done)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      {t}
+    </li>
+  ))}
+</ul>

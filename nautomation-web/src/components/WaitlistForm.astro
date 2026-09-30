@@ -1,0 +1,127 @@
+---
+/**
+ * WaitlistForm — seven states: idle · invalid · submitting · success · already-joined · rate-limited · error.
+ * Posts JSON to the waitlist Worker. Works without JS as a plain form POST (the Worker answers with a redirect).
+ */
+import { JOB_FAMILIES, SITE } from '@/lib/site';
+interface Props { compact?: boolean; id?: string }
+const { compact = false, id = 'waitlist' } = Astro.props;
+const turnstile = SITE.turnstileSiteKey;
+---
+<form id={id} class="waitlist-form" method="post" action={SITE.waitlistEndpoint} novalidate data-state="idle" data-endpoint={SITE.waitlistEndpoint}>
+  <input type="hidden" name="source" value="website" />
+  <input type="hidden" name="referred_by" value="" data-ref />
+  <input type="hidden" name="utm_source" value="" data-utm="utm_source" />
+  <input type="hidden" name="utm_medium" value="" data-utm="utm_medium" />
+  <input type="hidden" name="utm_campaign" value="" data-utm="utm_campaign" />
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="sm:col-span-2">
+      <label class="label" for={`${id}-email`}>Work email <span class="text-ask">*</span></label>
+      <input class="field" id={`${id}-email`} name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@company.com" />
+      <p class="hint hidden" data-err="email">Enter a valid work email.</p>
+    </div>
+    {!compact && (
+      <>
+        <div><label class="label" for={`${id}-name`}>Name</label><input class="field" id={`${id}-name`} name="name" type="text" autocomplete="name" /></div>
+        <div><label class="label" for={`${id}-company`}>Company</label><input class="field" id={`${id}-company`} name="company" type="text" autocomplete="organization" /></div>
+        <div>
+          <label class="label" for={`${id}-job`}>What work do you want done?</label>
+          <select class="field" id={`${id}-job`} name="job_family">
+            <option value="">Choose one</option>
+            {JOB_FAMILIES.map((j) => <option value={j.value}>{j.label}</option>)}
+          </select>
+        </div>
+        <div><label class="label" for={`${id}-country`}>Country</label><input class="field" id={`${id}-country`} name="country" type="text" autocomplete="country-name" placeholder="Detected automatically" data-country /></div>
+      </>
+    )}
+  </div>
+  <label class="mt-4 flex items-start gap-2.5 text-sm text-ink-2">
+    <input type="checkbox" name="consent" required class="mt-1 accent-[var(--accent)]" />
+    <span>I agree to be emailed about the waitlist and launch. See the <a class="link" href="/legal/privacy">privacy notice</a>.</span>
+  </label>
+  <p class="hint hidden" data-err="consent">Please tick the consent box.</p>
+  {turnstile && <div class="cf-turnstile mt-4" data-sitekey={turnstile} data-size="flexible"></div>}
+  <div class="mt-5 flex flex-wrap items-center gap-3">
+    <button type="submit" class="btn-primary" data-submit>Join the waitlist</button>
+    <span class="text-xs text-ink-3">Double opt-in: we confirm your email before your place is final.</span>
+  </div>
+  <div class="mt-4 hidden card border-ask/40 text-sm" data-msg="error">Something went wrong. Please try again, or email <a class="link" href={`mailto:${SITE.email}`}>{SITE.email}</a>.</div>
+  <div class="mt-4 hidden card border-ask/40 text-sm" data-msg="rate">Too many attempts from this network. Please try again in a few minutes.</div>
+  <div class="mt-4 hidden card text-sm" data-msg="exists">You're already on the list. We've re-sent your confirmation email in case you missed it.</div>
+  <div class="mt-4 hidden card" data-msg="success">
+    <p class="eyebrow">You're in</p>
+    <p class="mt-2 display text-4xl">You're <span data-pos>#—</span></p>
+    <p class="mt-2 text-sm text-ink-2">Check your inbox and confirm your email to make your place final. Each signup through your link moves you 5 places.</p>
+    <div class="mt-4 flex flex-col sm:flex-row gap-2">
+      <input class="field font-mono text-sm" readonly data-reflink value="" aria-label="Your referral link" />
+      <button type="button" class="btn-secondary" data-copy>Copy</button>
+    </div>
+    <div class="mt-3 flex flex-wrap gap-2 text-sm">
+      <a class="btn-secondary !py-1.5 !px-3" data-share="whatsapp" href="#" rel="noopener" target="_blank">WhatsApp</a>
+      <a class="btn-secondary !py-1.5 !px-3" data-share="linkedin" href="#" rel="noopener" target="_blank">LinkedIn</a>
+      <a class="btn-secondary !py-1.5 !px-3" data-share="x" href="#" rel="noopener" target="_blank">X</a>
+    </div>
+    <p class="mt-4 text-sm font-medium text-ink">What happens next</p>
+    <ol class="mt-1 list-decimal pl-5 text-sm text-ink-2 space-y-1">
+      <li>Confirm your email (the link is in your inbox).</li>
+      <li>We invite people in order. Referrals move you up.</li>
+      <li>When it's your turn you get a setup call or a self-serve invite on Decibyl.</li>
+    </ol>
+  </div>
+</form>
+{turnstile && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+<script>
+  const forms = document.querySelectorAll<HTMLFormElement>('form.waitlist-form');
+  const params = new URLSearchParams(location.search);
+  forms.forEach((form) => {
+    // Referral + UTM capture
+    const ref = params.get('ref');
+    if (ref) (form.querySelector('[data-ref]') as HTMLInputElement).value = ref;
+    form.querySelectorAll<HTMLInputElement>('[data-utm]').forEach((i) => { i.value = params.get(i.dataset.utm!) ?? ''; });
+    // Country pre-fill from the Worker (uses the Cloudflare CF-IPCountry header); editable.
+    const country = form.querySelector<HTMLInputElement>('[data-country]');
+    if (country) fetch(form.dataset.endpoint + '/country').then((r) => r.ok ? r.json() : null).then((j) => { if (j?.country && !country.value) country.value = j.country; }).catch(() => {});
+
+    const setState = (s: string) => { form.dataset.state = s; };
+    const show = (k: string, on: boolean) => form.querySelector(`[data-msg="${k}"]`)?.classList.toggle('hidden', !on);
+    const err = (k: string, on: boolean) => form.querySelector(`[data-err="${k}"]`)?.classList.toggle('hidden', !on);
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const fields = form.querySelector('.grid') as HTMLElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      ['error', 'rate', 'exists'].forEach((k) => show(k, false));
+      const email = (form.elements.namedItem('email') as HTMLInputElement);
+      const consent = (form.elements.namedItem('consent') as HTMLInputElement);
+      const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
+      err('email', !okEmail); err('consent', !consent.checked);
+      if (!okEmail || !consent.checked) { setState('invalid'); (okEmail ? consent : email).focus(); return; }
+      setState('submitting'); submit.disabled = true; submit.textContent = 'Joining…';
+      try {
+        const body = Object.fromEntries(new FormData(form).entries());
+        const res = await fetch(form.dataset.endpoint!, { method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json' }, body: JSON.stringify(body) });
+        if (res.status === 429) { setState('rate-limited'); show('rate', true); return; }
+        if (res.status === 409) { setState('already-joined'); show('exists', true); return; }
+        if (!res.ok) throw new Error(String(res.status));
+        const j = await res.json();
+        setState('success');
+        fields.classList.add('hidden'); submit.closest('div')?.classList.add('hidden');
+        form.querySelector('label.flex')?.classList.add('hidden');
+        (form.querySelector('[data-pos]') as HTMLElement).textContent = '#' + j.position;
+        const link = `${location.origin}/waitlist?ref=${j.ref_code}`;
+        (form.querySelector('[data-reflink]') as HTMLInputElement).value = link;
+        const text = encodeURIComponent('I joined the NAutomation Labs waitlist: AI agents that get your work done, with a record. ' + link);
+        (form.querySelector('[data-share="whatsapp"]') as HTMLAnchorElement).href = `https://wa.me/?text=${text}`;
+        (form.querySelector('[data-share="linkedin"]') as HTMLAnchorElement).href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`;
+        (form.querySelector('[data-share="x"]') as HTMLAnchorElement).href = `https://twitter.com/intent/tweet?text=${text}`;
+        show('success', true);
+        (window as any).posthog?.capture('waitlist_join', { job_family: body.job_family || null, referred: !!body.referred_by });
+      } catch { setState('error'); show('error', true); }
+      finally { if (form.dataset.state !== 'success') { submit.disabled = false; submit.textContent = 'Join the waitlist'; } }
+    });
+    form.querySelector('[data-copy]')?.addEventListener('click', async (e) => {
+      const input = form.querySelector<HTMLInputElement>('[data-reflink]')!;
+      try { await navigator.clipboard.writeText(input.value); (e.currentTarget as HTMLElement).textContent = 'Copied'; } catch { input.select(); }
+    });
+  });
+</script>

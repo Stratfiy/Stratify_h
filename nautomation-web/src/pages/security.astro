@@ -1,0 +1,58 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import CTABand from '@/components/CTABand.astro';
+import { SITE } from '@/lib/site';
+const crumbs = [{ name: 'Security', path: '/security' }];
+const items = [
+  { i: 'ledger', t: 'Every action logged and exportable', b: 'What the agent did, when, who approved it, and what happened next. Exportable as CSV at any time.' },
+  { i: 'gate', t: 'Approvals before anything is sent, spent or deleted', b: 'A named person on your team says yes first. On by default; loosened only by you, with the change itself on record.' },
+  { i: 'key', t: 'Your own accounts stay yours', b: 'Agents work from your email, WhatsApp and apps under your accounts. Per-person accounts for shared agents are in progress; today, shared agents use a team account you control.' },
+  { i: 'server', t: 'Data hosted in Mumbai, India', b: 'Records and transcripts are stored in the Mumbai region. Enterprise options (dedicated hosting, other regions) on request.' },
+  { i: 'mic', t: 'AI identity and recording disclosed on calls', b: 'Every call opens with the agent identifying itself as an AI assistant and stating that the call is recorded.' },
+  { i: 'phone', t: 'TRAI and DND rules followed for Indian calls', b: 'Permitted hours and the do-not-disturb registry are enforced in software, not by memory.' },
+  { i: 'trash', t: 'Retention and deletion on request', b: 'Records are kept for the length of the engagement plus 12 months unless you ask otherwise. Deletion on request, confirmed in writing.' },
+  { i: 'doc', t: 'DPA available', b: 'A data processing agreement is available for every managed engagement and on request for Decibyl teams.' },
+];
+const icon = (k: string) => ({
+  ledger: '<path d="M4 5h16M4 12h16M4 19h10"/>',
+  gate: '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+  key: '<circle cx="8" cy="12" r="4"/><path d="M12 12h8l-2 2m-2-2 2-2"/>',
+  server: '<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/>',
+  mic: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+  phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/>',
+  trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  doc: '<path d="M6 3h8l4 4v14H6ZM14 3v4h4M9 13h6M9 17h6"/>',
+}[k]);
+---
+<Base title="Security and trust — NAutomation Labs" description="Plain statements about how NAutomation Labs agents handle your data: every action logged, approvals before consequences, data in Mumbai, AI identity disclosed on calls, TRAI rules, DPA available." path="/security" crumbs={crumbs}>
+  <PageHero eyebrow="Security" title="Plain statements. No badges." sub="How the agents handle your data and your decisions. If a statement here is not true for your setup, we say so before we start." crumbs={crumbs} />
+  <section class="wrap pb-16 sm:pb-24">
+    <ul class="grid gap-4 md:grid-cols-2">
+      {items.map((it) => (
+        <li class="card flex gap-4">
+          <svg class="mt-0.5 h-6 w-6 shrink-0 text-accent-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={icon(it.i)} />
+          <div><h2 class="!font-sans text-lg font-semibold !leading-snug">{it.t}</h2><p class="mt-1.5 text-ink-2">{it.b}</p></div>
+        </li>
+      ))}
+    </ul>
+  </section>
+  <section class="border-y border-line bg-panel">
+    <div class="wrap section grid gap-8 md:grid-cols-2">
+      <div>
+        <p class="eyebrow">Downloads</p>
+        <ul class="mt-4 space-y-2 text-ink">
+          <!-- TODO(founder): add compliance/dpa-template.pdf and compliance/privacy-notice.pdf to public/downloads/ -->
+          <li><a class="link" href="/downloads/dpa-template.pdf">DPA template (PDF)</a> <span class="text-xs text-ink-3">· to be published</span></li>
+          <li><a class="link" href="/legal/privacy">Privacy notice</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="eyebrow">Security contact</p>
+        <p class="mt-4 text-ink">Report a vulnerability or ask a security question: <a class="link" href={`mailto:${SITE.securityEmail}`}>{SITE.securityEmail}</a>.</p>
+        <p class="mt-2 text-sm text-ink-3">We acknowledge within one business day.</p>
+      </div>
+    </div>
+  </section>
+  <CTABand title="Have a security questionnaire?" body="Send it over. We answer every row in plain words and say which ones are in progress." primary={{ href: '/contact', label: 'Send it to us' }} secondary={{ href: '/legal/privacy', label: 'Read the privacy notice' }} />
+</Base>

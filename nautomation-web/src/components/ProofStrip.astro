@@ -1,0 +1,16 @@
+---
+import ApprovalCard from '@/illustrations/ApprovalCard.astro';
+import ActionLedger from '@/illustrations/ActionLedger.astro';
+import CompletedTask from '@/illustrations/CompletedTask.astro';
+---
+<section class="border-y border-line bg-panel" aria-labelledby="proof-h">
+  <div class="wrap section">
+    <p class="eyebrow">The record is the product</p>
+    <h2 id="proof-h" class="mt-3 max-w-2xl">Real screens, not concept art.</h2>
+    <div class="mt-10 grid gap-6 md:grid-cols-3">
+      <figure><ApprovalCard /><figcaption class="mt-3 text-sm text-ink-2">It asks before it sends.</figcaption></figure>
+      <figure><ActionLedger /><figcaption class="mt-3 text-sm text-ink-2">Every action, who approved it, what happened.</figcaption></figure>
+      <figure><CompletedTask /><figcaption class="mt-3 text-sm text-ink-2">Done, on record.</figcaption></figure>
+    </div>
+  </div>
+</section>
