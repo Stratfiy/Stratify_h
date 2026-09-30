@@ -1,0 +1,80 @@
+---
+import { JOB_FAMILIES, SITE } from '@/lib/site';
+const turnstile = SITE.turnstileSiteKey;
+const tasks = [
+  { value: 'rfqs-quotes', label: 'RFQs & quotes' },
+  { value: 'po-followups-deliveries', label: 'PO follow-ups & deliveries' },
+  { value: 'invoice-matching', label: 'Invoice matching' },
+  { value: 'supplier-onboarding-documents', label: 'Supplier onboarding & documents' },
+  ...JOB_FAMILIES.filter((j) => j.value !== 'procurement-logistics'),
+];
+---
+<form id="contact" class="contact-form" method="post" action={SITE.contactEndpoint} novalidate data-endpoint={SITE.contactEndpoint}>
+  <input type="hidden" name="source" value="website" />
+  <input type="hidden" name="page" value="" data-page />
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div><label class="label" for="c-name">Name <span class="text-ask">*</span></label><input class="field" id="c-name" name="name" required autocomplete="name" /></div>
+    <div><label class="label" for="c-email">Work email <span class="text-ask">*</span></label><input class="field" id="c-email" name="email" type="email" required autocomplete="email" /></div>
+    <div><label class="label" for="c-company">Company <span class="text-ask">*</span></label><input class="field" id="c-company" name="company" required autocomplete="organization" /></div>
+    <div>
+      <label class="label" for="c-task">What work do you want done? <span class="text-ask">*</span></label>
+      <select class="field" id="c-task" name="task" required>
+        <option value="">Choose one</option>
+        {tasks.map((t) => <option value={t.value}>{t.label}</option>)}
+      </select>
+    </div>
+    <fieldset class="sm:col-span-2">
+      <legend class="label">Preferred channel</legend>
+      <div class="flex flex-wrap gap-4 text-sm text-ink-2">
+        {['Email', 'WhatsApp', 'Slack'].map((c, i) => (
+          <label class="flex items-center gap-2"><input type="radio" name="channel" value={c.toLowerCase()} checked={i === 0} class="accent-[var(--accent)]" /> {c}</label>
+        ))}
+      </div>
+    </fieldset>
+    <div class="sm:col-span-2">
+      <label class="label" for="c-message">Message</label>
+      <textarea class="field min-h-28" id="c-message" name="message" rows="4" placeholder="The work, the tools it lives in, and roughly how much of it there is."></textarea>
+    </div>
+  </div>
+  <p class="hint hidden text-ask" data-err>Please fill in the required fields with a valid email.</p>
+  {turnstile && <div class="cf-turnstile mt-4" data-sitekey={turnstile} data-size="flexible"></div>}
+  <div class="mt-5 flex flex-wrap items-center gap-3">
+    <button type="submit" class="btn-primary" data-submit>Book a proof of value</button>
+    <span class="text-xs text-ink-3">We reply within one business day.</span>
+  </div>
+  <div class="mt-4 hidden card border-ask/40 text-sm" data-msg="error">Something went wrong. Email us at <a class="link" href={`mailto:${SITE.email}`}>{SITE.email}</a> and we'll take it from there.</div>
+  <div class="mt-4 hidden card" data-msg="success">
+    <p class="eyebrow">Received</p>
+    <p class="mt-2 text-lg text-ink">Thanks. We'll reply within one business day with two or three times for a first call.</p>
+    <p class="mt-2 text-sm text-ink-2">In the meantime, <a class="link" href="/how-it-works">here's what a proof of value involves</a>.</p>
+  </div>
+</form>
+{turnstile && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+<script>
+  const form = document.querySelector<HTMLFormElement>('form.contact-form');
+  if (form) {
+    (form.querySelector('[data-page]') as HTMLInputElement).value = location.pathname;
+    // Pre-fill the task picker from ?task= (the "Start with one task" picker on /procurement).
+    const t = new URLSearchParams(location.search).get('task');
+    const sel = form.querySelector<HTMLSelectElement>('#c-task');
+    if (t && sel && [...sel.options].some((o) => o.value === t)) sel.value = t;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const show = (k: string, on: boolean) => form.querySelector(`[data-msg="${k}"]`)?.classList.toggle('hidden', !on);
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); show('error', false);
+      const d = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+      const ok = d.name?.trim() && d.company?.trim() && d.task && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email ?? '');
+      form.querySelector('[data-err]')?.classList.toggle('hidden', !!ok);
+      if (!ok) return;
+      submit.disabled = true; submit.textContent = 'Sending…';
+      try {
+        const res = await fetch(form.dataset.endpoint!, { method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json' }, body: JSON.stringify(d) });
+        if (!res.ok) throw new Error(String(res.status));
+        form.querySelector('.grid')?.classList.add('hidden'); submit.parentElement?.classList.add('hidden');
+        show('success', true);
+        const segment = ['rfqs-quotes', 'po-followups-deliveries', 'invoice-matching', 'supplier-onboarding-documents'].includes(d.task) ? 'procurement' : 'general';
+        (window as any).posthog?.capture('contact_submit', { segment, task: d.task, channel: d.channel });
+      } catch { show('error', true); submit.disabled = false; submit.textContent = 'Book a proof of value'; }
+    });
+  }
+</script>

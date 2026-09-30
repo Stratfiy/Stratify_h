@@ -1,0 +1,47 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import CTABand from '@/components/CTABand.astro';
+import PilotTimeline from '@/illustrations/PilotTimeline.astro';
+const crumbs = [{ name: 'How it works', path: '/how-it-works' }];
+const stages = [
+  { n: '01', t: 'Proof of value', when: '2–3 weeks · free', body: 'You give us a named owner, data access for one task, and 30 minutes a week. We agree the success criteria and the price of the next step before we start. At the end you see the agent doing the task on your data, with the record.' },
+  { n: '02', t: 'Pilot', when: '90 days · one task, one channel, one team', body: 'Scope and build, shadow mode with approvals, then live on one channel. A kill criterion is agreed on day 0. Day 90 is a review with a scorecard: expand, adjust, or stop.' },
+  { n: '03', t: 'Run', when: 'Monthly', body: 'We run the agents, you approve what matters, and you see a scorecard every month: work done, actions asked about, rejections, time saved. Friday written updates.' },
+  { n: '04', t: 'Expand', when: 'From day 90', body: 'The next task, the next channel, or the next team, one at a time, each with its own criteria. The record carries over.' },
+];
+const need = [
+  'A named owner on your side who can approve actions and make the day-90 call.',
+  'Read access to the data for one task (an inbox, a vendor list, a sheet).',
+  '30 minutes a week during the proof of value; a weekly review during the pilot.',
+  'Agreement on success criteria, the kill criterion and the pilot price before we start.',
+];
+---
+<Base title="How it works — proof of value, pilot, run, expand | NAutomation Labs" description="Free proof of value in two to three weeks, a 90-day pilot on one task, then a monthly run with a scorecard you can see. What we need from you, and when." path="/how-it-works" crumbs={crumbs}>
+  <PageHero eyebrow="How it works" title="Proof of value, pilot, run, expand." sub="Every engagement follows the same four stages, with the criteria and the price agreed before each one starts." crumbs={crumbs} />
+  <section class="wrap pb-16 sm:pb-24">
+    <ol class="grid gap-6 md:grid-cols-2">
+      {stages.map((s) => (
+        <li class="card">
+          <p class="display text-4xl text-accent-2">{s.n}</p>
+          <h2 class="mt-3 text-3xl">{s.t}</h2>
+          <p class="mt-1 text-sm text-ink-3">{s.when}</p>
+          <p class="mt-4 text-ink-2">{s.body}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+  <section class="border-y border-line bg-panel">
+    <div class="wrap section">
+      <p class="eyebrow">The pilot, on one line</p>
+      <div class="mt-6 card overflow-x-auto"><div class="min-w-[640px]"><PilotTimeline /></div></div>
+    </div>
+  </section>
+  <section class="wrap section grid gap-8 lg:grid-cols-[1fr_2fr]">
+    <div><p class="eyebrow">What we need from you</p></div>
+    <ul class="space-y-3 text-lg text-ink">
+      {need.map((n) => <li class="flex gap-3"><span class="text-done" aria-hidden="true">✓</span>{n}</li>)}
+    </ul>
+  </section>
+  <CTABand />
+</Base>

@@ -1,0 +1,28 @@
+---
+interface Props { class?: string }
+const { class: cls = 'w-full h-auto' } = Astro.props;
+const rows = [
+  { t: '09:42', a: 'Drafted RFQ · 3 vendors', who: 'Agent', s: 'Asked', c: 'ask' },
+  { t: '09:47', a: 'Approved RFQ', who: 'R. Menon', s: 'Approved', c: 'done' },
+  { t: '09:48', a: 'Sent RFQ by email', who: 'Agent', s: 'Done', c: 'done' },
+  { t: '11:05', a: 'Called Metco (Tamil) · transcript', who: 'Agent', s: 'Done', c: 'done' },
+  { t: '15:30', a: 'Compared 3 quotes · table', who: 'Agent', s: 'Done', c: 'done' },
+];
+---
+<svg class={cls} viewBox="0 0 360 240" role="img" aria-label="Action ledger with five rows: who did what, who approved it, and the result" font-family="Inter Variable, Inter, system-ui, sans-serif">
+  <rect x="0.5" y="0.5" width="359" height="239" rx="12" fill="var(--surface)" stroke="var(--border)"/>
+  <rect x="20" y="20" width="320" height="200" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+  <text x="36" y="44" font-size="12" font-weight="600" fill="var(--ink)">Record · Today</text>
+  <text x="324" y="44" text-anchor="end" font-size="10" fill="var(--ink-3)">Export CSV</text>
+  <rect x="36" y="54" width="288" height="1" fill="var(--border)"/>
+  {rows.map((r, i) => (
+    <g transform={`translate(0 ${64 + i * 30})`}>
+      <text x="36" y="14" font-size="10" fill="var(--ink-3)">{r.t}</text>
+      <text x="72" y="14" font-size="11" fill="var(--ink)">{r.a}</text>
+      <text x="228" y="14" font-size="10" fill="var(--ink-2)">{r.who}</text>
+      <rect x="276" y="3" width="48" height="16" rx="8" fill={`var(--${r.c}-soft)`}/>
+      <text x="300" y="14.5" text-anchor="middle" font-size="9.5" font-weight="600" fill={`var(--${r.c})`}>{r.s}</text>
+      {i < rows.length - 1 && <rect x="36" y="24" width="288" height="1" fill="var(--border)"/>}
+    </g>
+  ))}
+</svg>

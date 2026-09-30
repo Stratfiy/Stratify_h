@@ -1,4 +1,15 @@
-# NAutomation Labs · Marketing Site
+# NAutomation Labs · Website
+
+> **Your work, done by agents.** NAutomation Labs gets your business's work done through AI agents.
+
+**The current site lives in [`nautomation-web/`](./nautomation-web) (Astro, static HTML, Cloudflare Pages).** See its README for the build, the Workers, the budgets and the founder TODO list. It was built from the website brief of 30 September 2026.
+
+`frontend/` and `backend/` below are the previous client-rendered React + FastAPI site. They are superseded and kept only until the `/lab` decision (keep the 3D showcase or retire it) and the DNS cut-over; every old route is 301'd in `nautomation-web/public/_redirects`.
+
+---
+
+## Previous site (superseded)
+
 
 > India's first AI-native engineering labs. AI products and solutions, deployed.
 

@@ -1,0 +1,8 @@
+---
+interface Props { title: string; body: string; href?: string }
+const { title, body, href } = Astro.props;
+---
+<article class="card h-full">
+  <h3 class="!font-sans text-lg font-semibold !leading-snug">{href ? <a href={href} class="hover:text-accent">{title}</a> : title}</h3>
+  <p class="mt-2 text-ink-2">{body}</p>
+</article>

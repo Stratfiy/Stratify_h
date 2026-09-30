@@ -1,0 +1,30 @@
+---
+import Base from '@/layouts/Base.astro';
+import Logo from '@/components/Logo.astro';
+import WaitlistForm from '@/components/WaitlistForm.astro';
+---
+<Base title="Join the waitlist — NAutomation Labs" description="Join the NAutomation Labs waitlist and we'll invite you in order. AI agents that get your work done, with approvals and a record." path="/waitlist" bare>
+  <section class="wrap min-h-screen py-10 sm:py-16 grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
+    <div>
+      <a href="/" class="flex items-center gap-2.5 text-ink font-medium"><Logo /> NAutomation Labs</a>
+      <h1 class="mt-10 reveal">Your work, done by agents.</h1>
+      <p class="mt-6 max-w-md lede">Join the waitlist and we'll invite you in order.</p>
+      <ul class="mt-8 space-y-2 text-sm text-ink-2">
+        <li>Follow-ups, vendor coordination, front desk, back office.</li>
+        <li>Approvals before anything is sent, spent or deleted.</li>
+        <li>Every action on record.</li>
+      </ul>
+      <p class="mt-10 text-xs text-ink-3"><a href="/legal/privacy" class="hover:text-ink">Privacy</a> · <a href="/" class="hover:text-ink">Back to the site</a></p>
+    </div>
+    <div class="card sm:p-8">
+      <p id="wl-confirmed" class="mb-4 hidden rounded-[8px] bg-done-soft px-4 py-3 text-sm text-done">Your email is confirmed. Your place on the waitlist is final.</p>
+      <p id="wl-confirm-failed" class="mb-4 hidden rounded-[8px] bg-ask-soft px-4 py-3 text-sm text-ask">That confirmation link didn't work. Join again below and we'll send a fresh one.</p>
+      <WaitlistForm id="waitlist-page" />
+    </div>
+    <script>
+      const q = new URLSearchParams(location.search);
+      if (q.get('confirmed') === '1') document.getElementById('wl-confirmed')?.classList.remove('hidden');
+      if (q.get('confirmed') === '0') document.getElementById('wl-confirm-failed')?.classList.remove('hidden');
+    </script>
+  </section>
+</Base>

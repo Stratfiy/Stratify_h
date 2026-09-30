@@ -1,0 +1,31 @@
+---
+/** Approval card. `state`: pending | approved | rejected | sent. Colours follow CSS tokens, so light/dark come free. */
+interface Props { state?: 'pending' | 'approved' | 'rejected' | 'sent'; class?: string }
+const { state = 'pending', class: cls = 'w-full h-auto' } = Astro.props;
+const label = { pending: 'Asks first', approved: 'Approved', rejected: 'Not sent', sent: 'Sent' }[state];
+const color = { pending: 'var(--ask)', approved: 'var(--done)', rejected: 'var(--ask)', sent: 'var(--done)' }[state];
+const soft = { pending: 'var(--ask-soft)', approved: 'var(--done-soft)', rejected: 'var(--ask-soft)', sent: 'var(--done-soft)' }[state];
+---
+<svg class={cls} viewBox="0 0 360 240" role="img" aria-label={`Approval card, state: ${label}`} font-family="Inter Variable, Inter, system-ui, sans-serif">
+  <rect x="0.5" y="0.5" width="359" height="239" rx="12" fill="var(--surface)" stroke="var(--border)"/>
+  <rect x="20" y="20" width="320" height="200" rx="10" fill="var(--panel)" stroke="var(--border)"/>
+  <rect x="36" y="36" width="84" height="20" rx="10" fill={soft}/>
+  <text x="78" y="50" text-anchor="middle" font-size="11" font-weight="600" fill={color}>{label}</text>
+  <text x="36" y="84" font-size="14" font-weight="600" fill="var(--ink)">Send RFQ to 3 vendors</text>
+  <text x="36" y="104" font-size="12" fill="var(--ink-2)">Item: SS304 sheet 2 mm · Qty 1,200 kg · Due 14 Oct</text>
+  <text x="36" y="122" font-size="12" fill="var(--ink-2)">To: Arvind Steels · Metco · Sri Balaji Alloys</text>
+  <rect x="36" y="140" width="288" height="1" fill="var(--border)"/>
+  <text x="36" y="164" font-size="11" fill="var(--ink-3)">Agent · Procurement follow-ups · 09:42</text>
+  {state === 'pending' && (
+    <>
+      <rect x="36" y="180" width="92" height="28" rx="8" fill="var(--accent)"/>
+      <text x="82" y="198" text-anchor="middle" font-size="12" font-weight="600" fill="var(--on-accent)">Approve</text>
+      <rect x="136.5" y="180.5" width="92" height="27" rx="8" fill="var(--panel)" stroke="var(--border)"/>
+      <text x="182" y="198" text-anchor="middle" font-size="12" font-weight="500" fill="var(--ink)">Edit</text>
+      <text x="256" y="198" font-size="12" fill="var(--ink-3)">Reject</text>
+    </>
+  )}
+  {state !== 'pending' && (
+    <text x="36" y="198" font-size="12" fill="var(--ink-2)">{state === 'approved' ? 'Approved by R. Menon · 09:47' : state === 'rejected' ? 'Rejected by R. Menon · 09:47 · "Add Metco spec sheet"' : 'Sent 09:48 · 3 delivered · replies expected by 3 Oct'}</text>
+  )}
+</svg>

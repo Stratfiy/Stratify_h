@@ -1,0 +1,46 @@
+[
+  {
+    "slug": "senior-full-stack-engineer-ai-products",
+    "title": "Senior Full-Stack Engineer, AI Products",
+    "area": "Product & Engineering",
+    "summary": "Own Decibyl's agent runtime, approvals and action ledger end to end, from TypeScript services to the UI people approve in.",
+    "employmentType": "FULL_TIME",
+    "openings": 1,
+    "applyUrl": "/contact?task=something-else",
+    "datePosted": "2026-09-15",
+    "validThrough": "2026-12-31"
+  },
+  {
+    "slug": "business-development-representative",
+    "title": "Business Development Representative",
+    "area": "Sales & Partnerships",
+    "summary": "Open conversations with procurement and logistics heads at mid-size companies and book proofs of value.",
+    "employmentType": "FULL_TIME",
+    "openings": 1,
+    "applyUrl": "/contact?task=something-else",
+    "datePosted": "2026-09-15",
+    "validThrough": "2026-12-31"
+  },
+  {
+    "slug": "content-and-social-media",
+    "title": "Content & Social Media",
+    "area": "Growth & Marketplace",
+    "summary": "Write plainly about agents, approvals and records; run our LinkedIn and the blog with Growth.",
+    "employmentType": "FULL_TIME",
+    "openings": 1,
+    "applyUrl": "/contact?task=something-else",
+    "datePosted": "2026-09-15",
+    "validThrough": "2026-12-31"
+  },
+  {
+    "slug": "devrel-intern",
+    "title": "DevRel Intern",
+    "area": "Product & Engineering",
+    "summary": "Build examples on Decibyl, answer builders' questions, and turn what you learn into docs and posts.",
+    "employmentType": "INTERN",
+    "openings": 2,
+    "applyUrl": "/contact?task=something-else",
+    "datePosted": "2026-09-15",
+    "validThrough": "2026-12-31"
+  }
+]

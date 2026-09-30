@@ -1,0 +1,20 @@
+---
+interface Props { class?: string }
+const { class: cls = 'w-full h-auto max-w-md mx-auto' } = Astro.props;
+const stages = ['Request', 'Source', 'Negotiate', 'Order', 'Pay', 'Manage suppliers', 'Analyse spend', 'Logistics'];
+const cx = 280, cy = 210, r = 135;
+const pts = stages.map((s, i) => { const a = (-90 + i * 45) * Math.PI / 180; const lr = r + 44; return { s, x: cx + r * Math.cos(a), y: cy + r * Math.sin(a), lx: cx + lr * Math.cos(a), ly: cy + lr * Math.sin(a) + 4, anchor: Math.abs(Math.cos(a)) < 0.01 ? 'middle' : Math.cos(a) > 0 ? 'start' : 'end' }; });
+---
+<svg class={cls} viewBox="0 0 560 420" role="img" aria-label={`Procurement cycle ring with eight stages: ${stages.join(', ')}`} font-family="Inter Variable, Inter, system-ui, sans-serif">
+  <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--border)" stroke-width="2" stroke-dasharray="4 6"/>
+  <circle cx={cx} cy={cy} r="62" fill="var(--panel)" stroke="var(--border)"/>
+  <text x={cx} y={cy - 6} text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink)">One task</text>
+  <text x={cx} y={cy + 12} text-anchor="middle" font-size="11" fill="var(--ink-2)">to start with</text>
+  {pts.map((p, i) => (
+    <g>
+      <circle cx={p.x} cy={p.y} r="22" fill={i < 4 ? 'var(--accent-soft)' : 'var(--panel)'} stroke={i < 4 ? 'var(--accent-2)' : 'var(--border)'}/>
+      <text x={p.x} y={p.y + 4} text-anchor="middle" font-size="11" font-weight="600" fill="var(--ink)">{i + 1}</text>
+      <text x={p.lx} y={p.ly} text-anchor={p.anchor} font-size="12" fill="var(--ink-2)">{p.s}</text>
+    </g>
+  ))}
+</svg>

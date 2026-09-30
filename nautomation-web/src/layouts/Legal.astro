@@ -1,0 +1,15 @@
+---
+import Base from './Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+interface Props { title: string; description: string; path: string; heading: string; updated: string }
+const { title, description, path, heading, updated } = Astro.props;
+const crumbs = [{ name: 'Legal', path: '/legal/privacy' }, { name: heading, path }];
+---
+<Base title={title} description={description} path={path} crumbs={crumbs} noWaitlist>
+  <article class="wrap py-10 sm:py-16">
+    <Breadcrumbs items={crumbs} />
+    <h1 class="mt-6 text-[clamp(2.25rem,5vw,3.75rem)]">{heading}</h1>
+    <p class="mt-3 text-sm text-ink-3">Last updated <time datetime={updated}>{updated}</time>. <span class="tag-ask ml-1">Draft pending CA review</span></p>
+    <div class="prose mt-10"><slot /></div>
+  </article>
+</Base>

@@ -1,0 +1,16 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import BlogCard from '@/components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const crumbs = [{ name: 'Blog', path: '/blog' }];
+---
+<Base title="Blog — AI agents, approvals and records, in plain words" description="Plain-language writing from NAutomation Labs on AI agents for business: super intelligence explained, the four layers of controls, approvals, 90-day pilots and vendor calls in Indian languages." path="/blog" crumbs={crumbs}>
+  <PageHero eyebrow="Blog" title="Plain words about agents, approvals and records." crumbs={crumbs} />
+  <section class="wrap pb-16 sm:pb-24">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {posts.map((p) => <BlogCard slug={p.id} title={p.data.title} description={p.data.description} date={p.data.date} tags={p.data.tags} />)}
+    </div>
+  </section>
+</Base>

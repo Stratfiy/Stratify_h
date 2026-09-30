@@ -1,0 +1,15 @@
+---
+import roles from '@content/roles.json';
+---
+<ul class="divide-y divide-line border-y border-line">
+  {roles.map((r) => (
+    <li id={r.slug} class="grid gap-3 py-6 sm:grid-cols-[1fr_auto] sm:items-center">
+      <div>
+        <h3 class="!font-sans text-lg font-semibold !leading-snug">{r.title}{r.openings > 1 && <span class="ml-2 tag">×{r.openings}</span>}</h3>
+        <p class="mt-1 text-ink-2">{r.summary}</p>
+        <p class="mt-2 text-sm text-ink-3">{r.area} · Remote, India · {r.employmentType === 'INTERN' ? 'Internship' : 'Full-time'}</p>
+      </div>
+      <a href={r.applyUrl} class="btn-secondary" data-role={r.slug} rel={r.applyUrl.startsWith('http') ? 'noopener' : undefined}>{r.applyUrl.startsWith('http') ? 'View on LinkedIn' : 'Apply'}</a>
+    </li>
+  ))}
+</ul>

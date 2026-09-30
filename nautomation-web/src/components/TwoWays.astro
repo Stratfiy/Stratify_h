@@ -1,0 +1,21 @@
+---
+import { SITE } from '@/lib/site';
+---
+<section class="wrap section" aria-labelledby="two-h">
+  <p class="eyebrow">Two ways to work with us</p>
+  <h2 id="two-h" class="mt-3 max-w-2xl">We run it for you, or you run it yourself.</h2>
+  <div class="mt-10 grid gap-6 md:grid-cols-2">
+    <a href="/procurement" class="card group flex flex-col hover:border-accent-2 transition-colors duration-200" data-cta="two_ways_managed">
+      <span class="tag self-start">Managed service</span>
+      <h3 class="mt-4">We run it for you</h3>
+      <p class="mt-3 text-ink-2 flex-1">For procurement and logistics teams. A free proof of value on your data, then a 90-day pilot on one task, one channel, one team. We set up the agents, run them, and are accountable for the result.</p>
+      <span class="mt-6 text-accent font-medium group-hover:underline">Procurement & logistics teams →</span>
+    </a>
+    <a href={SITE.decibyl} class="card group flex flex-col hover:border-accent-2 transition-colors duration-200" data-cta="two_ways_decibyl">
+      <span class="tag self-start">Self-serve</span>
+      <h3 class="mt-4">Run it yourself</h3>
+      <p class="mt-3 text-ink-2 flex-1">For any team, on Decibyl. The same agents, on your own email, WhatsApp and apps. Start free, add the work you want done, approve what matters.</p>
+      <span class="mt-6 text-accent font-medium group-hover:underline">Start free on Decibyl →</span>
+    </a>
+  </div>
+</section>

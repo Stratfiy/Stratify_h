@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /waitlist
+Disallow: /lab
+
+Sitemap: https://nautomationlabs.com/sitemap-index.xml

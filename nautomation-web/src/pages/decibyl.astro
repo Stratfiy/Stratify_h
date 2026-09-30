@@ -1,0 +1,32 @@
+---
+import Base from '@/layouts/Base.astro';
+import { SITE } from '@/lib/site';
+const crumbs = [{ name: 'Decibyl', path: '/decibyl' }];
+const bullets = [
+  'Your own assistant, on your own accounts: email, WhatsApp, calendar, files.',
+  'Shared agents for the work your team does together: follow-ups, front desk, back office.',
+  'Every action logged, exportable, with who approved it.',
+  'Asks before it sends, spends or deletes.',
+  'Learns from what worked, from the record, not from guesses.',
+];
+---
+<Base title="Decibyl — the AI assistant every person in a business uses" description="Decibyl is the self-serve product from NAutomation Labs: an AI assistant for every person in a business, shared agents for the team, every action on record. Start free." path="/decibyl" canonical={`${SITE.decibyl}/`} crumbs={crumbs}>
+  <section class="wrap py-16 sm:py-24">
+    <div class="grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div>
+        <p class="eyebrow">Our product</p>
+        <h1 class="mt-4 reveal">Decibyl is the AI assistant every person in a business uses.</h1>
+        <p class="mt-6 lede">The same agents we run for procurement teams, available self-serve for any team. Start free, add the work you want done, approve what matters.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href={SITE.decibylSignup} class="btn-primary" data-cta="decibyl_signup">Start free</a>
+          <a href={SITE.decibyl} class="btn-secondary" data-cta="decibyl_site">More at decibyl.ai</a>
+        </div>
+      </div>
+      <ul class="card divide-y divide-line">
+        {bullets.map((b) => (
+          <li class="flex gap-3 py-3.5 first:pt-0 last:pb-0 text-ink"><svg class="mt-1.5 shrink-0" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="var(--done)" stroke-width="1.4"/><path d="m4.8 8.2 2 2 4.4-4.6" stroke="var(--done)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>{b}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>

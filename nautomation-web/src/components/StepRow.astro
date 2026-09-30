@@ -1,0 +1,17 @@
+---
+interface Props { steps: { title: string; body: string }[]; eyebrow?: string; title?: string; id?: string }
+const { steps, eyebrow = 'How it works', title = 'Three steps. One record.', id = 'how' } = Astro.props;
+---
+<section class="wrap section" aria-labelledby={`${id}-h`}>
+  <p class="eyebrow">{eyebrow}</p>
+  <h2 id={`${id}-h`} class="mt-3 max-w-2xl">{title}</h2>
+  <ol class="mt-10 grid gap-6 md:grid-cols-3">
+    {steps.map((s, i) => (
+      <li class="card relative">
+        <span class="display text-5xl text-accent-2 leading-none">{i + 1}</span>
+        <h3 class="mt-4 !font-sans text-lg font-semibold !leading-snug">{s.title}</h3>
+        <p class="mt-2 text-ink-2">{s.body}</p>
+      </li>
+    ))}
+  </ol>
+</section>

@@ -1,0 +1,24 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import ContactForm from '@/components/ContactForm.astro';
+import { SITE } from '@/lib/site';
+const crumbs = [{ name: 'Contact', path: '/contact' }];
+---
+<Base title="Book a proof of value — NAutomation Labs" description="Tell us the work you want done. We reply within one business day and set up a free proof of value on your data." path="/contact" crumbs={crumbs} noWaitlist>
+  <PageHero eyebrow="Contact" title="Book a proof of value." sub="Tell us the work. We reply within one business day with times for a first call." crumbs={crumbs} />
+  <section class="wrap pb-16 sm:pb-24 grid gap-10 lg:grid-cols-[2fr_1fr]">
+    <div class="card sm:p-8">
+      <p id="c-sent" class="mb-4 hidden rounded-[8px] bg-done-soft px-4 py-3 text-sm text-done">Received. We reply within one business day.</p>
+      <ContactForm />
+    </div>
+    <script>if (new URLSearchParams(location.search).get('sent') === '1') document.getElementById('c-sent')?.classList.remove('hidden');</script>
+    <aside class="space-y-6 text-sm">
+      <div><p class="eyebrow">Email</p><p class="mt-2"><a class="link" href={`mailto:${SITE.email}`}>{SITE.email}</a></p></div>
+      <div><p class="eyebrow">Phone / WhatsApp</p><p class="mt-2"><a class="link" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></p></div>
+      <div><p class="eyebrow">Support</p><p class="mt-2 text-ink-2">Existing customers: reply to your Friday update or write to <a class="link" href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p></div>
+      <div><p class="eyebrow">Security</p><p class="mt-2"><a class="link" href={`mailto:${SITE.securityEmail}`}>{SITE.securityEmail}</a></p></div>
+      <div><p class="eyebrow">What happens next</p><ol class="mt-2 list-decimal pl-4 space-y-1 text-ink-2"><li>We reply within one business day.</li><li>A 30-minute call to pick the one task.</li><li>A free two-to-three-week proof of value on your data.</li></ol></div>
+    </aside>
+  </section>
+</Base>

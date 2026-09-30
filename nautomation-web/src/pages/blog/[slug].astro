@@ -1,0 +1,58 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import CTABand from '@/components/CTABand.astro';
+import { getCollection, render } from 'astro:content';
+import { SITE } from '@/lib/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const path = `/blog/${post.id}`;
+const crumbs = [{ name: 'Blog', path: '/blog' }, { name: post.data.title, path }];
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.date.toISOString(),
+  dateModified: (post.data.updated ?? post.data.date).toISOString(),
+  author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+  publisher: { '@id': `${SITE.url}/#organization` },
+  mainEntityOfPage: `${SITE.url}${path}`,
+  image: `${SITE.url}/og/blog-${post.id}.png`,
+};
+const d = post.data.date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base title={`${post.data.title} | NAutomation Labs`} description={post.data.description} path={path} crumbs={crumbs} schema={[article]} type="article">
+  <article class="wrap py-10 sm:py-16" data-blog={post.id}>
+    <Breadcrumbs items={[crumbs[0]]} />
+    <header class="mt-6 max-w-3xl">
+      <p class="text-sm text-ink-3"><time datetime={post.data.date.toISOString()}>{d}</time> · {post.data.author}</p>
+      <h1 class="mt-3 text-[clamp(2.25rem,5vw,3.75rem)] reveal">{post.data.title}</h1>
+      <p class="mt-5 lede">{post.data.description}</p>
+    </header>
+    <div class="prose mt-10"><Content /></div>
+    <footer class="mt-12 max-w-[68ch] border-t border-line pt-6 text-sm text-ink-2">
+      <p>Want this done for your team? <a class="link" href="/procurement">Procurement and logistics teams</a> work with us as a managed service. Everyone else can <a class="link" href="/decibyl">start free on Decibyl</a>.</p>
+    </footer>
+  </article>
+  <CTABand />
+  <script>
+    // blog_read at 50% scroll, once.
+    const a = document.querySelector<HTMLElement>('article[data-blog]');
+    if (a) {
+      let fired = false;
+      const onScroll = () => {
+        if (fired) return;
+        const r = a.getBoundingClientRect();
+        const seen = (innerHeight - r.top) / r.height;
+        if (seen >= 0.5) { fired = true; (window as any).posthog?.capture('blog_read', { slug: a.dataset.blog }); removeEventListener('scroll', onScroll); }
+      };
+      addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    }
+  </script>
+</Base>

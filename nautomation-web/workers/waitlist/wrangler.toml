@@ -1,0 +1,20 @@
+name = "nautomation-waitlist"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+routes = [{ pattern = "nautomationlabs.com/api/waitlist*", zone_name = "nautomationlabs.com" }]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nautomation-waitlist"
+database_id = "TODO_D1_DATABASE_ID"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "TODO_KV_NAMESPACE_ID"
+
+[vars]
+SITE_URL = "https://nautomationlabs.com"
+FROM_EMAIL = "NAutomation Labs <office@nautomationlabs.com>"
+POSTHOG_HOST = "https://us.i.posthog.com"
+POSITION_OFFSET = "0"
+# Secrets (wrangler secret put): TURNSTILE_SECRET, RESEND_API_KEY, ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, ZOHO_REFRESH_TOKEN, POSTHOG_KEY, EXPORT_TOKEN

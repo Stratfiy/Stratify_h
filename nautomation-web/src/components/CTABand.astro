@@ -1,0 +1,20 @@
+---
+import { SITE } from '@/lib/site';
+interface Props { title?: string; body?: string; primary?: { href: string; label: string }; secondary?: { href: string; label: string } }
+const {
+  title = 'Tell us the work.',
+  body = 'A proof of value is free, takes two to three weeks, and runs on your data. We agree the success criteria and the price of the next step before we start.',
+  primary = { href: '/contact', label: 'Book a proof of value' },
+  secondary = { href: SITE.decibylSignup, label: 'Start free on Decibyl' },
+} = Astro.props;
+---
+<section class="wrap section">
+  <div class="rounded-[12px] border border-line bg-accent text-on-accent p-8 sm:p-12 lg:p-16">
+    <h2 class="max-w-2xl text-on-accent">{title}</h2>
+    <p class="mt-4 max-w-2xl text-lg opacity-85">{body}</p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href={primary.href} class="btn bg-panel text-ink border-panel hover:bg-surface" data-cta={`band_${primary.label.toLowerCase().replace(/\W+/g, '_')}`}>{primary.label}</a>
+      <a href={secondary.href} class="btn border-on-accent/40 text-on-accent hover:border-on-accent" data-cta={`band_${secondary.label.toLowerCase().replace(/\W+/g, '_')}`}>{secondary.label}</a>
+    </div>
+  </div>
+</section>
