@@ -1,6 +1,6 @@
 # NAutomation Labs · Website
 
-> **The work, done.** NAutomation Labs gets your business's work done through AI agents.
+> **Your work, done by agents.** NAutomation Labs gets your business's work done through AI agents.
 
 **The current site lives in [`nautomation-web/`](./nautomation-web) (Astro, static HTML, Cloudflare Pages).** See its README for the build, the Workers, the budgets and the founder TODO list. It was built from the website brief of 30 September 2026.
 

@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 
 const pages = {
-  home: ['The work, done.', 'AI agents that get your business’s work done. Approvals. A record of every action.'],
+  home: ['Your work, done by agents.', 'You tell us the work. Our agents do it. You approve what matters. Every action on record.'],
   'what-we-do': ['What we do', 'Follow-ups · Vendor coordination · Front desk · Back office'],
   procurement: ['AI agents for procurement & logistics teams', 'RFQs, quotes, PO follow-ups, invoice matching. Every call and email logged.'],
   decibyl: ['Decibyl', 'The AI assistant every person in a business uses. Start free.'],

@@ -1,7 +1,7 @@
 export const SITE = {
   name: 'NAutomation Labs',
   url: 'https://nautomationlabs.com',
-  tagline: 'The work, done.',
+  tagline: 'Your work, done by agents.',
   description:
     'An AI-native studio that gets your work done through AI agents, with approvals and a record of every action. Managed for procurement and logistics teams; self-serve for everyone else.',
   email: 'office@nautomationlabs.com',

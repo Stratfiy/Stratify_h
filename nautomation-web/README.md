@@ -2,7 +2,7 @@
 
 The marketing site for **nautomationlabs.com**. Static HTML (Astro 5 + Tailwind 4 + MDX), hosted on Cloudflare Pages, with two Cloudflare Workers for the contact form and the waitlist.
 
-Built from the website brief dated 30 September 2026 (v1.0). Positioning: *The work, done.*
+Built from the website brief dated 30 September 2026 (v1.0). Positioning: *Your work, done by agents.*
 
 ## Layout
 
