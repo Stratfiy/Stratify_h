@@ -6,29 +6,16 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 
 const pages = {
-  home: ['Your work, done by agents.', 'You tell us the work. Our agents do it. You approve what matters. Every action on record.'],
-  'what-we-do': ['What we do', 'Follow-ups · Vendor coordination · Front desk · Back office'],
-  procurement: ['AI agents for procurement & logistics teams', 'RFQs, quotes, PO follow-ups, invoice matching. Every call and email logged.'],
-  decibyl: ['Decibyl', 'The AI assistant every person in a business uses. Start free.'],
-  'how-it-works': ['How it works', 'Proof of value → 90-day pilot → run → expand'],
-  about: ['About NAutomation Labs', 'An AI-native studio. Registered in Hosur, remote across India.'],
-  careers: ['Careers', 'The application is the work sample.'],
-  security: ['Security', 'Every action logged. Approvals before consequences. Data stays yours.'],
-  waitlist: ['Join the waitlist', 'We invite people in order.'],
-  contact: ['Book a proof of value', 'Free, two to three weeks, on your data.'],
-  blog: ['Blog', 'Plain words about agents, approvals and records.'],
-  'legal-privacy': ['Privacy notice', 'nautomationlabs.com'],
-  'legal-terms': ['Terms of use', 'nautomationlabs.com'],
+  home: ['Robots that machine shops can teach themselves.', 'nA labs, the robotics arm of NAutomation Labs.'],
+  robots: ['Four bodies. One brain.', 'A trolley arm first, then three more.'],
+  software: ['One brain for every robot.', 'Teach a job by showing it. Run it on any robot.'],
+  jobs: ['The jobs we are building them for.', 'Machine tending, pick and place, inspection and more.'],
+  roadmap: ['From the shop floor to beyond Earth.', 'Build for space before we build in space.'],
+  about: ['Make India build faster.', 'nA labs, OrderShed and Decibyl are NAutomation Labs.'],
+  contact: ['Talk to us', 'Parts made, or a job automated.'],
+  privacy: ['Privacy notice', 'nautomationlabs.com'],
   '404': ['Not found', 'nautomationlabs.com'],
 };
-// Blog posts from frontmatter
-for (const f of await readdir('content/blog')) {
-  if (!f.endsWith('.mdx')) continue;
-  const src = await readFile(`content/blog/${f}`, 'utf8');
-  const title = /^title:\s*"(.+)"/m.exec(src)?.[1] ?? f;
-  const desc = /^description:\s*"(.+)"/m.exec(src)?.[1] ?? '';
-  pages[`blog-${f.replace(/\.mdx$/, '')}`] = [title.replace(/\\'/g, "'"), desc.slice(0, 120)];
-}
 
 const serif = await readFile(require.resolve('@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff'));
 // Body copy also uses the serif here: satori needs static-weight TTF/WOFF and Inter ships as a variable woff2.
