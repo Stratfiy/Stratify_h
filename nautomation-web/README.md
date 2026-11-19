@@ -1,5 +1,20 @@
 # nautomation-web
 
+The site for **nautomationlabs.com**. Since 19 November 2026 it is the nA labs robotics site: plain static HTML in `public/`, copied to `dist/` by the Astro build. The earlier AI-agents site (Astro pages, blog, waitlist) was removed in that change and is in git history before it.
+
+- `public/*.html`, `public/site.css`, `public/fonts/`: the pages, shared styles and self-hosted Barlow type.
+- `public/contact.html`: enquiry form. It posts to FormSubmit (formsubmit.co), which forwards to office@nautomationlabs.com. The first submission from the live site triggers a one-time activation email to that address.
+- `public/_redirects` and `vercel.json`: redirects from the previous routes.
+- `scripts/og.mjs`: social preview image per page, generated at build.
+- `src/components`, `src/layouts`, `workers/`: left from the previous site and not used by the current pages.
+
+Robot images are AI-generated concept renders and are labelled as such on the pages.
+
+---
+
+The notes below describe the previous site.
+
+
 The marketing site for **nautomationlabs.com**. Static HTML (Astro 5 + Tailwind 4 + MDX), hosted on Cloudflare Pages, with two Cloudflare Workers for the contact form and the waitlist.
 
 Built from the website brief dated 30 September 2026 (v1.0). Positioning: *Your work, done by agents.*

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Talk to us | nA labs</title>
+<meta name="description" content="Ask nA labs for machined parts or for a job automated in your shop. Enquiries go to office@nautomationlabs.com.">
+<link rel="canonical" href="https://nautomationlabs.com/contact">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="Talk to us | nA labs">
+<meta property="og:description" content="Ask nA labs for machined parts or for a job automated in your shop. Enquiries go to office@nautomationlabs.com.">
+<meta property="og:image" content="https://nautomationlabs.com/og/contact.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+<header class="phero plain">
+  <nav class="nav" aria-label="Main">
+    <a href="/" aria-label="nA labs, home">
+      <svg class="nav-mark wordmark" viewBox="0 0 300 213" aria-hidden="true">
+        <clipPath id="baseA"><rect x="0" y="-40" width="760" height="223"/></clipPath>
+        <mask id="holesA" maskUnits="userSpaceOnUse" x="-50" y="-80" width="900" height="360">
+          <rect x="-50" y="-80" width="900" height="360" fill="#fff"/>
+          <circle cx="215" cy="38" r="6.5" fill="#000"/>
+          <circle cx="163" cy="163" r="5.5" fill="#000"/>
+        </mask>
+        <path class="ink" d="M30 183 V80"/>
+        <path class="ink" d="M30 125 a45 45 0 0 1 90 0 V183"/>
+        <g mask="url(#holesA)">
+          <path class="ink" d="M150 195 L215 34" clip-path="url(#baseA)"/>
+          <path class="ink" d="M215 34 L254 130"/>
+          <circle class="joint" cx="215" cy="34" r="13"/>
+        </g>
+        <rect class="part" x="250" y="159" width="24" height="24"/>
+      </svg>
+    </a>
+    <div class="nav-links">
+      <a class="plain" href="/robots">Robots</a>
+      <a class="plain" href="/software">Software</a>
+      <a class="plain" href="/jobs">Jobs</a>
+      <a class="plain" href="/roadmap">Roadmap</a>
+      <a class="plain" href="/about">About</a>
+      <a class="talk" href="/contact">Talk to us</a>
+    </div>
+  </nav>
+  <div class="ptext">
+    <h1>Have work a robot should be doing?</h1>
+    <p class="lede">Tell us the job, the machine and how many shifts it runs. We will reply with whether a robot fits and which one.</p>
+  </div>
+</header>
+<main>
+  <section class="band dark" style="padding-top:0">
+    <form class="form" id="enquiry" action="https://formsubmit.co/office@nautomationlabs.com" method="POST" novalidate>
+      <input type="hidden" name="_subject" value="New enquiry from the nA labs website">
+      <input type="hidden" name="_template" value="table">
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+      <div class="field wide2">
+        <label for="f-type">What do you need?</label>
+        <select id="f-type" name="Enquiry type" required>
+          <option value="">Choose one</option>
+          <option>Machined parts (OrderShed)</option>
+          <option>A job automated in my shop (nA labs)</option>
+          <option>I run a machine shop and want to partner</option>
+          <option>I want to join the team</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-name">Your name</label>
+        <input id="f-name" name="Name" type="text" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="f-company">Company</label>
+        <input id="f-company" name="Company" type="text" autocomplete="organization">
+      </div>
+      <div class="field">
+        <label for="f-email">Email</label>
+        <input id="f-email" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="f-phone">Phone (optional)</label>
+        <input id="f-phone" name="Phone" type="tel" autocomplete="tel">
+      </div>
+      <div class="field wide2">
+        <label for="f-msg">Tell us about it</label>
+        <p class="hint" id="f-hint">For parts: the part, quantity and date. For automation: where the job is, what gets picked up and placed, and how many shifts it runs.</p>
+        <textarea id="f-msg" name="Message" rows="6" aria-describedby="f-hint" required></textarea>
+      </div>
+      <div class="wide2">
+        <button class="btn" type="submit" id="f-send">Send enquiry</button>
+        <p class="status" id="f-status" role="status" aria-live="polite"></p>
+        <p class="hint" style="margin-top:14px">We use what you send only to reply to you. See the <a href="/privacy" style="color:inherit">privacy notice</a>.</p>
+      </div>
+    </form>
+    <p class="body" style="margin-top:40px">Prefer email? Write to <a href="mailto:office@nautomationlabs.com" style="color:inherit">office@nautomationlabs.com</a>. Send drawings there too.</p>
+  </section>
+</main>
+<script>
+(function(){
+  var f=document.getElementById('enquiry'),s=document.getElementById('f-status'),b=document.getElementById('f-send');
+  if(!f||!window.fetch)return;
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var bad=null;
+    ['f-type','f-name','f-email','f-msg'].forEach(function(id){var el=document.getElementById(id);var ok=el.value.trim()!==''&&(id!=='f-email'||/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(el.value.trim()));el.setAttribute('aria-invalid',ok?'false':'true');if(!ok&&!bad)bad=el;});
+    if(bad){s.textContent='Fill in the highlighted fields, then send again.';s.className='status err';bad.focus();return;}
+    var data={};new FormData(f).forEach(function(v,k){data[k]=v;});
+    b.disabled=true;b.textContent='Sending';s.textContent='';s.className='status';
+    fetch('https://formsubmit.co/ajax/office@nautomationlabs.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
+      .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
+      .then(function(x){
+        if(x.ok&&String(x.j.success)==='true'){f.reset();s.textContent='Enquiry sent. We will reply by email.';s.className='status ok';}
+        else{throw new Error('not sent');}
+      })
+      .catch(function(){s.textContent='This did not send. Please email office@nautomationlabs.com instead.';s.className='status err';})
+      .then(function(){b.disabled=false;b.textContent='Send enquiry';});
+  });
+})();
+</script>
+
+<footer class="foot2">
+  <span>NAutomation Labs Private Limited, Tamil Nadu: nA labs (robotics), OrderShed (machined parts) and Decibyl (AI agents). Images marked concept are renders.</span>
+  <nav aria-label="Footer"><a href="/">Home</a><a href="/robots">Robots</a><a href="/software">Software</a><a href="/jobs">Jobs</a><a href="/roadmap">Roadmap</a><a href="/about">About</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a></nav>
+</footer>
+</body>
+</html>
