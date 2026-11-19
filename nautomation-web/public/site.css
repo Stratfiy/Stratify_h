@@ -232,3 +232,26 @@ body{font-size:17px}
 .legal h2{font-size:clamp(24px,2.6vw,34px);margin-top:44px}
 .legal p,.legal li{font-size:17px;line-height:1.6;color:#D0D0D0}
 .legal a{color:#fff}
+
+/* quieter type outside the hero: light Barlow, sentence case, smaller sizes */
+@font-face{font-family:'Barlow';font-style:normal;font-weight:300;font-display:swap;src:url('/fonts/barlow-latin-300-normal.woff2') format('woff2')}
+h2,h3,.big,.ask{font-family:'Barlow','Helvetica Neue',Arial,sans-serif;text-transform:none;letter-spacing:-.005em}
+.phero h1{font-size:clamp(28px,3.8vw,50px);line-height:1.04;font-weight:600;letter-spacing:.012em;max-width:18em}
+.panel h2{font-size:clamp(28px,3.4vw,46px);line-height:1.12;font-weight:300;max-width:18em}
+.band h2{font-size:clamp(25px,2.8vw,38px);line-height:1.15;font-weight:300;max-width:20em}
+.row h3,.loop h3{font-size:clamp(22px,2.1vw,28px);line-height:1.2;font-weight:400}
+.big{font-size:clamp(22px,2.4vw,32px);line-height:1.25;font-weight:300;max-width:22em}
+.ask{font-size:clamp(19px,1.8vw,24px);line-height:1.35;font-weight:400}
+.cols h3,.lineup h3,.stages h3{font-size:clamp(17px,1.35vw,19px);letter-spacing:0;line-height:1.3;font-weight:500}
+@media (max-width:720px){.band .cols.six h3,.cols.six h3{font-size:17px}}
+body{font-size:16px}
+.panel .lede,.phero .lede,.band .lede{font-size:clamp(16px,1.25vw,18px);line-height:1.55;font-weight:400}
+.band p.body,.row p{font-size:16px;line-height:1.6}
+.cols p,.lineup p,.stages p,.loop p{font-size:15px;line-height:1.55}
+.row dl{font-size:15px}
+.cols .when,.lineup .when,.row .when,.stages .when,.cols .who{font-size:14px;font-weight:500}
+.ask a,.big a{font-size:inherit;font-weight:500}
+.nav-links{font-size:13px;font-weight:500}
+.btn{font-size:13px;font-weight:600;padding:13px 22px}
+.form label{font-size:14px;font-weight:500}
+.form input,.form select,.form textarea{font-size:16px}
